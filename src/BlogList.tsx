@@ -1,5 +1,7 @@
 'use client'
 
+import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -35,27 +37,23 @@ export default function BlogList() {
 
   useGSAP(
     () => {
-      gsap.from('.blog-list-reveal', {
-        y: 60,
-        opacity: 0,
-        stagger: 0.12,
+      reveal('.blog-list-reveal', {
+        from: { y: 60 },
         duration: 1.4,
-        ease: 'expo.out',
+        stagger: 0.12,
+        scrollTrigger: false,
       })
 
-      gsap.from('.blog-card-reveal', {
-        scrollTrigger: {
-          trigger: '.blog-grid-section',
-          start: 'top 85%',
-        },
-        y: 35,
-        opacity: 0,
-        stagger: 0.1,
+      reveal('.blog-card-reveal', {
+        from: { y: 35 },
         duration: 1.2,
-        ease: 'expo.out',
+        stagger: 0.1,
+        scrollTrigger: { trigger: '.blog-grid-section', start: 'top 85%' },
       })
+
+      return () => clearRevealStyles('.blog-list-reveal, .blog-card-reveal')
     },
-    { scope: containerRef, dependencies: [selectedCategory, searchQuery] }
+    { scope: containerRef, ...gsapScopeOptions }
   )
 
   return (

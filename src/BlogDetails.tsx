@@ -1,5 +1,7 @@
 'use client'
 
+import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -28,27 +30,23 @@ export default function BlogDetails() {
     () => {
       if (!activePost) return
 
-      gsap.from('.blog-det-reveal', {
-        y: 50,
-        opacity: 0,
-        stagger: 0.12,
+      reveal('.blog-det-reveal', {
+        from: { y: 50 },
         duration: 1.4,
-        ease: 'expo.out',
+        stagger: 0.12,
+        scrollTrigger: false,
       })
 
-      gsap.from('.blog-paragraph-anim', {
-        scrollTrigger: {
-          trigger: '.blog-reading-stream',
-          start: 'top 85%',
-        },
-        y: 25,
-        opacity: 0,
-        stagger: 0.1,
+      reveal('.blog-paragraph-anim', {
+        from: { y: 25 },
         duration: 1.1,
-        ease: 'expo.out',
+        stagger: 0.1,
+        scrollTrigger: { trigger: '.blog-reading-stream', start: 'top 85%' },
       })
+
+      return () => clearRevealStyles('.blog-det-reveal, .blog-paragraph-anim')
     },
-    { scope: containerRef, dependencies: [id] }
+    { scope: containerRef, dependencies: [id], ...gsapScopeOptions }
   )
 
   if (!activePost) {

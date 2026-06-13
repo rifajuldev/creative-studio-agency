@@ -1,5 +1,7 @@
 'use client'
 
+import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -113,21 +115,18 @@ export default function ProjectTimeline() {
       )
 
       // Fade in milestones
-      const milestones = gsap.utils.toArray('.milestone-item')
-      milestones.forEach((item: any, i) => {
-        gsap.from(item, {
-          opacity: 0,
-          x: i % 2 === 0 ? -40 : 40,
+      const milestones = gsap.utils.toArray<Element>('.milestone-item')
+      milestones.forEach((item: Element, i) => {
+        reveal(item, {
+          from: { x: i % 2 === 0 ? -40 : 40 },
           duration: 1,
-          scrollTrigger: {
-            trigger: item,
-            start: 'top 85%',
-            toggleActions: 'play none none reverse',
-          },
+          scrollTrigger: { trigger: item, start: 'top 85%', once: true },
         })
       })
+
+      return () => clearRevealStyles('.milestone-item')
     },
-    { scope: containerRef }
+    { scope: containerRef, ...gsapScopeOptions }
   )
 
   return (

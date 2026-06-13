@@ -1,6 +1,8 @@
 'use client'
 
 import { useLanguage } from '@/context/LanguageContext'
+import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -45,36 +47,31 @@ function Hero() {
 
   useGSAP(
     () => {
-      // Elegant intro animations
-      gsap.from('.hero-word', {
-        yPercent: 130,
-        rotationZ: 4,
-        scale: 0.95,
-        opacity: 0,
+      reveal('.hero-word', {
+        from: { yPercent: 130, rotationZ: 4, scale: 0.95 },
         duration: 2.2,
         stagger: 0.15,
-        ease: 'expo.out',
         delay: 0.1,
-        transformOrigin: 'left bottom',
+        scrollTrigger: false,
       })
 
-      gsap.from('.hero-fade', {
-        opacity: 0,
-        y: 30,
+      gsap.set('.hero-word', { transformOrigin: 'left bottom' })
+
+      reveal('.hero-fade', {
+        from: { y: 30 },
         duration: 2,
         delay: 1,
         stagger: 0.2,
-        ease: 'expo.out',
+        scrollTrigger: false,
       })
 
       gsap.fromTo(
         '.hero-image',
         { filter: 'blur(12px)', opacity: 0 },
-        { filter: 'blur(0px)', opacity: 1, duration: 2.5, ease: 'power2.inOut' }
+        { filter: 'blur(0px)', opacity: 1, duration: 2.5, ease: 'power2.inOut', immediateRender: false }
       )
       gsap.fromTo('.hero-img', { scale: 1.15 }, { scale: 1.0, duration: 3, ease: 'power3.out' })
 
-      // Parallax scrolling effects
       gsap.to('.hero-img', {
         yPercent: 30,
         ease: 'none',
@@ -86,8 +83,10 @@ function Hero() {
         ease: 'none',
         scrollTrigger: { trigger: container.current, start: 'top top', end: 'bottom top', scrub: 1.2 },
       })
+
+      return () => clearRevealStyles('.hero-word, .hero-fade, .hero-image')
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   return (
@@ -208,16 +207,15 @@ function HowWeWork() {
 
   useGSAP(
     () => {
-      gsap.from('.animate-work-step', {
-        scrollTrigger: { trigger: container.current, start: 'top 80%' },
-        opacity: 0,
-        y: 40,
+      reveal('.animate-work-step', {
+        from: { y: 40 },
         duration: 1.2,
         stagger: 0.15,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: container.current, start: 'top 80%' },
       })
+      return () => clearRevealStyles('.animate-work-step')
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   return (
@@ -310,16 +308,15 @@ function Projects() {
 
   useGSAP(
     () => {
-      gsap.from('.animate-proj', {
-        scrollTrigger: { trigger: container.current, start: 'top 80%' },
-        opacity: 0,
-        y: 50,
+      reveal('.animate-proj', {
+        from: { y: 50 },
         duration: 1.5,
         stagger: 0.15,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: container.current, start: 'top 80%' },
       })
+      return () => clearRevealStyles('.animate-proj')
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   const handleProjEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -502,25 +499,29 @@ function Services() {
 
   const { contextSafe } = useGSAP(
     () => {
-      gsap.from('.feature-up', {
-        scrollTrigger: { trigger: container.current, start: 'top 80%' },
-        opacity: 0,
-        y: 40,
+      reveal('.feature-up', {
+        from: { y: 40 },
         duration: 1.2,
         stagger: 0.1,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: container.current, start: 'top 80%' },
       })
 
       if (selectedServiceIndex !== null && modalBgRef.current && modalContentRef.current) {
-        gsap.fromTo(modalBgRef.current, { opacity: 0 }, { opacity: 1, duration: 0.5, ease: 'power2.out' })
+        gsap.fromTo(
+          modalBgRef.current,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.5, ease: 'power2.out', immediateRender: false }
+        )
         gsap.fromTo(
           modalContentRef.current,
           { y: 100, opacity: 0, scale: 0.95 },
-          { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.5)', delay: 0.1 }
+          { y: 0, opacity: 1, scale: 1, duration: 0.7, ease: 'back.out(1.5)', delay: 0.1, immediateRender: false }
         )
       }
+
+      return () => clearRevealStyles('.feature-up')
     },
-    { scope: container, dependencies: [selectedServiceIndex] }
+    { scope: container, dependencies: [selectedServiceIndex], ...gsapScopeOptions }
   )
 
   const closeServiceModal = contextSafe(() => {
@@ -751,16 +752,15 @@ function Testimonials() {
 
   useGSAP(
     () => {
-      gsap.from('.test-up', {
-        scrollTrigger: { trigger: container.current, start: 'top 80%' },
-        opacity: 0,
-        y: 40,
+      reveal('.test-up', {
+        from: { y: 40 },
         duration: 1.2,
         stagger: 0.15,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: container.current, start: 'top 80%' },
       })
+      return () => clearRevealStyles('.test-up')
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   return (
@@ -845,16 +845,15 @@ function FAQ() {
 
   useGSAP(
     () => {
-      gsap.from('.faq-up', {
-        scrollTrigger: { trigger: container.current, start: 'top 80%' },
-        opacity: 0,
-        y: 40,
+      reveal('.faq-up', {
+        from: { y: 40 },
         duration: 1.2,
         stagger: 0.1,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: container.current, start: 'top 80%' },
       })
+      return () => clearRevealStyles('.faq-up')
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   return (
@@ -930,13 +929,11 @@ function ContactBlock() {
 
   useGSAP(
     () => {
-      gsap.from('.contact-up', {
-        scrollTrigger: { trigger: container.current, start: 'top 80%' },
-        opacity: 0,
-        y: 40,
+      reveal('.contact-up', {
+        from: { y: 40 },
         duration: 1.5,
         stagger: 0.15,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: container.current, start: 'top 80%' },
       })
 
       gsap.to('.contact-parallax', {
@@ -944,8 +941,10 @@ function ContactBlock() {
         ease: 'none',
         scrollTrigger: { trigger: container.current, start: 'top bottom', end: 'bottom top', scrub: true },
       })
+
+      return () => clearRevealStyles('.contact-up')
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   const handleChange = (e: any) => setFormData({ ...formData, [e.target.name]: e.target.value })
@@ -1114,16 +1113,15 @@ function Blog() {
 
   useGSAP(
     () => {
-      gsap.from('.blog-up', {
-        scrollTrigger: { trigger: container.current, start: 'top 80%' },
-        opacity: 0,
-        y: 40,
+      reveal('.blog-up', {
+        from: { y: 40 },
         duration: 1.2,
         stagger: 0.15,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: container.current, start: 'top 80%' },
       })
+      return () => clearRevealStyles('.blog-up')
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   return (

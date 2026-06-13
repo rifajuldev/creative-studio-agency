@@ -1,5 +1,7 @@
 'use client'
 
+import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -610,51 +612,39 @@ export default function Portfolio() {
   useGSAP(
     () => {
       if (!id) {
-        // Reveal categories with elegant stagger
-        gsap.from('.portfolio-reveal', {
-          scrollTrigger: {
-            trigger: '.portfolio-container',
-            start: 'top 85%',
-          },
-          y: 40,
-          opacity: 0,
-          stagger: 0.1,
+        reveal('.portfolio-reveal', {
+          from: { y: 40 },
           duration: 1.2,
-          ease: 'expo.out',
+          stagger: 0.1,
+          scrollTrigger: { trigger: '.portfolio-container', start: 'top 85%' },
         })
 
-        gsap.from('.hero-text-reveal', {
-          y: 80,
-          opacity: 0,
-          stagger: 0.1,
+        reveal('.hero-text-reveal', {
+          from: { y: 80 },
           duration: 1.5,
-          ease: 'expo.out',
+          stagger: 0.1,
           delay: 0.1,
+          scrollTrigger: false,
         })
       } else {
-        // Stagger section reveals on details view
-        gsap.from('.details-hero-reveal', {
-          y: 50,
-          opacity: 0,
-          stagger: 0.12,
+        reveal('.details-hero-reveal', {
+          from: { y: 50 },
           duration: 1.3,
-          ease: 'expo.out',
+          stagger: 0.12,
+          scrollTrigger: false,
         })
 
-        gsap.from('.details-sec-card', {
-          scrollTrigger: {
-            trigger: '.details-sections',
-            start: 'top 85%',
-          },
-          y: 30,
-          opacity: 0,
-          stagger: 0.15,
+        reveal('.details-sec-card', {
+          from: { y: 30 },
           duration: 1.1,
-          ease: 'expo.out',
+          stagger: 0.15,
+          scrollTrigger: { trigger: '.details-sections', start: 'top 85%' },
         })
       }
+
+      return () => clearRevealStyles('.portfolio-reveal, .hero-text-reveal, .details-hero-reveal, .details-sec-card')
     },
-    { scope: container, dependencies: [id] }
+    { scope: container, dependencies: [id], ...gsapScopeOptions }
   )
 
   // -------------------------------------------------------------

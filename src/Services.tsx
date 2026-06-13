@@ -1,5 +1,7 @@
 'use client'
 
+import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -22,7 +24,8 @@ import {
 import { AnimatePresence, motion } from 'motion/react'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import MarketingServiceDetail from './components/services/MarketingServiceDetail'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -369,34 +372,27 @@ export default function Services() {
   // Scroll to top when dynamic ID route updates
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'instant' })
-    if (id && SERVICES_DATA.find((s) => s.id === id)) {
-      setActiveTab(id)
-    }
   }, [id])
 
   useGSAP(
     () => {
-      gsap.from('.srv-hero-reveal', {
-        y: 60,
-        opacity: 0,
-        stagger: 0.12,
+      reveal('.srv-hero-reveal', {
+        from: { y: 60 },
         duration: 1.4,
-        ease: 'expo.out',
+        stagger: 0.12,
+        scrollTrigger: false,
       })
 
-      gsap.from('.srv-bento-card', {
-        scrollTrigger: {
-          trigger: '.srv-interactive-grid',
-          start: 'top 85%',
-        },
-        y: 40,
-        opacity: 0,
-        stagger: 0.1,
+      reveal('.srv-bento-card', {
+        from: { y: 40 },
         duration: 1.2,
-        ease: 'expo.out',
+        stagger: 0.1,
+        scrollTrigger: { trigger: '.srv-interactive-grid', start: 'top 85%' },
       })
+
+      return () => clearRevealStyles('.srv-hero-reveal, .srv-bento-card')
     },
-    { scope: containerRef, dependencies: [id] }
+    { scope: containerRef, dependencies: [id], ...gsapScopeOptions }
   )
 
   const activeService = SERVICES_DATA.find((s) => s.id === activeTab) || SERVICES_DATA[0]
@@ -406,6 +402,10 @@ export default function Services() {
   if (id) {
     const serviceDetail = SERVICES_DATA.find((s) => s.id === id)
     if (serviceDetail) {
+      if (serviceDetail.id === 'marketing') {
+        return <MarketingServiceDetail />
+      }
+
       const DetailIcon = serviceDetail.icon
       return (
         <div

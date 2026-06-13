@@ -1,5 +1,7 @@
 'use client'
 
+import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -56,27 +58,23 @@ export default function FAQPage() {
 
   useGSAP(
     () => {
-      gsap.from('.faq-hero-reveal', {
-        y: 60,
-        opacity: 0,
-        stagger: 0.12,
+      reveal('.faq-hero-reveal', {
+        from: { y: 60 },
         duration: 1.4,
-        ease: 'expo.out',
+        stagger: 0.12,
+        scrollTrigger: false,
       })
 
-      gsap.from('.faq-item-anim', {
-        scrollTrigger: {
-          trigger: '.faq-list-container',
-          start: 'top 85%',
-        },
-        y: 30,
-        opacity: 0,
-        stagger: 0.08,
+      reveal('.faq-item-anim', {
+        from: { y: 30 },
         duration: 1.1,
-        ease: 'expo.out',
+        stagger: 0.08,
+        scrollTrigger: { trigger: '.faq-list-container', start: 'top 85%' },
       })
+
+      return () => clearRevealStyles('.faq-hero-reveal, .faq-item-anim')
     },
-    { scope: container, dependencies: [activeCategory, searchQuery] }
+    { scope: container, ...gsapScopeOptions }
   )
 
   return (

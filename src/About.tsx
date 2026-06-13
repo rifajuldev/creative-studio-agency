@@ -1,5 +1,7 @@
 'use client'
 
+import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -17,72 +19,57 @@ export default function About() {
 
   useGSAP(
     () => {
-      // Intro text wipe effect
-      gsap.from('.about-hero-word', {
-        yPercent: 100,
-        opacity: 0,
+      reveal('.about-hero-word', {
+        from: { yPercent: 100 },
         duration: 1.4,
         stagger: 0.12,
-        ease: 'expo.out',
         delay: 0.1,
+        scrollTrigger: false,
       })
 
-      // Smooth fade in for decorative tags and lines
-      gsap.from('.about-fade', {
-        opacity: 0,
-        y: 25,
+      reveal('.about-fade', {
+        from: { y: 25 },
         duration: 1.3,
         delay: 0.6,
-        ease: 'expo.out',
+        scrollTrigger: false,
       })
 
       gsap.fromTo(
         '.about-hero-img',
         { filter: 'blur(8px)', opacity: 0, scale: 1.04 },
-        { filter: 'blur(0px)', opacity: 1, scale: 1, duration: 1.8, ease: 'power3.out', delay: 0.4 }
+        {
+          filter: 'blur(0px)',
+          opacity: 1,
+          scale: 1,
+          duration: 1.8,
+          ease: 'power3.out',
+          delay: 0.4,
+          immediateRender: false,
+        }
       )
 
-      // Staggered reveals for bento grids and process elements
       gsap.utils.toArray<HTMLElement>('.about-section-reveal').forEach((el) => {
-        gsap.from(el, {
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 85%',
-          },
-          y: 45,
-          opacity: 0,
+        reveal(el, {
+          from: { y: 45 },
           duration: 1.2,
-          ease: 'expo.out',
+          scrollTrigger: { trigger: el, start: 'top 85%' },
         })
       })
 
-      // Process step cards cascade trigger
-      gsap.from('.about-process-step', {
-        scrollTrigger: {
-          trigger: '.about-process-container',
-          start: 'top 80%',
-        },
-        y: 35,
-        opacity: 0,
+      reveal('.about-process-step', {
+        from: { y: 35 },
         duration: 1,
         stagger: 0.12,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: '.about-process-container', start: 'top 80%' },
       })
 
-      // Team members hover card transitions
-      gsap.from('.about-member-card', {
-        scrollTrigger: {
-          trigger: '.about-team-container',
-          start: 'top 80%',
-        },
-        y: 40,
-        opacity: 0,
+      reveal('.about-member-card', {
+        from: { y: 40 },
         duration: 1.1,
         stagger: 0.15,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: '.about-team-container', start: 'top 80%' },
       })
 
-      // Parallax scrolling triggers for immersive visual graphics
       gsap.utils.toArray<HTMLElement>('.parallax-viewport-img').forEach((img) => {
         gsap.fromTo(
           img,
@@ -99,8 +86,13 @@ export default function About() {
           }
         )
       })
+
+      return () =>
+        clearRevealStyles(
+          '.about-hero-word, .about-fade, .about-section-reveal, .about-process-step, .about-member-card'
+        )
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   const valuesList = [

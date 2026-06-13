@@ -4,6 +4,8 @@ import CookieConsent from '@/components/CookieConsent'
 import PageTransition from '@/components/PageTransition'
 import SchedulerModal from '@/components/SchedulerModal'
 import { LanguageProvider, useLanguage } from '@/context/LanguageContext'
+import { gsapScopeOptions, useScrollTriggerRefresh } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
@@ -30,6 +32,8 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
   const { t } = useLanguage()
   const pathname = usePathname()
 
+  useScrollTriggerRefresh()
+
   useEffect(() => {
     window.scrollTo(0, 0)
   }, [pathname])
@@ -44,13 +48,35 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
 
     lenis.on('scroll', ScrollTrigger.update)
 
-    gsap.ticker.add((time) => {
-      lenis.raf(time * 1000)
+    ScrollTrigger.scrollerProxy(document.documentElement, {
+      scrollTop(value?: number) {
+        if (value !== undefined) {
+          lenis.scrollTo(value, { immediate: true })
+        }
+        return lenis.scroll
+      },
+      getBoundingClientRect() {
+        return {
+          top: 0,
+          left: 0,
+          width: window.innerWidth,
+          height: window.innerHeight,
+        }
+      },
     })
+
+    const raf = (time: number) => {
+      lenis.raf(time * 1000)
+    }
+
+    gsap.ticker.add(raf)
     gsap.ticker.lagSmoothing(0)
 
+    ScrollTrigger.addEventListener('refresh', () => lenis.resize())
+
     return () => {
-      gsap.ticker.remove((time) => lenis.raf(time * 1000))
+      gsap.ticker.remove(raf)
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill())
       lenis.destroy()
     }
   }, [])
@@ -372,13 +398,11 @@ function ContactBlock() {
 
   useGSAP(
     () => {
-      gsap.from('.contact-up', {
-        scrollTrigger: { trigger: container.current, start: 'top 80%' },
-        opacity: 0,
-        y: 40,
+      reveal('.contact-up', {
+        from: { y: 40 },
         duration: 1.5,
         stagger: 0.15,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: container.current, start: 'top 80%' },
       })
 
       gsap.to('.contact-parallax', {
@@ -391,8 +415,10 @@ function ContactBlock() {
           scrub: true,
         },
       })
+
+      return () => clearRevealStyles('.contact-up')
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
@@ -550,27 +576,27 @@ function Footer() {
         },
       })
 
-      gsap.from('.footer-reveal', {
-        scrollTrigger: { trigger: container.current, start: 'top 85%' },
-        opacity: 0,
-        y: 30,
+      reveal('.footer-reveal', {
+        from: { y: 30 },
         duration: 1.5,
         stagger: 0.1,
-        ease: 'expo.out',
+        scrollTrigger: { trigger: container.current, start: 'top 85%' },
       })
 
-      gsap.from('.footer-big-text span', {
-        scrollTrigger: { trigger: container.current, start: 'top 95%' },
-        yPercent: 120,
-        rotationZ: 5,
-        opacity: 0,
+      reveal('.footer-big-text span', {
+        from: { yPercent: 120, rotationZ: 5 },
         duration: 1.8,
         stagger: 0.05,
-        ease: 'expo.out',
-        transformOrigin: 'left bottom',
+        scrollTrigger: { trigger: container.current, start: 'top 95%' },
       })
+
+      gsap.set('.footer-big-text span', { transformOrigin: 'left bottom' })
+
+      return () => {
+        clearRevealStyles('.footer-reveal, .footer-big-text span')
+      }
     },
-    { scope: container }
+    { scope: container, ...gsapScopeOptions }
   )
 
   const handleSocialEnter = (e: React.MouseEvent<HTMLAnchorElement>) => {

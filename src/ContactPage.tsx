@@ -1,7 +1,8 @@
 'use client'
 
+import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
 import { CheckCircle, Mail, MapPin, Phone, Shield } from 'lucide-react'
 import { useRef } from 'react'
 import ContactForm from './components/contact/ContactForm'
@@ -13,24 +14,24 @@ export default function ContactPage() {
 
   useGSAP(
     () => {
-      gsap.from('.contact-title-fade', {
-        y: 35,
-        opacity: 0,
+      reveal('.contact-title-fade', {
+        from: { y: 35 },
         duration: 1.2,
         stagger: 0.12,
-        ease: 'expo.out',
         delay: 0.05,
+        scrollTrigger: false,
       })
 
-      gsap.from('.contact-form-fade', {
-        y: 45,
-        opacity: 0,
+      reveal('.contact-form-fade', {
+        from: { y: 45 },
         duration: 1.4,
-        ease: 'expo.out',
         delay: 0.35,
+        scrollTrigger: false,
       })
+
+      return () => clearRevealStyles('.contact-title-fade, .contact-form-fade')
     },
-    { scope: containerRef }
+    { scope: containerRef, ...gsapScopeOptions }
   )
 
   return (

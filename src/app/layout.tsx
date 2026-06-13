@@ -1,4 +1,4 @@
-import { GoogleAnalytics, GoogleTagManagerBody, GoogleTagManagerHead } from '@/components/seo/GoogleTags'
+import GoogleTag from '@/components/seo/GoogleTags'
 import JsonLd from '@/components/seo/JsonLd'
 import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/json-ld'
 import { buildDefaultMetadata } from '@/lib/seo/metadata'
@@ -16,11 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        <GoogleTagManagerHead />
+        <GoogleTag />
       </head>
       <body>
-        <GoogleTagManagerBody />
-        <GoogleAnalytics />
         <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <ClientProviders>{children}</ClientProviders>
       </body>

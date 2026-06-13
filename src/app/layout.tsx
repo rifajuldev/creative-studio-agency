@@ -1,11 +1,12 @@
+import { GoogleAnalytics, GoogleTagManagerBody, GoogleTagManagerHead } from '@/components/seo/GoogleTags'
+import JsonLd from '@/components/seo/JsonLd'
+import { organizationJsonLd, websiteJsonLd } from '@/lib/seo/json-ld'
+import { buildDefaultMetadata } from '@/lib/seo/metadata'
 import ClientProviders from '@/providers/ClientProviders'
 import type { Metadata } from 'next'
 import './globals.css'
 
-export const metadata: Metadata = {
-  title: 'NextCreavo | Creative Studio Agency',
-  description: 'Crafting digital ecosystems for modern brands.',
-}
+export const metadata: Metadata = buildDefaultMetadata()
 
 export default function RootLayout({
   children,
@@ -14,7 +15,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        <GoogleTagManagerHead />
+      </head>
       <body>
+        <GoogleTagManagerBody />
+        <GoogleAnalytics />
+        <JsonLd data={[organizationJsonLd(), websiteJsonLd()]} />
         <ClientProviders>{children}</ClientProviders>
       </body>
     </html>

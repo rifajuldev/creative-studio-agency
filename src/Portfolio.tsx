@@ -1,6 +1,7 @@
 'use client'
 
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { absoluteUrl } from '@/lib/seo/site'
 import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -664,7 +665,7 @@ export default function Portfolio() {
           className="bg-primary text-primary selection:bg-invert selection:text-invert min-h-screen w-full pb-32 transition-colors duration-700"
         >
           {/* Floating Share Control */}
-          <SocialShareToolbar title={activeProject.title} url={window.location.href} />
+          <SocialShareToolbar title={activeProject.title} url={absoluteUrl(`/portfolio/${activeProject.id}`)} />
 
           {/* Executive Sub-Header Controller Ribbon */}
           <div className="bg-primary/95 border-border-primary/80 sticky top-[70px] z-30 w-full border-b px-4 py-3 backdrop-blur-md md:top-[80px] md:px-12 md:py-4">

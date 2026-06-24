@@ -1,6 +1,6 @@
-import { BLOG_POSTS } from '@/blogData'
 import { PORTFOLIO_INDEX, getPortfolioById } from '@/data/portfolioIndex'
 import { SERVICES_DATA, getServiceById } from '@/data/services'
+import type { IBlogPublicDetail } from '@/interfaces/blog.interface'
 import { absoluteUrl, siteConfig } from './site'
 
 type JsonLd = Record<string, unknown>
@@ -103,8 +103,7 @@ export function portfolioProjectJsonLd(id: string): JsonLd | null {
   }
 }
 
-export function blogPostJsonLd(id: string): JsonLd | null {
-  const post = BLOG_POSTS.find((p) => p.id === id)
+export function blogPostJsonLd(post: IBlogPublicDetail): JsonLd | null {
   if (!post) return null
 
   return {
@@ -112,17 +111,19 @@ export function blogPostJsonLd(id: string): JsonLd | null {
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.summary,
-    image: post.img,
-    datePublished: post.date,
-    author: {
-      '@type': 'Person',
-      name: post.author.name,
-      jobTitle: post.author.role,
-    },
+    image: post.coverImageUrl,
+    datePublished: post.createdAt,
+    author: post.authorName
+      ? {
+          '@type': 'Person',
+          name: post.authorName,
+          ...(post.authorRole ? { jobTitle: post.authorRole } : {}),
+        }
+      : undefined,
     publisher: { '@id': `${siteConfig.url}/#organization` },
-    url: absoluteUrl(`/blog/${post.id}`),
-    keywords: post.tags.join(', '),
-    articleSection: post.category,
+    url: absoluteUrl(`/blog/${post.slug}`),
+    keywords: (post.tags ?? []).join(', '),
+    ...(post.category ? { articleSection: post.category } : {}),
   }
 }
 

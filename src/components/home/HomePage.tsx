@@ -2,6 +2,8 @@
 
 import { useLanguage } from '@/context/LanguageContext'
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import { formatBlogDateShort } from '@/interfaces/blog.interface'
+import { useGetHomeBlogsQuery } from '@/redux/features/blog/blogPublic.api'
 import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -22,8 +24,9 @@ import {
   X,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
+import Image from 'next/image'
 import Link from 'next/link'
-import React, { useRef, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -97,10 +100,12 @@ function Hero() {
     >
       <div className="pointer-events-none absolute top-0 right-0 z-0 h-[130%] w-full overflow-hidden opacity-[0.2] mix-blend-multiply lg:block lg:w-1/2 dark:mix-blend-screen">
         <div className="hero-image h-full w-full origin-top">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
             alt="Abstract"
             className="hero-img absolute inset-0 top-[-15%] h-[130%] w-full object-cover grayscale"
+            width={1000}
+            height={1000}
           />
         </div>
         <div className="to-primary absolute inset-0 bg-linear-to-l from-transparent via-transparent"></div>
@@ -392,10 +397,12 @@ function Projects() {
 
               {/* Cursor following image */}
               <div className="proj-img-wrap pointer-events-none absolute top-0 left-0 z-30 hidden h-[280px] w-[400px] scale-50 overflow-hidden rounded-2xl opacity-0 shadow-[0_20px_50px_rgba(0,0,0,0.3)] lg:block">
-                <img
+                <Image
                   src={proj.img}
                   alt={proj.title}
                   className="proj-img h-full w-full scale-150 object-cover grayscale"
+                  width={1000}
+                  height={1000}
                 />
                 <div className="bg-primary/10 absolute inset-0 mix-blend-overlay"></div>
               </div>
@@ -497,7 +504,7 @@ function Services() {
     },
   ]
 
-  const { contextSafe } = useGSAP(
+  useGSAP(
     () => {
       reveal('.feature-up', {
         from: { y: 40 },
@@ -524,10 +531,12 @@ function Services() {
     { scope: container, dependencies: [selectedServiceIndex], ...gsapScopeOptions }
   )
 
-  const closeServiceModal = contextSafe(() => {
-    if (!modalBgRef.current || !modalContentRef.current) return
+  const closeServiceModal = useCallback(() => {
+    const bg = modalBgRef.current
+    const content = modalContentRef.current
+    if (!bg || !content) return
 
-    gsap.to(modalContentRef.current, {
+    gsap.to(content, {
       y: 100,
       opacity: 0,
       scale: 0.95,
@@ -535,14 +544,14 @@ function Services() {
       ease: 'power3.in',
     })
 
-    gsap.to(modalBgRef.current, {
+    gsap.to(bg, {
       opacity: 0,
       duration: 0.7,
       ease: 'power2.inOut',
       onComplete: () => setSelectedServiceIndex(null),
       delay: 0.15,
     })
-  })
+  }, [])
 
   const openServiceModal = (index: number) => {
     setSelectedServiceIndex(index)
@@ -782,17 +791,19 @@ function Testimonials() {
         <div className="test-up lg:col-span-8">
           <h3 className="font-display text-primary relative mb-16 text-3xl leading-[1.3] font-light tracking-tighter md:text-4xl lg:text-5xl">
             <span className="text-border-primary absolute -top-4 -left-6 font-serif text-4xl md:-left-8 md:text-5xl">
-              "
+              {`"`}
             </span>
-            The best agency we've worked with so far. They understand our product deeply and integrate{' '}
+            {`The best agency we've worked with so far. They understand our product deeply and integrate{' '}`}
             <span className="font-serif italic">elegant</span> features with an incredible eye for detail.
           </h3>
           <div className="border-border-primary flex flex-col gap-8 border-t pt-8 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-6">
-              <img
+              <Image
                 src="https://i.pravatar.cc/150?img=47"
                 alt="Jenny Wilson"
                 className="border-border-primary h-14 w-14 rounded-full border object-cover grayscale"
+                width={1000}
+                height={1000}
               />
               <div>
                 <p className="text-primary mb-1 text-sm font-medium tracking-widest uppercase">Jenny Wilson</p>
@@ -955,10 +966,12 @@ function ContactBlock() {
       <div className="grid min-h-0 grid-cols-1 lg:min-h-[800px] lg:grid-cols-2">
         {/* Cover Image Half */}
         <div className="contact-up relative order-2 h-72 overflow-hidden sm:h-96 lg:order-1 lg:h-full">
-          <img
+          <Image
             src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=1200&auto=format&fit=crop"
             alt="Collaboration"
             className="contact-parallax absolute inset-0 top-[-10%] h-[120%] w-full object-cover opacity-90 grayscale transition-opacity duration-1000"
+            width={1000}
+            height={1000}
           />
           <div className="bg-primary/20 absolute inset-0 mix-blend-multiply"></div>
           <div className="from-primary absolute inset-0 flex flex-col justify-end bg-linear-to-t to-transparent p-8 sm:p-12 lg:p-24">
@@ -1089,27 +1102,8 @@ function ContactBlock() {
 function Blog() {
   const container = useRef(null)
   const { t } = useLanguage()
-
-  const posts = [
-    {
-      id: 'headless-doubled',
-      date: 'April 1, 2024',
-      title: 'How pivoting to a headless architecture doubled conversions.',
-      img: 'https://images.unsplash.com/photo-1553877522-43269d4ea984?q=80&w=600&auto=format&fit=crop',
-    },
-    {
-      id: 'ai-agentic-saas',
-      date: 'March 15, 2024',
-      title: 'The ultimate guide to AI Agentic features in SaaS.',
-      img: 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?q=80&w=600&auto=format&fit=crop',
-    },
-    {
-      id: 'minimal-design-retention',
-      date: 'Feb 28, 2024',
-      title: 'Why minimal design drives higher user retention in 2024.',
-      img: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600&auto=format&fit=crop',
-    },
-  ]
+  const { data, isLoading } = useGetHomeBlogsQuery()
+  const posts = data?.data ?? []
 
   useGSAP(
     () => {
@@ -1121,8 +1115,10 @@ function Blog() {
       })
       return () => clearRevealStyles('.blog-up')
     },
-    { scope: container, ...gsapScopeOptions }
+    { scope: container, dependencies: [posts.length], ...gsapScopeOptions }
   )
+
+  if (!isLoading && posts.length === 0) return null
 
   return (
     <section
@@ -1139,33 +1135,48 @@ function Blog() {
         </div>
 
         <div className="grid grid-cols-1 gap-12 md:grid-cols-3 lg:gap-16">
-          {posts.map((p, idx) => (
-            <Link
-              href={`/blog/${p.id}`}
-              key={idx}
-              className="blog-up group border-border-primary block cursor-pointer border-t pt-8"
-            >
-              <div className="bg-border-primary relative mb-8 aspect-4/3 overflow-hidden">
-                <img
-                  src={p.img}
-                  alt={p.title}
-                  className="h-full w-full object-cover opacity-90 grayscale transition-all duration-[1.2s] ease-[0.16,1,0.3,1] group-hover:scale-110 group-hover:grayscale-0"
-                />
-              </div>
-              <div className="mb-4 flex items-center justify-between">
-                <p className="text-secondary/60 text-[10px] font-medium tracking-[0.2em] uppercase">{p.date}</p>
-              </div>
-              <h3 className="font-display text-primary mb-6 text-2xl leading-[1.3] font-light tracking-tight transition-none group-hover:font-serif group-hover:italic">
-                {p.title}
-              </h3>
-              <div className="text-primary group-hover:text-secondary flex w-max items-center gap-3 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors">
-                <span className="before:bg-secondary relative before:absolute before:-bottom-1 before:left-0 before:h-px before:w-0 before:transition-all before:content-[''] group-hover:before:w-full">
-                  Read Article
-                </span>
-                <ArrowRight size={14} className="-rotate-45 transition-transform duration-500 group-hover:rotate-0" />
-              </div>
-            </Link>
-          ))}
+          {isLoading
+            ? Array.from({ length: 3 }).map((_, idx) => (
+                <div key={idx} className="blog-up border-border-primary animate-pulse border-t pt-8">
+                  <div className="bg-border-primary mb-8 aspect-4/3" />
+                  <div className="bg-secondary/30 mb-4 h-3 w-24" />
+                  <div className="bg-secondary/30 h-8 w-full" />
+                </div>
+              ))
+            : posts.map((p) => (
+                <Link
+                  href={`/blog/${p.slug}`}
+                  key={p._id}
+                  className="blog-up group border-border-primary block cursor-pointer border-t pt-8"
+                >
+                  <div className="bg-border-primary relative mb-8 aspect-4/3 overflow-hidden">
+                    <Image
+                      src={p.coverImageUrl}
+                      alt={p.title}
+                      className="h-full w-full object-cover opacity-90 grayscale transition-all duration-[1.2s] ease-[0.16,1,0.3,1] group-hover:scale-110 group-hover:grayscale-0"
+                      width={1000}
+                      height={1000}
+                    />
+                  </div>
+                  <div className="mb-4 flex items-center justify-between">
+                    <p className="text-secondary/60 text-[10px] font-medium tracking-[0.2em] uppercase">
+                      {formatBlogDateShort(p.createdAt)}
+                    </p>
+                  </div>
+                  <h3 className="font-display text-primary mb-6 text-2xl leading-[1.3] font-light tracking-tight transition-none group-hover:font-serif group-hover:italic">
+                    {p.title}
+                  </h3>
+                  <div className="text-primary group-hover:text-secondary flex w-max items-center gap-3 text-[10px] font-medium tracking-[0.2em] uppercase transition-colors">
+                    <span className="before:bg-secondary relative before:absolute before:-bottom-1 before:left-0 before:h-px before:w-0 before:transition-all before:content-[''] group-hover:before:w-full">
+                      Read Article
+                    </span>
+                    <ArrowRight
+                      size={14}
+                      className="-rotate-45 transition-transform duration-500 group-hover:rotate-0"
+                    />
+                  </div>
+                </Link>
+              ))}
         </div>
       </div>
     </section>

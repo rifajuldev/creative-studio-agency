@@ -14,6 +14,15 @@ const publicBaseQuery = fetchBaseQuery({
 export const api = createApi({
   reducerPath: 'baseApi',
   baseQuery: publicBaseQuery,
-  tagTypes: ['brief', 'booking'],
+  tagTypes: [
+    'brief',
+    'booking',
+    'blogHome',
+    'blogFeatured',
+    'blogPublicList',
+    'blogDetail',
+    'blogCategories',
+    'portfolioCategories',
+  ],
   endpoints: () => ({}),
 })

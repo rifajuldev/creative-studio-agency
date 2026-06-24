@@ -1,12 +1,14 @@
-import { BLOG_POSTS } from '@/blogData'
 import BlogList from '@/BlogList'
 import JsonLd from '@/components/seo/JsonLd'
+import { fetchPublicBlogList } from '@/lib/blog/server'
 import { itemListJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
 import { staticPagesSeo } from '@/lib/seo/static-pages'
 
 export const metadata = staticPagesSeo.blog
 
-export default function BlogPage() {
+export default async function BlogPage() {
+  const posts = await fetchPublicBlogList({ skip: 0, limit: 100 })
+
   return (
     <>
       <JsonLd
@@ -15,7 +17,7 @@ export default function BlogPage() {
           itemListJsonLd(
             'Blog Articles',
             '/blog',
-            BLOG_POSTS.map((post) => ({ name: post.title, url: `/blog/${post.id}` }))
+            posts.map((post) => ({ name: post.title, url: `/blog/${post.slug}` }))
           ),
         ]}
       />

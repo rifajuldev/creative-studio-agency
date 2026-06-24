@@ -1,10 +1,10 @@
-import { BLOG_POSTS } from '@/blogData'
 import { PORTFOLIO_INDEX } from '@/data/portfolioIndex'
 import { SERVICES_DATA } from '@/data/services'
+import { fetchPublicBlogList } from '@/lib/blog/server'
 import { siteConfig } from '@/lib/seo/site'
 import type { MetadataRoute } from 'next'
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticRoutes = [
     '',
     '/about',
@@ -19,6 +19,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   const now = new Date()
+  const blogPosts = await fetchPublicBlogList({ skip: 0, limit: 500 })
 
   return [
     ...staticRoutes.map((path) => ({
@@ -39,9 +40,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: 'monthly' as const,
       priority: 0.75,
     })),
-    ...BLOG_POSTS.map((post) => ({
-      url: `${siteConfig.url}/blog/${post.id}`,
-      lastModified: now,
+    ...blogPosts.map((post) => ({
+      url: `${siteConfig.url}/blog/${post.slug}`,
+      lastModified: post.createdAt ? new Date(post.createdAt) : now,
       changeFrequency: 'weekly' as const,
       priority: 0.7,
     })),

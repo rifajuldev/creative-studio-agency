@@ -1,6 +1,7 @@
 'use client'
 
 import AppShell from '@/components/layout/AppShell'
+import '@/redux/features/blog/blogPublic.api'
 import '@/redux/features/booking/booking.api'
 import { store } from '@/redux/store'
 import { Provider } from 'react-redux'

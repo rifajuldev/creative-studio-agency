@@ -170,7 +170,7 @@ export default function SocialMediaManagementService() {
                   className="group relative flex min-h-[44px] items-center justify-center gap-3 overflow-hidden rounded-full bg-white px-8 py-4 text-[11px] font-black tracking-widest text-[#05050A] uppercase transition-transform active:scale-95"
                 >
                   <div className="absolute inset-0 bg-gradient-to-r from-purple-100 to-white opacity-0 transition-opacity group-hover:opacity-100"></div>
-                  <span className="relative z-10">Let's Grow Your Brand</span>
+                  <span className="relative z-10">Let&apos;s Grow Your Brand</span>
                   <div className="relative z-10 flex h-6 w-6 items-center justify-center rounded-full bg-[#05050A]/10 transition-colors group-hover:bg-[#05050A]/20">
                     <Play size={10} fill="currentColor" />
                   </div>
@@ -277,6 +277,7 @@ export default function SocialMediaManagementService() {
                   className="absolute -top-6 -left-4 z-30 flex items-center gap-4 rounded-2xl border border-white/10 bg-[#11111A]/90 p-4 shadow-2xl backdrop-blur-xl transition-transform hover:-translate-y-1 md:-top-12 md:-left-12"
                 >
                   <div className="h-12 w-12 rounded-full bg-gradient-to-br from-fuchsia-500 to-purple-600 p-[2px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop"
                       alt="Profile"
@@ -465,6 +466,7 @@ export default function SocialMediaManagementService() {
                 className="group flex flex-col justify-between overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-sm transition-all duration-500 hover:border-purple-500/30 hover:bg-slate-50 hover:shadow-xl dark:border-stone-800/80 dark:bg-[#0e1117] dark:hover:bg-[#12161f]"
               >
                 <div className="relative aspect-[16/9] overflow-hidden bg-slate-900">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img
                     src={pillar.image}
                     alt={pillar.title}
@@ -984,12 +986,13 @@ export default function SocialMediaManagementService() {
 
                           {/* Testimonial Quote Text */}
                           <p className="text-base leading-relaxed font-light text-slate-800 italic sm:text-lg dark:text-stone-200">
-                            "{t.text}"
+                            &ldquo;{t.text}&rdquo;
                           </p>
                         </div>
 
                         {/* Author Card Footer */}
                         <div className="relative z-10 mt-8 flex items-center gap-4 border-t border-slate-100 pt-6 dark:border-stone-800/60">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img
                             src={t.img}
                             alt={t.name}
@@ -1048,7 +1051,7 @@ export default function SocialMediaManagementService() {
 
                 <p className="mx-auto max-w-xl text-lg leading-relaxed font-light text-slate-300 lg:mx-0">
                   Join hundreds of brands that have transformed their social media presence into a predictable growth
-                  engine. Let's build something remarkable.
+                  engine. Let&apos;s build something remarkable.
                 </p>
 
                 <div className="flex flex-col justify-center gap-4 pt-2 sm:flex-row lg:justify-start">
@@ -1095,26 +1098,27 @@ export default function SocialMediaManagementService() {
   )
 }
 
+type SocialBubble = { id: number; text: string; icon: string; x: number }
+
+const socialBubbleTypes = [
+  { text: '+1,240 Followers', icon: '👤' },
+  { text: '+4.2k Reel Views', icon: '🔥' },
+  { text: 'Viral Reach +124%', icon: '📈' },
+  { text: 'New Lead Inbound', icon: '💬' },
+  { text: 'nextcreavo liked post', icon: '❤️' },
+]
+
+const initialSocialBubbles: SocialBubble[] = [
+  { id: 1, text: '+1,240 Followers', icon: '👤', x: -15 },
+  { id: 2, text: '+4.2k Reel Views', icon: '🔥', x: 20 },
+]
+
 function SocialsFloatingOverlay() {
-  const [bubbles, setBubbles] = useState<{ id: number; text: string; icon: string; x: number }[]>([])
+  const [bubbles, setBubbles] = useState<SocialBubble[]>(initialSocialBubbles)
 
   useEffect(() => {
-    const bubbleTypes = [
-      { text: '+1,240 Followers', icon: '👤' },
-      { text: '+4.2k Reel Views', icon: '🔥' },
-      { text: 'Viral Reach +124%', icon: '📈' },
-      { text: 'New Lead Inbound', icon: '💬' },
-      { text: 'nextcreavo liked post', icon: '❤️' },
-    ]
-
-    // Initial seed bubbles
-    setBubbles([
-      { id: 1, text: '+1,240 Followers', icon: '👤', x: -15 },
-      { id: 2, text: '+4.2k Reel Views', icon: '🔥', x: 20 },
-    ])
-
     const interval = setInterval(() => {
-      const type = bubbleTypes[Math.floor(Math.random() * bubbleTypes.length)]
+      const type = socialBubbleTypes[Math.floor(Math.random() * socialBubbleTypes.length)]
       const newBubble = {
         id: Date.now() + Math.random(),
         text: type.text,

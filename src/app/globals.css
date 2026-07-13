@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700&display=swap');
 @import 'tailwindcss';
+@plugin '@tailwindcss/typography';
 
 @theme {
   --font-sans: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
@@ -198,81 +199,97 @@ body {
   color: transparent;
 }
 
-.blog-prose {
-  color: var(--color-secondary);
+/* Brand overrides for Tailwind Typography (`prose`) on blog Portable Text */
+.prose.blog-prose {
+  --tw-prose-body: var(--text-secondary);
+  --tw-prose-headings: var(--text-primary);
+  --tw-prose-lead: var(--text-secondary);
+  --tw-prose-links: var(--text-primary);
+  --tw-prose-bold: var(--text-primary);
+  --tw-prose-counters: var(--text-secondary);
+  --tw-prose-bullets: var(--text-secondary);
+  --tw-prose-hr: var(--border-color);
+  --tw-prose-quotes: var(--text-primary);
+  --tw-prose-quote-borders: var(--text-secondary);
+  --tw-prose-captions: var(--text-secondary);
+  --tw-prose-code: var(--text-primary);
+  --tw-prose-pre-code: var(--text-primary);
+  --tw-prose-pre-bg: var(--bg-secondary);
+  --tw-prose-th-borders: var(--border-color);
+  --tw-prose-td-borders: var(--border-color);
   font-weight: 300;
-  line-height: 1.75;
   word-break: normal;
   overflow-wrap: break-word;
   hyphens: auto;
-  max-width: 100%;
 }
 
-.blog-prose > * + * {
-  margin-top: 1.5rem;
-}
-
-.blog-prose p {
-  white-space: normal;
-}
-
-.blog-prose h2,
-.blog-prose h3,
-.blog-prose h4 {
-  color: var(--color-primary);
-  font-family: var(--font-display), ui-serif, Georgia, serif;
+.prose.blog-prose :where(h2, h3, h4) {
+  font-family: var(--font-display), ui-sans-serif, system-ui, sans-serif;
   font-weight: 300;
   letter-spacing: -0.02em;
-  line-height: 1.25;
 }
 
-.blog-prose h2 {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  margin-top: 2.5rem;
-}
-
-.blog-prose h3 {
-  font-size: clamp(1.25rem, 2.5vw, 1.75rem);
-  margin-top: 2rem;
-}
-
-.blog-prose p {
-  font-size: 1rem;
-  line-height: 1.8;
-}
-
-.blog-prose ul,
-.blog-prose ol {
-  padding-left: 1.25rem;
-}
-
-.blog-prose li + li {
-  margin-top: 0.5rem;
-}
-
-.blog-prose blockquote {
-  border-left: 2px solid var(--color-secondary);
-  color: var(--color-primary);
+.prose.blog-prose :where(blockquote) {
   font-family: ui-serif, Georgia, serif;
   font-style: italic;
-  margin: 2rem 0;
-  padding-left: 1.5rem;
 }
 
-.blog-prose img {
-  border-radius: 1rem;
+.prose.blog-prose :where(a) {
+  text-underline-offset: 3px;
+  transition: color 0.2s ease;
+}
+
+.prose.blog-prose :where(a):hover {
+  color: var(--text-secondary);
+}
+
+.blog-prose-figure {
+  margin: 2.5rem 0;
+}
+
+.blog-prose-figure img {
+  border-radius: 0;
+  display: block;
   height: auto;
-  margin: 2rem 0;
+  margin: 0;
   max-width: 100%;
+  width: 100%;
 }
 
-.blog-prose a {
-  color: var(--color-secondary);
+.blog-prose-caption {
+  color: var(--text-secondary);
+  font-size: 0.8125rem;
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  margin-top: 0.75rem;
+  opacity: 0.75;
+  text-align: center;
+}
+
+.blog-prose-link {
+  color: var(--text-primary);
   text-decoration: underline;
   text-underline-offset: 3px;
+  transition: color 0.2s ease;
 }
 
-.blog-prose strong {
-  color: var(--color-primary);
-  font-weight: 600;
+.blog-prose-link:hover {
+  color: var(--text-secondary);
+}
+
+.blog-prose-code {
+  background: color-mix(in oklab, var(--text-secondary) 18%, transparent);
+  border-radius: 0.35rem;
+  color: var(--text-primary);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.875em;
+  font-weight: 500;
+  padding: 0.15em 0.4em;
+}
+
+.blog-prose-highlight {
+  background: color-mix(in oklab, #d97706 28%, transparent);
+  border-radius: 0.2rem;
+  color: inherit;
+  padding: 0.05em 0.2em;
 }

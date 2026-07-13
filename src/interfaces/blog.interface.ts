@@ -1,5 +1,12 @@
 export type BlogCategory = 'Tech' | 'AI' | 'Design' | 'Marketing' | 'all'
 
+/** Minimal Portable Text block shape used by next-sanity PortableText */
+export type PortableTextBlock = {
+  _type: string
+  _key?: string
+  [key: string]: unknown
+}
+
 export interface IBlogPublicListItem {
   _id: string
   title: string
@@ -9,15 +16,16 @@ export interface IBlogPublicListItem {
   authorName: string
   authorRole: string
   authorAvatarUrl: string
-  category: Exclude<BlogCategory, 'all'> | ''
+  category: Exclude<BlogCategory, 'all'> | string
   readTime: string
   tags: string[]
   createdAt: string
 }
 
 export interface IBlogPublicDetail extends IBlogPublicListItem {
+  /** @deprecated Prefer `body` (Portable Text). Kept for transitional UI. */
   contentHtml: string
-  detailMidImageUrl: string
+  body: PortableTextBlock[]
   featuredOnHome: boolean
   featuredOnBlogPage: boolean
 }

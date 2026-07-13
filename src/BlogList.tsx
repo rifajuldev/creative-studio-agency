@@ -24,7 +24,7 @@ gsap.registerPlugin(ScrollTrigger)
 const PAGE_SIZE = 6
 
 function AuthorAvatar({ post, className }: { post: IBlogPublicListItem; className?: string }) {
-  if (post.authorAvatarUrl || post.authorAvatarUrl === '') {
+  if (post.authorAvatarUrl) {
     return (
       <Image
         src={post.authorAvatarUrl}

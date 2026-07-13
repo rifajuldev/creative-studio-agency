@@ -4,6 +4,7 @@ import { useLanguage } from '@/context/LanguageContext'
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
 import { formatBlogDateShort } from '@/interfaces/blog.interface'
 import { useGetHomeBlogsQuery } from '@/redux/features/blog/blogPublic.api'
+import { useGetHomePortfolioQuery } from '@/redux/features/portfolio/portfolioPublic.api'
 import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -278,36 +279,14 @@ function HowWeWork() {
 
 function Projects() {
   const { t } = useLanguage()
-  const projects = [
-    {
-      id: 'nexus-headless-shopify',
-      title: 'Aura E-Commerce',
-      desc: 'Next.js headless Shopify storefront',
-      category: 'Web Development',
-      img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop',
-    },
-    {
-      id: 'zenith-fitness-app',
-      title: 'Kinetix App',
-      desc: 'Cross-platform fitness tracking app',
-      category: 'Mobile App',
-      img: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop',
-    },
-    {
-      id: 'saas-social-hub',
-      title: 'Vortex SaaS Brand Social Engine',
-      desc: 'Digital organic marketing strategy and content curation',
-      category: 'Digital Marketing',
-      img: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format&fit=crop',
-    },
-    {
-      id: 'alchemist-book',
-      title: 'Oasis Rebrand',
-      desc: 'Digital identity and 3D motion assets',
-      category: 'UI/UX & Animation',
-      img: 'https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=1200&auto=format&fit=crop',
-    },
-  ]
+  const { data } = useGetHomePortfolioQuery()
+  const projects = (data?.data ?? []).map((proj) => ({
+    id: proj.slug,
+    title: proj.homeTitle || proj.title,
+    desc: proj.homeSummary || proj.summary,
+    category: proj.category,
+    img: proj.coverImageUrl,
+  }))
 
   const container = useRef(null)
 
@@ -384,62 +363,68 @@ function Projects() {
         </div>
 
         <div className="border-border-primary flex flex-col border-t border-b border-transparent">
-          {projects.map((proj, idx) => (
-            <Link
-              key={idx}
-              href={`/portfolio/${proj.id}`}
-              className="animate-proj group border-border-primary relative z-10 flex cursor-pointer flex-col items-start justify-between border-b px-4 py-10 hover:z-20 md:flex-row md:items-center md:py-16"
-              onMouseEnter={handleProjEnter}
-              onMouseLeave={handleProjLeave}
-              onMouseMove={handleProjMove}
-            >
-              <div className="bg-secondary/5 absolute inset-0 z-0 hidden origin-bottom scale-y-0 transition-transform duration-700 ease-[0.16,1,0.3,1] group-hover:origin-top group-hover:scale-y-100 lg:block"></div>
+          {projects.length === 0 ? (
+            <p className="text-secondary py-16 text-sm font-light">
+              Featured projects will appear here once published in Sanity.
+            </p>
+          ) : (
+            projects.map((proj, idx) => (
+              <Link
+                key={idx}
+                href={`/portfolio/${proj.id}`}
+                className="animate-proj group border-border-primary relative z-10 flex cursor-pointer flex-col items-start justify-between border-b px-4 py-10 hover:z-20 md:flex-row md:items-center md:py-16"
+                onMouseEnter={handleProjEnter}
+                onMouseLeave={handleProjLeave}
+                onMouseMove={handleProjMove}
+              >
+                <div className="bg-secondary/5 absolute inset-0 z-0 hidden origin-bottom scale-y-0 transition-transform duration-700 ease-[0.16,1,0.3,1] group-hover:origin-top group-hover:scale-y-100 lg:block"></div>
 
-              {/* Cursor following image */}
-              <div className="proj-img-wrap pointer-events-none absolute top-0 left-0 z-30 hidden h-[280px] w-[400px] scale-50 overflow-hidden rounded-2xl opacity-0 shadow-[0_20px_50px_rgba(0,0,0,0.3)] lg:block">
-                <Image
-                  src={proj.img}
-                  alt={proj.title}
-                  className="proj-img h-full w-full scale-150 object-cover grayscale"
-                  width={1000}
-                  height={1000}
-                />
-                <div className="bg-primary/10 absolute inset-0 mix-blend-overlay"></div>
-              </div>
+                {/* Cursor following image */}
+                <div className="proj-img-wrap pointer-events-none absolute top-0 left-0 z-30 hidden h-[280px] w-[400px] scale-50 overflow-hidden rounded-2xl opacity-0 shadow-[0_20px_50px_rgba(0,0,0,0.3)] lg:block">
+                  <Image
+                    src={proj.img}
+                    alt={proj.title}
+                    className="proj-img h-full w-full scale-150 object-cover grayscale"
+                    width={1000}
+                    height={1000}
+                  />
+                  <div className="bg-primary/10 absolute inset-0 mix-blend-overlay"></div>
+                </div>
 
-              <div className="pointer-events-none relative z-10 flex flex-1 items-center gap-6 md:gap-16">
-                <span className="text-secondary/30 font-display group-hover:text-secondary text-2xl italic transition-colors duration-500 md:text-3xl">
-                  0{idx + 1}
-                </span>
-                <div>
-                  <h3 className="proj-title-text font-display text-primary origin-left text-4xl font-light tracking-tighter transition-colors duration-500 md:text-6xl">
-                    {proj.title}
-                  </h3>
-                  <p className="text-secondary mt-3 text-xs font-medium tracking-[0.2em] uppercase md:text-sm">
-                    {proj.category}
+                <div className="pointer-events-none relative z-10 flex flex-1 items-center gap-6 md:gap-16">
+                  <span className="text-secondary/30 font-display group-hover:text-secondary text-2xl italic transition-colors duration-500 md:text-3xl">
+                    0{idx + 1}
+                  </span>
+                  <div>
+                    <h3 className="proj-title-text font-display text-primary origin-left text-4xl font-light tracking-tighter transition-colors duration-500 md:text-6xl">
+                      {proj.title}
+                    </h3>
+                    <p className="text-secondary mt-3 text-xs font-medium tracking-[0.2em] uppercase md:text-sm">
+                      {proj.category}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pointer-events-none relative z-10 mt-6 flex w-full items-center justify-between gap-6 md:mt-0 md:w-auto md:justify-end">
+                  <p className="text-secondary max-w-[300px] flex-1 font-light opacity-80 transition-all duration-500 ease-out group-hover:opacity-100 md:mr-12 md:flex-none md:text-right">
+                    {proj.desc}
                   </p>
+                  <div className="border-border-primary group-hover:bg-invert relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-transparent transition-all duration-500 group-hover:border-transparent group-hover:shadow-lg md:h-16 md:w-16">
+                    <ArrowUpRight
+                      strokeWidth={1}
+                      size={24}
+                      className="proj-arrow text-invert absolute -translate-x-8 translate-y-8 opacity-0 transition-colors"
+                    />
+                    <ArrowUpRight
+                      strokeWidth={1}
+                      size={24}
+                      className="text-primary absolute opacity-60 transition-opacity duration-300 group-hover:opacity-0"
+                    />
+                  </div>
                 </div>
-              </div>
-
-              <div className="pointer-events-none relative z-10 mt-6 flex w-full items-center justify-between gap-6 md:mt-0 md:w-auto md:justify-end">
-                <p className="text-secondary max-w-[300px] flex-1 font-light opacity-80 transition-all duration-500 ease-out group-hover:opacity-100 md:mr-12 md:flex-none md:text-right">
-                  {proj.desc}
-                </p>
-                <div className="border-border-primary group-hover:bg-invert relative flex h-14 w-14 shrink-0 items-center justify-center overflow-hidden rounded-full border bg-transparent transition-all duration-500 group-hover:border-transparent group-hover:shadow-lg md:h-16 md:w-16">
-                  <ArrowUpRight
-                    strokeWidth={1}
-                    size={24}
-                    className="proj-arrow text-invert absolute -translate-x-8 translate-y-8 opacity-0 transition-colors"
-                  />
-                  <ArrowUpRight
-                    strokeWidth={1}
-                    size={24}
-                    className="text-primary absolute opacity-60 transition-opacity duration-300 group-hover:opacity-0"
-                  />
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            ))
+          )}
         </div>
       </div>
     </section>

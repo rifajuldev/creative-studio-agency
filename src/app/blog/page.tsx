@@ -7,7 +7,7 @@ import { staticPagesSeo } from '@/lib/seo/static-pages'
 export const metadata = staticPagesSeo.blog
 
 export default async function BlogPage() {
-  const posts = await fetchPublicBlogList({ skip: 0, limit: 100 })
+  const { data: posts } = await fetchPublicBlogList({ skip: 0, limit: 100 })
 
   return (
     <>

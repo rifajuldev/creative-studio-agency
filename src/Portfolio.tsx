@@ -1,7 +1,13 @@
 'use client'
 
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import type { IPortfolioPublicDetail, IPortfolioPublicListItem } from '@/interfaces/portfolio.interface'
 import { absoluteUrl } from '@/lib/seo/site'
+import {
+  useGetPublicPortfolioBySlugQuery,
+  useGetPublicPortfolioCategoriesQuery,
+  useGetPublicPortfolioListQuery,
+} from '@/redux/features/portfolio/portfolioPublic.api'
 import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -37,7 +43,7 @@ import { useLanguage } from './context/LanguageContext'
 
 gsap.registerPlugin(ScrollTrigger)
 
-interface Project {
+type Project = {
   id: string
   title: string
   category: string
@@ -58,468 +64,83 @@ interface Project {
   kpis?: { label: string; value: string; desc: string }[]
 }
 
-const PROJECTS: Project[] = [
-  // 2D Animation
-  {
-    id: 'lumina-logo',
-    title: 'Lumina Fluid Motion Systems',
-    category: '2D Animation',
-    categoryId: 'animation',
-    desc: 'Liquid-motion brand signature and micro-animated interface assets.',
-    longDesc:
-      'A complete custom animated identity system developed for Lumina Studios. The project involved constructing dynamic vector physics-based logo reveals, fluid custom loading assets for web interfaces, and bespoke motion patterns that evoke brand precision.',
-    img: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Logo Animation', 'Lottie SDK', 'After Effects', 'Micro-interactions'],
-    client: 'Lumina Digital Group',
-    timeline: '4 Weeks',
-    challenge:
-      'Lumina needed a motion signature that rendered perfectly across weak mobile networks, meaning traditional heavy MP4/GIF solutions were unacceptable.',
-    solution:
-      'We built a programmatic vector-based Lottie JSON animation from scratch, utilizing keyframe interpolation to compression ratios of over 95%.',
-    results: [
-      'Render payload reduced from 12.4MB to only 160KB',
-      'Flawless 60fps execution on mobile hardware',
-      'Unified brand interactive animation across 4 core sub-brands',
-    ],
-    link: 'https://lumina.example.com/brand',
-  },
-  {
-    id: 'alchemist-book',
-    title: 'The Alchemist interactive Book Animation',
-    category: '2D Animation',
-    categoryId: 'animation',
-    desc: 'Immersive tactile page-flip animation and magical vector overlay effects.',
-    longDesc:
-      'A beautiful promotional interactive page designed to accompany the modern special edition of "The Alchemist" book. Integrating canvas-based 3D simulation with hand-crafted 2D custom graphic animations, we created a magical visual trip through the chapters.',
-    img: 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Book Animation', 'WebGL Canvas', 'Spline 3D', 'Tactile UI'],
-    client: 'Harper Collins Promo Division',
-    timeline: '6 Weeks',
-    challenge:
-      'Recreating the organic feel and unpredictable physics of paper friction and turn speed in a pure browser element.',
-    solution:
-      'Engineered a modular WebGL simulation layered with hand-drawn vector stroke morphs executed via CSS path variables on flip events.',
-    results: [
-      'Average session duration increased by 220%',
-      'Featured on multiple digital layout showcase galleries',
-      '50,000+ interactive chapters flipped in the first week',
-    ],
-  },
-  {
-    id: 'asset-motion-toolkit',
-    title: 'NextGen Fintech UI Assets',
-    category: '2D Animation',
-    categoryId: 'animation',
-    desc: 'Programmatic motion assets for mobile and responsive fintech platforms.',
-    longDesc:
-      'A complete suite of scalable, responsive animated assets compiled for a revolutionary financial services company. From micro-interactions on biometric login to custom celebration charts upon goal metrics, we designed lightweight, highly energetic motion designs.',
-    img: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop',
-    tags: ['SVG Animation', 'Anime.js', 'Fintech', 'Asset Creation'],
-    client: 'Aura Finance Inc',
-    timeline: '5 Weeks',
-    challenge:
-      'Ensuring animated elements remained perfectly high contrast and readable under varying smartphone glare situations while preserving active feedback states.',
-    solution:
-      'Iterated interactive SVGs with high-luminance active states and adaptive path widths to accommodate mobile hardware limitations.',
-    results: [
-      'Active transactional friction reduced by 18%',
-      'Created and shipped 42 custom reusable animated vector structures',
-      'Successful cross-platform translation for Web, iOS, and Android',
-    ],
-  },
+const CATEGORY_ICONS: Record<string, typeof Video> = {
+  animation: Video,
+  marketing: Megaphone,
+  webdev: Code,
+  appdev: Smartphone,
+  ai: Bot,
+  uiux: Layout,
+}
 
-  // Digital Marketing
-  {
-    id: 'gmb-omnimap',
-    title: 'GMB Map Ranking Dominance',
-    category: 'Digital Marketing',
-    categoryId: 'marketing',
-    desc: 'Local visibility optimization driving real store transactions.',
-    longDesc:
-      'A data-heavy GMB optimization program crafted for a regional clinic franchise across 14 separate locations. We audited existing structures, resolved duplicate indexing, automated local citation synchronization, and engineered a smart review review funnel.',
-    img: 'https://images.unsplash.com/photo-1522542550221-31fd19575a2d?q=80&w=1200&auto=format&fit=crop',
-    tags: ['GMB Optimization', 'Local SEO', 'Citation Sync', 'Conversion Funnels'],
-    client: 'Apex Health Systems',
-    timeline: '12 Weeks',
-    challenge:
-      'Locations were suffering from inconsistent business nomenclature and severe keyword cannibalization across adjacent maps.',
-    solution:
-      'Designed a localized content hub pairing structured schema data with programmatic map pin validation to clean indexing pipelines.',
-    results: [
-      '340% average increase in primary map search actions',
-      'Top-3 local map stack placement across all 14 locations',
-      'Reduction in customer acquisition cost (CAC) by 42%',
-    ],
-  },
-  {
-    id: 'scale-ads-funnel',
-    title: 'Scale 360 Ads Optimizer',
-    category: 'Digital Marketing',
-    categoryId: 'marketing',
-    desc: 'High-ROI multi-channel paid social campaigns with custom creative.',
-    longDesc:
-      'A performance-driven campaign for an enterprise Shopify lifestyle brand. We developed deep-funnel Facebook and Google Ads campaigns, using custom visual assets and adaptive copy variants to structure high-converting retargeting loops.',
-    img: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Google Ads', 'Facebook Paid Funnel', 'ROAS Optimization', 'Copywriting'],
-    client: 'Solis Lifestyle',
-    timeline: 'Ongoing',
-    challenge:
-      'Ad spend was highly volatile with high acquisition friction and declining returns on static banner placements.',
-    solution:
-      'Pivoted to rich, modular audio-visual ad blocks coupled with tightly structured custom dynamic product ad formats (DPA).',
-    results: [
-      'Maintained stable 5.2x blending Return on Ad Spend (ROAS)',
-      'Generated $2.4M in direct promotional conversion value',
-      'Created over 120+ localized ad creative iterations',
-    ],
-    link: 'https://solis.example.com',
-  },
-  {
-    id: 'saas-social-hub',
-    title: 'Vortex SaaS Brand Social Engine',
-    category: 'Digital Marketing',
-    categoryId: 'marketing',
-    desc: 'Full-funnel social media blueprint and custom digital content curation.',
-    longDesc:
-      'Digital organic marketing strategy and comprehensive visual branding built for a growing developer tooling workspace. We configured a structured publication pipeline focusing on educational graphics, long-form system teardowns, and interactive polls.',
-    img: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Social Management', 'Content Architecture', 'Visual Layout', 'B2B SaaS'],
-    client: 'Vortex Labs LLC',
-    timeline: '6 Months',
-    challenge:
-      'The technical platform struggled to translate its specialized value proposition into simple, memorable social media posts.',
-    solution:
-      'Constructed detailed vector infographics explaining compound server ideas, making developer tooling visual and shareable.',
-    results: [
-      'Organic engagement metrics boosted by 180%',
-      'Attracted over 25,000 active developer followers without paid spend',
-      '30% week-on-week increase in inbound beta signup pipelines',
-    ],
-  },
+function toListProject(item: IPortfolioPublicListItem): Project {
+  return {
+    id: item.slug,
+    title: item.title,
+    category: item.category,
+    categoryId: item.categoryId,
+    desc: item.summary,
+    longDesc: item.longDesc,
+    img: item.coverImageUrl,
+    tags: item.tags,
+    client: item.client,
+    timeline: item.timeline,
+    challenge: '',
+    solution: '',
+    results: [],
+  }
+}
 
-  // Web Development
-  {
-    id: 'nexus-headless-shopify',
-    title: 'Nexus Headless Commerce Platform',
-    category: 'Web Development',
-    categoryId: 'webdev',
-    desc: 'Next-generation headless React engine paired with Sanity CMS.',
-    longDesc:
-      'A custom, lightning-fast Shopify headless architecture created using React and custom-tailored Sanity CMS. Serving static assets with selective hydration, we delivered unmatched performance score indices.',
-    img: 'https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200&auto=format&fit=crop',
-    tags: ['React', 'Shopify Headless', 'Sanity CMS', 'Vercel Edge'],
-    client: 'Nexus Retail Collective',
-    timeline: '10 Weeks',
-    challenge:
-      'The client had complex catalog customization needs that made their standard Shopify theme load time exceed 6 seconds.',
-    solution:
-      'Designed a fully decoupled custom front-end using static-site generation, caching live product states at the Edge network layer.',
-    results: [
-      'Page speed index score increased to 99/100',
-      'Average checkouts increased by 31%',
-      'Content management workload reduced by half',
-    ],
-    link: 'https://nexus-commerce.example.com',
-  },
-  {
-    id: 'empower-corporate-digital',
-    title: 'Empower Corporate Webflow Portal',
-    category: 'Web Development',
-    categoryId: 'webdev',
-    desc: 'Immersive corporate identity built on custom-integrated Webflow.',
-    longDesc:
-      'For a sustainable investment bank, we constructed an elegant corporate hub on Webflow, enhanced with advanced custom JavaScript modules, fluid GSAP scroll interactions, and programmatic carbon footprints calculators.',
-    img: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Webflow Developer', 'GSAP Animation', 'Custom JS Integrations', 'SEO Optimization'],
-    client: 'Empower Sovereign Funds',
-    timeline: '6 Weeks',
-    challenge:
-      'Achieving a highly customized, animation-rich layout that usually depends on raw code, while keeping content management super easy for non-developers.',
-    solution:
-      'Set up an elegant Webflow layout with custom JavaScript bindings, linking real-time analytics to their standard Webflow CMS.',
-    results: [
-      'Smooth client-side calculation queries with zero latency',
-      'Internal marketing team can launch new articles and guides contextually',
-      'Over 1.2M annual digital visitors navigated without layout degradation',
-    ],
-  },
-  {
-    id: 'vortex-core-portal',
-    title: 'Vortex Real-Time Cloud Console',
-    category: 'Web Development',
-    categoryId: 'webdev',
-    desc: 'Enterprise full-stack developer portal and monitoring environment.',
-    longDesc:
-      'A secure, high-density Web experience built on a full-stack Node.js framework. Combining dynamic canvas layout systems, real-time telemetry pipelines via secure sockets, and modular admin interfaces, we constructed an amazing developer platform.',
-    img: 'https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=1200&auto=format&fit=crop',
-    tags: ['NodeJS', 'Express.js', 'PostgreSQL', 'Socket.io', 'Tailwind'],
-    client: 'Vortex Cloud Services',
-    timeline: '14 Weeks',
-    challenge:
-      'Optimizing high-density charts so that they update smoothly in real-time under hundreds of concurrent operations without locking the UI.',
-    solution:
-      'Implemented canvas-optimized raster render patterns instead of rendering individual browser DOM nodes for active charts.',
-    results: [
-      'Renders 10,000 metrics per second smoothly at 60fps',
-      'Robust enterprise authentication and scope controls integrated',
-      'Reduced server reporting delays to less than 40 milliseconds',
-    ],
-  },
-
-  // App Development
-  {
-    id: 'zenith-fitness-app',
-    title: 'Zenith Smart Fitness companion',
-    category: 'App Development',
-    categoryId: 'appdev',
-    desc: 'A gorgeous React Native mobile app with custom health-metric pipelines.',
-    longDesc:
-      'A modern, cross-platform health tracking platform built to interface with consumer smartwatches and sensors. Engineered with React Native, the app records real-time bioindicators, uses local SQLite datasets, and outputs stateful progress visualizers.',
-    img: 'https://images.unsplash.com/photo-1510051646316-935218d6facc?q=80&w=1200&auto=format&fit=crop',
-    tags: ['React Native', 'SQLite', 'Bluetooth SDK', 'HealthKit'],
-    client: 'Zenith BioLab Systems',
-    timeline: '12 Weeks',
-    challenge:
-      'Resolving high battery drain and frame drops during live spatial coordinate logging on older smartphone models.',
-    solution:
-      'Migrated coordinate capture services to native background tasks, caching sensor states efficiently before updating UI structures.',
-    results: [
-      'Battery usage rate reduced by 65%',
-      'Enriched layout experiences with smooth 60fps state tracking',
-      'Average iOS and Android store ratings of 4.8/5',
-    ],
-  },
-  {
-    id: 'velo-express-app',
-    title: 'Velo Delivery Native iOS App',
-    category: 'App Development',
-    categoryId: 'appdev',
-    desc: 'Real-time routing logistics and on-demand delivery interface.',
-    longDesc:
-      'A swift, Native iOS application developed to serve urban delivery riders and dispatcher networks. Embedded with custom maps overlays, programmatic transit estimation engines, and frictionless payment portals.',
-    img: 'https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Swift', 'MapKit Routing', 'CoreLocation API', 'Stripe Native'],
-    client: 'Velo Logistics Corp',
-    timeline: '16 Weeks',
-    challenge: 'Providing robust spatial redirection algorithms even under sudden urban cellular tunnel dropouts.',
-    solution:
-      'Created an offline-first navigation fallback system that uses local device compass states and vector map tiles.',
-    results: [
-      'Uninterrupted rider routing with 99.8% uptime metrics',
-      'Average route completion times improved by 14%',
-      'Integrated Secure payments handling millions of transit points',
-    ],
-  },
-  {
-    id: 'pocket-wallet-crypto',
-    title: 'Pocket Non-Custodial Mobile Wallet',
-    category: 'App Development',
-    categoryId: 'appdev',
-    desc: 'Bespoke cross-platform mobile crypto experience prioritizing security.',
-    longDesc:
-      'Designed to offer secure, frictionless blockchain queries, Pocket is built on unified cross-platform tech. Featuring biometric keychains, seed phrase generation engines, and complex instant gas visual graphs.',
-    img: 'https://images.unsplash.com/photo-1621416894569-0f39ed31d247?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Flutter', 'Rust Secure Core', 'Web3.js SDK', 'Biometric Lock'],
-    client: 'Pocket Crypto Inc',
-    timeline: '10 Weeks',
-    challenge:
-      'Keeping visual asset feeds highly updated while maintaining solid safety protocols for cold storage systems.',
-    solution:
-      'Engineered a sandboxed local database written in secure Rust that interacts with UI views through encrypted channels.',
-    results: [
-      'Secured zero security failures across audits',
-      'Supported native custom themes and responsive sizes',
-      '300k+ active installations across iOS and Android stores',
-    ],
-  },
-
-  // AI & Integrations
-  {
-    id: 'cognitive-crm-agents',
-    title: 'Cognitive Hub CRM Automator',
-    category: 'AI & Integrations',
-    categoryId: 'ai',
-    desc: 'Advanced autonomous agent pipeline handling complex B2B client communications.',
-    longDesc:
-      'A modern multi-agent digital workflow built for global scaling operations. The system continuously polls incoming communications, parses user intent, extracts transaction details, and automatically updates CRM databases.',
-    img: 'https://images.unsplash.com/photo-1531747118685-ca8fa6e08806?q=80&w=1200&auto=format&fit=crop',
-    tags: ['AI Agentic', 'Gemini API', 'NodeJS Orchestrator', 'CRM Syncs'],
-    client: 'Cognitive Enterprise Softwares',
-    timeline: '8 Weeks',
-    challenge:
-      'Parsing complex, highly fragmented custom legal requests without losing semantic context or generating wrong metadata.',
-    solution:
-      'Implemented structured system instructions coupled with strict JSON schemas to validate all agentic outputs.',
-    results: [
-      'Manual clerical workloads cut by 82%',
-      'Processing times for CRM update tickets reduced to seconds',
-      'Over 99.4% classification precision across test databases',
-    ],
-  },
-  {
-    id: 'gemini-legal-search',
-    title: 'Gemini Dense Knowledge Hub',
-    category: 'AI & Integrations',
-    categoryId: 'ai',
-    desc: 'Empowering rapid query pipelines through semantic indices and AI synthesis.',
-    longDesc:
-      'A heavy legal analytics portal developed to parse hundreds of thousands of active transaction articles. Powered by the Gemini API, it runs semantic inquiries and structures instant legally grounded case summaries.',
-    img: 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Gemini LLM', 'Vector Index', 'RAG Architecture', 'LegalTech'],
-    client: 'Harding & Partners Law',
-    timeline: '10 Weeks',
-    challenge:
-      'Lawyers need ultra-precise citations. Mock results or untraceable details would render the tool useless.',
-    solution:
-      'Crafted a custom vector searching network (RAG) that restricts the LLM text output solely to active legal database documents.',
-    results: [
-      'Document research speeds improved by over 400%',
-      'Eliminated output hallucinations through strict local grounding',
-      'Highly praised interface currently active across 5 partner offices',
-    ],
-  },
-  {
-    id: 'intelligent-pipeline-flows',
-    title: 'Interstellar Pipeline Sync',
-    category: 'AI & Integrations',
-    categoryId: 'ai',
-    desc: 'Unified intelligent pipelines connecting standard communication suites.',
-    longDesc:
-      'Automated integration patterns bridging HubSpot, Salesforce, Slack, Zendesk, and Google Workspace. The pipeline uses natural language analysis to parse incoming priority incidents, alert target squads on Slack, and suggest resolutions.',
-    img: 'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Webhooks API', 'Automation', 'Zendesk Custom', 'NodeJS'],
-    client: 'Interstellar SaaS Corp',
-    timeline: '5 Weeks',
-    challenge:
-      'Integrating different APIs with proprietary payload standards without generating synchronization conflicts.',
-    solution:
-      'Structured a resilient queue middleware that normalizes incoming webhook data into clean internal event streams.',
-    results: [
-      'SLA responses improved by 35% with zero dropped webhooks',
-      'Eliminated duplicate server alerts by deduplicating incident queues',
-      'Configured 15 programmatic connectors into a single automated pipeline',
-    ],
-  },
-
-  // UI/UX Design
-  {
-    id: 'helios-smart-house',
-    title: 'Helios Smart Home UX System',
-    category: 'UI/UX Design',
-    categoryId: 'uiux',
-    desc: 'Sleek, highly accessible visual interfaces for smart environmental components.',
-    longDesc:
-      'An exhaustive UX overhaul for a leading smart home brand. We built a gorgeous visual system with rich widget assets, flexible dashboards, micro-interactions, high accessibility, and deep mobile support.',
-    img: 'https://images.unsplash.com/photo-1558002038-1055907df827?q=80&w=1200&auto=format&fit=crop',
-    tags: ['Figma Blueprint', 'UX Architecture', 'Smart Home UI', 'Accessibility WCAG'],
-    client: 'Helios Devices Corp',
-    timeline: '8 Weeks',
-    challenge: 'The platform had complex navigation hierarchies that confused senior users and kids alike.',
-    solution:
-      'Designed and tested simple visual layouts with bold touch targets, keeping key active widgets accessible within 1 tap.',
-    results: [
-      'First-try completion metrics boosted by 90%',
-      'Successfully integrated full Dark/Light adaptive color scales',
-      'Client recorded a 60% drop in device-onboarding support calls',
-    ],
-  },
-  {
-    id: 'aero-logistics-dashboard',
-    title: 'Aero Flight Logistics Console',
-    category: 'UI/UX Design',
-    categoryId: 'uiux',
-    desc: 'Dense, fast, and high-performance layout interfaces for dispatch metrics.',
-    longDesc:
-      'A premium, high-density dashboard built for airline scheduling. We researched dispatchers’ active shifts, analyzed eye-tracking data, and converted cluttered tools into beautiful layouts optimized for multiple views.',
-    img: 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1200&auto=format&fit=crop',
-    tags: ['High Density Design', 'Dashboard UX', 'Eye-Tracking Audit', 'Design System'],
-    client: 'Aero Cargo Group',
-    timeline: '12 Weeks',
-    challenge:
-      'Creating an interface that displays 50+ real-time variables on screen without inducing visual fatigue during 12-hour dispatcher shifts.',
-    solution:
-      'Organized views using soft background scales, custom sans-mono fonts for stats, and deep context colors.',
-    results: [
-      'Dispatcher entry errors decreased by 27%',
-      'Visual stress ratings dropped by 45%',
-      'A streamlined corporate layout deployed across 3 major airports',
-    ],
-  },
-  {
-    id: 'nova-retail-overhaul',
-    title: 'Nova Retail Checkout Flows',
-    category: 'UI/UX Design',
-    categoryId: 'uiux',
-    desc: 'High-conversion checkout patterns redesigning traditional e-commerce paradigms.',
-    longDesc:
-      'A strategic, pixel-perfect UX redesign targeting checkout optimization. We analyzed user dropoffs, restructured step modules, streamlined input fields, and integrated dynamic validation to minimize buying friction.',
-    img: 'https://images.unsplash.com/photo-1512428559087-560fa5ceab42?q=80&w=1200&auto=format&fit=crop',
-    tags: ['E-Commerce UX', 'Conversion Flow', 'Mobile Testing', 'Figma Assets'],
-    client: 'Nova Fashion Ltd',
-    timeline: '7 Weeks',
-    challenge:
-      'The old multi-page checkout was causing severe cart abandonment rates, particularly for young mobile users.',
-    solution:
-      'Constructed an express checkout page with inline validations, instant postal lookup, and dynamic credit forms.',
-    results: [
-      'E-commerce cart abandonment rate dropped by 45%',
-      'Interactive checkout speeds climbed by 60%',
-      'Mobile sales conversions climbed by 28%',
-    ],
-  },
-]
+function toDetailProject(item: IPortfolioPublicDetail): Project {
+  return {
+    ...toListProject(item),
+    challenge: item.challenge,
+    solution: item.solution,
+    results: item.results,
+    link: item.link || undefined,
+    brandColors: item.brandColors.length ? item.brandColors : undefined,
+    techStack: item.techStack.length ? item.techStack : undefined,
+    strategySteps: item.strategySteps.length ? item.strategySteps : undefined,
+    kpis: item.kpis.length ? item.kpis : undefined,
+  }
+}
 
 export default function Portfolio() {
   const params = useParams()
   const id = typeof params.id === 'string' ? params.id : undefined
   const router = useRouter()
-  const { t, language } = useLanguage()
+  const { t } = useLanguage()
 
-  // Categories definition
-  const CATEGORIES = [
-    { id: 'all', label: t('portfolio.categories.all'), count: 18 },
-    {
-      id: 'animation',
-      label: t('portfolio.categories.animation'),
-      desc: t('portfolio.categories.desc.animation'),
-      icon: Video,
-      count: 3,
-    },
-    {
-      id: 'marketing',
-      label: t('portfolio.categories.marketing'),
-      desc: t('portfolio.categories.desc.marketing'),
-      icon: Megaphone,
-      count: 3,
-    },
-    {
-      id: 'webdev',
-      label: t('portfolio.categories.webdev'),
-      desc: t('portfolio.categories.desc.webdev'),
-      icon: Code,
-      count: 3,
-    },
-    {
-      id: 'appdev',
-      label: t('portfolio.categories.appdev'),
-      desc: t('portfolio.categories.desc.appdev'),
-      icon: Smartphone,
-      count: 3,
-    },
-    {
-      id: 'ai',
-      label: t('portfolio.categories.ai'),
-      desc: t('portfolio.categories.desc.ai'),
-      icon: Bot,
-      count: 3,
-    },
-    {
-      id: 'uiux',
-      label: t('portfolio.categories.uiux'),
-      desc: t('portfolio.categories.desc.uiux'),
-      icon: Layout,
-      count: 3,
-    },
+  const { data: listData, isLoading: listLoading } = useGetPublicPortfolioListQuery({
+    skip: 0,
+    limit: 100,
+  })
+  const { data: categoriesData } = useGetPublicPortfolioCategoriesQuery()
+  const {
+    data: detailData,
+    isLoading: detailLoading,
+    isError: detailError,
+  } = useGetPublicPortfolioBySlugQuery(id!, { skip: !id })
+
+  const PROJECTS = (listData?.data ?? []).map(toListProject)
+  const sanityCategories = categoriesData?.data ?? []
+  const totalCount = PROJECTS.length
+
+  const CATEGORIES: {
+    id: string
+    label: string
+    count: number
+    desc?: string
+    icon?: (typeof CATEGORY_ICONS)[string]
+  }[] = [
+    { id: 'all', label: t('portfolio.categories.all'), count: totalCount },
+    ...sanityCategories.map((category) => ({
+      id: category.slug,
+      label: category.name,
+      desc: category.description,
+      icon: CATEGORY_ICONS[category.slug],
+      count: category.count ?? 0,
+    })),
   ]
 
   const [selectedCategory, setSelectedCategory] = useState('all')
@@ -652,12 +273,43 @@ export default function Portfolio() {
   // DEDICATED FULL-PAGE DETAILS RENDER BRANCH
   // -------------------------------------------------------------
   if (id) {
-    const activeProject = PROJECTS.find((p) => p.id === id)
-    if (activeProject) {
+    if (detailLoading) {
+      return (
+        <div className="bg-primary text-primary flex min-h-screen w-full items-center justify-center p-6">
+          <div className="border-border-primary h-12 w-12 animate-spin rounded-full border-2 border-t-transparent" />
+        </div>
+      )
+    }
+
+    if (detailError || !detailData?.data) {
+      return (
+        <div className="bg-primary text-primary flex min-h-screen w-full flex-col items-center justify-center p-6 text-center">
+          <Sparkles className="text-secondary mb-4 h-12 w-12 animate-pulse" />
+          <h1 className="font-display text-2xl font-light">Case study not found</h1>
+          <p className="text-secondary mt-2 mb-6 max-w-sm text-xs font-light">
+            This project may have been moved or is not published yet.
+          </p>
+          <button
+            onClick={() => router.push('/portfolio')}
+            className="bg-invert text-invert hover:text-primary border-invert hover:border-primary rounded-full border px-6 py-2.5 text-xs font-semibold tracking-wider uppercase transition-all hover:bg-transparent"
+          >
+            Back to portfolio
+          </button>
+        </div>
+      )
+    }
+
+    {
+      const activeProject = toDetailProject(detailData.data)
       const { colors, stack, steps, kpis } = getProjectStrategy(activeProject)
-      const currentIndex = PROJECTS.findIndex((p) => p.id === id)
-      const prevProject = PROJECTS[currentIndex > 0 ? currentIndex - 1 : PROJECTS.length - 1]
-      const nextProject = PROJECTS[currentIndex < PROJECTS.length - 1 ? currentIndex + 1 : 0]
+      const currentIndex = Math.max(
+        0,
+        PROJECTS.findIndex((p) => p.id === id)
+      )
+      const prevProject =
+        PROJECTS.length > 0 ? PROJECTS[currentIndex > 0 ? currentIndex - 1 : PROJECTS.length - 1] : activeProject
+      const nextProject =
+        PROJECTS.length > 0 ? PROJECTS[currentIndex < PROJECTS.length - 1 ? currentIndex + 1 : 0] : activeProject
 
       return (
         <div
@@ -1249,6 +901,14 @@ export default function Portfolio() {
         </div>
       )
     }
+  }
+
+  if (listLoading) {
+    return (
+      <div className="bg-primary text-primary flex min-h-screen w-full items-center justify-center p-6">
+        <div className="border-border-primary h-12 w-12 animate-spin rounded-full border-2 border-t-transparent" />
+      </div>
+    )
   }
 
   // -------------------------------------------------------------

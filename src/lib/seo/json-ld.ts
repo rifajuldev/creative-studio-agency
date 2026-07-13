@@ -1,6 +1,6 @@
-import { PORTFOLIO_INDEX, getPortfolioById } from '@/data/portfolioIndex'
 import { SERVICES_DATA, getServiceById } from '@/data/services'
 import type { IBlogPublicDetail } from '@/interfaces/blog.interface'
+import type { IPortfolioPublicListItem } from '@/interfaces/portfolio.interface'
 import { absoluteUrl, siteConfig } from './site'
 
 type JsonLd = Record<string, unknown>
@@ -86,17 +86,16 @@ export function serviceJsonLd(id: string): JsonLd | null {
   }
 }
 
-export function portfolioProjectJsonLd(id: string): JsonLd | null {
-  const project = getPortfolioById(id)
+export function portfolioProjectJsonLd(project: IPortfolioPublicListItem): JsonLd | null {
   if (!project) return null
 
   return {
     '@context': 'https://schema.org',
     '@type': 'CreativeWork',
     name: project.title,
-    description: project.longDesc,
-    url: absoluteUrl(`/portfolio/${project.id}`),
-    image: project.img,
+    description: project.longDesc || project.summary,
+    url: absoluteUrl(`/portfolio/${project.slug}`),
+    image: project.coverImageUrl,
     creator: { '@id': `${siteConfig.url}/#organization` },
     genre: project.category,
     keywords: project.tags.join(', '),
@@ -151,11 +150,11 @@ export function servicesListJsonLd(): JsonLd {
   )
 }
 
-export function portfolioListJsonLd(): JsonLd {
+export function portfolioListJsonLd(projects: IPortfolioPublicListItem[]): JsonLd {
   return itemListJsonLd(
     'NextCreavo Portfolio',
     '/portfolio',
-    PORTFOLIO_INDEX.map((p) => ({ name: p.title, url: `/portfolio/${p.id}` }))
+    projects.map((p) => ({ name: p.title, url: `/portfolio/${p.slug}` }))
   )
 }
 

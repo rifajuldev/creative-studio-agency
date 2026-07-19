@@ -27,7 +27,7 @@ export default function AppShell({ children }: { children: React.ReactNode }) {
 }
 
 function AppShellContent({ children }: { children: React.ReactNode }) {
-  const [isDark, setIsDark] = useState(true)
+  const [isDark, setIsDark] = useState(false)
   const [isSchedulerOpen, setIsSchedulerOpen] = useState(false)
   const { t } = useLanguage()
   const pathname = usePathname()
@@ -637,11 +637,11 @@ function Footer() {
                   <span className="text-secondary italic">{t('footer.tagline_secondary') || "Let's build it."}</span>
                 </h3>
                 <a
-                  href="mailto:hello@nextcreavo.com"
+                  href="mailto:info@nextcreavo.com"
                   className="group text-invert border-invert/20 hover:border-invert mt-4 flex w-full items-center justify-between gap-4 overflow-hidden border-b pb-5 text-base font-light transition-colors sm:text-xl md:w-max md:pr-12 md:text-2xl lg:text-3xl"
                 >
                   <span className="relative pr-8 font-serif italic">
-                    hello@nextcreavo.com
+                    info@nextcreavo.com
                     <span className="bg-secondary absolute -bottom-1 left-0 h-px w-0 transition-all duration-500 group-hover:w-full"></span>
                   </span>
                   <div className="border-invert/30 group-hover:border-secondary group-hover:bg-secondary group-hover:text-primary relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full border transition-all duration-500 sm:h-10 sm:w-10">

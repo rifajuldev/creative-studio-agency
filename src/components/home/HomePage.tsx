@@ -570,14 +570,12 @@ function Services() {
     const iconWrap = e.currentTarget.querySelector('.icon-wrap')
     const titleText = e.currentTarget.querySelector('.svc-title-text')
     const desc = e.currentTarget.querySelector('.svc-desc')
-    const bg = e.currentTarget.querySelector('.svc-bg')
     const arrow = e.currentTarget.querySelector('.svc-arrow')
     const glow = e.currentTarget.querySelector('.svc-glow')
     const iconSvg = e.currentTarget.querySelector('.icon-wrap svg')
 
     gsap.to(e.currentTarget, { scale: 1.025, zIndex: 10, duration: 0.8, ease: 'expo.out' })
     gsap.to(glow, { opacity: 1, duration: 0.5 })
-    gsap.to(bg, { yPercent: 0, duration: 0.8, ease: 'expo.out' })
     gsap.to(iconWrap, { scale: 1.15, y: -6, duration: 0.8, ease: 'back.out(1.5)' })
     if (iconSvg) {
       gsap.to(iconSvg, { rotation: 360, duration: 1.2, ease: 'elastic.out(1, 0.5)' })
@@ -592,14 +590,12 @@ function Services() {
     const iconWrap = e.currentTarget.querySelector('.icon-wrap')
     const titleText = e.currentTarget.querySelector('.svc-title-text')
     const desc = e.currentTarget.querySelector('.svc-desc')
-    const bg = e.currentTarget.querySelector('.svc-bg')
     const arrow = e.currentTarget.querySelector('.svc-arrow')
     const glow = e.currentTarget.querySelector('.svc-glow')
     const iconSvg = e.currentTarget.querySelector('.icon-wrap svg')
 
     gsap.to(e.currentTarget, { scale: 1, zIndex: 1, duration: 0.6, ease: 'power3.out' })
     gsap.to(glow, { opacity: 0, duration: 0.5 })
-    gsap.to(bg, { yPercent: 101, duration: 0.7, ease: 'power3.inOut' })
     gsap.to(iconWrap, { scale: 1, y: 0, duration: 0.8, ease: 'power3.out' })
     if (iconSvg) gsap.to(iconSvg, { rotation: 0, y: 0, duration: 0.8, ease: 'power3.out' })
     gsap.to(titleText, { x: 0, duration: 0.5, ease: 'power3.out' })
@@ -649,7 +645,7 @@ function Services() {
               onBlur={handleMouseLeave}
             >
               <div className="svc-glow bg-invert/10 pointer-events-none absolute z-0 h-[300px] w-[300px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-0 blur-[60px]"></div>
-              <div className="svc-bg bg-invert pointer-events-none absolute inset-0 z-0 translate-y-[101%] rounded-3xl"></div>
+              <div className="svc-bg bg-invert pointer-events-none absolute inset-0 z-0 translate-y-full rounded-3xl transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-y-0 group-focus:translate-y-0 group-focus-visible:translate-y-0"></div>
               <div className="relative z-10 mb-16 flex items-start justify-between">
                 <div className="icon-wrap border-border-primary text-primary bg-secondary/80 group-hover:border-invert/30 group-hover:text-invert group-focus:border-invert/30 group-focus:text-invert flex h-14 w-14 items-center justify-center rounded-full border backdrop-blur-sm transition-colors duration-500 group-hover:bg-transparent group-focus:bg-transparent">
                   {f.icon}

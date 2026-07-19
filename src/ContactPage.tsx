@@ -86,10 +86,10 @@ export default function ContactPage() {
                     Direct Email
                   </span>
                   <a
-                    href="mailto:brief@nextcreavo.com"
+                    href="mailto:info@nextcreavo.com"
                     className="text-primary hover:text-secondary font-medium transition-colors"
                   >
-                    brief@nextcreavo.com
+                    info@nextcreavo.com
                   </a>
                 </div>
               </div>

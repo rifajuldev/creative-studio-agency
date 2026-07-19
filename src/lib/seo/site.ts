@@ -6,7 +6,7 @@ export const siteConfig = {
     'NextCreavo is a creative studio agency specializing in web development, digital marketing, 2D animation, mobile apps, AI integrations, and UI/UX design for modern brands.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.nextcreavo.com',
   locale: 'en_US',
-  email: 'hello@nextcreavo.com',
+  email: 'info@nextcreavo.com',
   phone: '+1-404-111-2222',
   defaultOgImage: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop',
   twitterHandle: '@nextcreavo',

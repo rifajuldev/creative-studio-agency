@@ -256,14 +256,14 @@ export default function FAQPage() {
               </Link>
 
               <a
-                href="mailto:support@nextcreavo.com"
+                href="mailto:info@nextcreavo.com"
                 className="bg-primary border-border-primary/60 hover:bg-secondary/40 group inline-flex w-full items-center justify-between rounded-2xl border p-6 transition-all"
               >
                 <div>
                   <span className="text-secondary/50 mb-0.5 block font-mono text-[8px]">
                     {t('faq.unresolved.cta_email')}
                   </span>
-                  <span className="text-primary font-mono text-sm font-semibold lowercase">support@nextcreavo.com</span>
+                  <span className="text-primary font-mono text-sm font-semibold lowercase">info@nextcreavo.com</span>
                 </div>
                 <ArrowRight size={14} className="text-secondary transition-transform group-hover:translate-x-1" />
               </a>

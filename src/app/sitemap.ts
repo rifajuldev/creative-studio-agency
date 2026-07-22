@@ -1,6 +1,6 @@
-import { PORTFOLIO_INDEX } from '@/data/portfolioIndex'
 import { SERVICES_DATA } from '@/data/services'
 import { fetchPublicBlogList } from '@/lib/blog/server'
+import { fetchPortfolioIndex } from '@/lib/portfolio/server'
 import { siteConfig } from '@/lib/seo/site'
 import type { MetadataRoute } from 'next'
 
@@ -19,7 +19,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   const now = new Date()
-  const blogPosts = await fetchPublicBlogList({ skip: 0, limit: 500 })
+  const [{ data: blogPosts }, portfolioProjects] = await Promise.all([
+    fetchPublicBlogList({ skip: 0, limit: 500 }),
+    fetchPortfolioIndex(),
+  ])
 
   return [
     ...staticRoutes.map((path) => ({
@@ -34,9 +37,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'monthly' as const,
       priority: 0.85,
     })),
-    ...PORTFOLIO_INDEX.map((project) => ({
-      url: `${siteConfig.url}/portfolio/${project.id}`,
-      lastModified: now,
+    ...portfolioProjects.map((project) => ({
+      url: `${siteConfig.url}/portfolio/${project.slug}`,
+      lastModified: project.createdAt ? new Date(project.createdAt) : now,
       changeFrequency: 'monthly' as const,
       priority: 0.75,
     })),

@@ -1,5 +1,6 @@
 'use client'
 
+import PortableTextBody from '@/components/blog/PortableTextBody'
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
 import { formatBlogDate } from '@/interfaces/blog.interface'
 import { useGetPublicBlogBySlugQuery, useGetPublicBlogListQuery } from '@/redux/features/blog/blogPublic.api'
@@ -193,20 +194,13 @@ export default function BlogDetails() {
 
       <section className="bg-primary blog-reading-stream px-6 py-16 md:px-12">
         <div className="mx-auto max-w-[800px]">
-          {activePost.detailMidImageUrl ? (
-            <div className="blog-paragraph-anim border-border-primary/40 relative mb-16 overflow-hidden rounded-3xl border">
-              <Image
-                src={activePost.detailMidImageUrl}
-                alt=""
-                className="h-auto w-full object-cover"
-                referrerPolicy="no-referrer"
-              />
+          {activePost.body?.length ? (
+            <div className="blog-paragraph-anim">
+              <PortableTextBody value={activePost.body} />
             </div>
-          ) : null}
-
-          {activePost.contentHtml ? (
+          ) : activePost.contentHtml ? (
             <div
-              className="blog-prose blog-paragraph-anim"
+              className="prose blog-prose blog-paragraph-anim max-w-none"
               dangerouslySetInnerHTML={{ __html: activePost.contentHtml }}
             />
           ) : (

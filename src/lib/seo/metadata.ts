@@ -61,5 +61,10 @@ export function buildDefaultMetadata(): Metadata {
       default: `${siteConfig.name} | Creative Studio Agency`,
       template: `%s | ${siteConfig.name}`,
     },
+    icons: {
+      icon: [{ url: '/favicon-logo.png', type: 'image/png' }],
+      apple: [{ url: '/favicon-logo.png', type: 'image/png' }],
+      shortcut: '/favicon-logo.png',
+    },
   }
 }

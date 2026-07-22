@@ -1,6 +1,6 @@
 import Portfolio from '@/Portfolio'
 import JsonLd from '@/components/seo/JsonLd'
-import { getPortfolioSeo, PORTFOLIO_INDEX } from '@/data/portfolioIndex'
+import { fetchPublicPortfolioBySlug, fetchPublicPortfolioSlugs, getPortfolioSeoFromItem } from '@/lib/portfolio/server'
 import { breadcrumbJsonLd, portfolioProjectJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
 import { buildPageMetadata } from '@/lib/seo/metadata'
 import type { Metadata } from 'next'
@@ -9,22 +9,25 @@ import { notFound } from 'next/navigation'
 type Props = { params: Promise<{ id: string }> }
 
 export async function generateStaticParams() {
-  return PORTFOLIO_INDEX.map((project) => ({ id: project.id }))
+  const slugs = await fetchPublicPortfolioSlugs()
+  return slugs.map((slug) => ({ id: slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await params
-  const seo = getPortfolioSeo(id)
-  if (!seo) return { title: 'Project Not Found' }
+  const project = await fetchPublicPortfolioBySlug(id)
+  if (!project) return { title: 'Project Not Found' }
+  const seo = getPortfolioSeoFromItem(project)
   return buildPageMetadata({ ...seo, type: 'article' })
 }
 
 export default async function PortfolioDetailPage({ params }: Props) {
   const { id } = await params
-  const seo = getPortfolioSeo(id)
-  if (!seo) notFound()
+  const project = await fetchPublicPortfolioBySlug(id)
+  if (!project) notFound()
 
-  const projectLd = portfolioProjectJsonLd(id)
+  const seo = getPortfolioSeoFromItem(project)
+  const projectLd = portfolioProjectJsonLd(project)
 
   return (
     <>

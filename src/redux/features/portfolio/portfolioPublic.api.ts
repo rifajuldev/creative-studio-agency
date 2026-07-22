@@ -1,73 +1,60 @@
-import type { IBlogListMetaPublic, IBlogPublicDetail, IBlogPublicListItem } from '@/interfaces/blog.interface'
+import type {
+  IPortfolioCategory,
+  IPortfolioListMetaPublic,
+  IPortfolioPublicDetail,
+  IPortfolioPublicListItem,
+} from '@/interfaces/portfolio.interface'
 import {
-  fetchFeaturedBlog,
-  fetchHomeBlogs,
-  fetchPublicBlogBySlug,
-  fetchPublicBlogList,
-  fetchPublicCategories,
-} from '@/lib/blog/server'
+  fetchHomePortfolio,
+  fetchPublicPortfolioBySlug,
+  fetchPublicPortfolioCategories,
+  fetchPublicPortfolioList,
+} from '@/lib/portfolio/server'
 import { api } from '@/redux/api/api'
 
 type HomeResponse = {
   success: boolean
-  data: IBlogPublicListItem[]
+  data: IPortfolioPublicListItem[]
   message: string
 }
 
 type ListResponse = {
   success: boolean
-  data: IBlogPublicListItem[]
-  meta?: IBlogListMetaPublic
-  message: string
-}
-
-type FeaturedResponse = {
-  success: boolean
-  data: IBlogPublicDetail | null
+  data: IPortfolioPublicListItem[]
+  meta?: IPortfolioListMetaPublic
   message: string
 }
 
 type DetailResponse = {
   success: boolean
-  data: IBlogPublicDetail
+  data: IPortfolioPublicDetail
   message: string
 }
 
-export type PublicBlogListArg = {
+export type PublicPortfolioListArg = {
   skip?: number
   limit?: number
   searchTerm?: string
   category?: string
 }
 
-const blogPublicApi = api.injectEndpoints({
+const portfolioPublicApi = api.injectEndpoints({
   endpoints: (builder) => ({
-    getHomeBlogs: builder.query<HomeResponse, void>({
+    getHomePortfolio: builder.query<HomeResponse, void>({
       async queryFn() {
         try {
-          const data = await fetchHomeBlogs()
+          const data = await fetchHomePortfolio()
           return { data: { success: true, data, message: 'OK' } }
         } catch (error) {
           return { error: { status: 500, data: String(error) } }
         }
       },
-      providesTags: ['blogHome'],
+      providesTags: ['portfolioHome'],
     }),
-    getPublicFeaturedBlog: builder.query<FeaturedResponse, void>({
-      async queryFn() {
+    getPublicPortfolioList: builder.query<ListResponse, PublicPortfolioListArg>({
+      async queryFn({ skip = 0, limit = 100, searchTerm, category }) {
         try {
-          const data = await fetchFeaturedBlog()
-          return { data: { success: true, data, message: 'OK' } }
-        } catch (error) {
-          return { error: { status: 500, data: String(error) } }
-        }
-      },
-      providesTags: ['blogFeatured'],
-    }),
-    getPublicBlogList: builder.query<ListResponse, PublicBlogListArg>({
-      async queryFn({ skip = 0, limit = 6, searchTerm, category }) {
-        try {
-          const { data, meta } = await fetchPublicBlogList({ skip, limit, searchTerm, category })
+          const { data, meta } = await fetchPublicPortfolioList({ skip, limit, searchTerm, category })
           return { data: { success: true, data, meta, message: 'OK' } }
         } catch (error) {
           return { error: { status: 500, data: String(error) } }
@@ -92,42 +79,40 @@ const blogPublicApi = api.injectEndpoints({
           currentArg?.category !== previousArg?.category
         )
       },
-      providesTags: ['blogPublicList'],
+      providesTags: ['portfolioPublicList'],
     }),
-    getPublicBlogBySlug: builder.query<DetailResponse, string>({
+    getPublicPortfolioBySlug: builder.query<DetailResponse, string>({
       async queryFn(slug) {
         try {
-          const data = await fetchPublicBlogBySlug(slug)
+          const data = await fetchPublicPortfolioBySlug(slug)
           if (!data) return { error: { status: 404, data: 'Not found' } }
           return { data: { success: true, data, message: 'OK' } }
         } catch (error) {
           return { error: { status: 500, data: String(error) } }
         }
       },
-      providesTags: (_r, _e, slug) => [{ type: 'blogDetail' as const, id: slug }],
+      providesTags: (_r, _e, slug) => [{ type: 'portfolioDetail' as const, id: slug }],
     }),
-    getPublicCategories: builder.query<
-      { success: boolean; data: { _id: string; name: string; slug: string }[]; message: string },
+    getPublicPortfolioCategories: builder.query<
+      { success: boolean; data: IPortfolioCategory[]; message: string },
       void
     >({
       async queryFn() {
         try {
-          const data = await fetchPublicCategories()
+          const data = await fetchPublicPortfolioCategories()
           return { data: { success: true, data, message: 'OK' } }
         } catch (error) {
           return { error: { status: 500, data: String(error) } }
         }
       },
-      providesTags: ['blogCategories'],
+      providesTags: ['portfolioCategories'],
     }),
   }),
 })
 
 export const {
-  useGetHomeBlogsQuery,
-  useGetPublicFeaturedBlogQuery,
-  useGetPublicBlogListQuery,
-  useLazyGetPublicBlogListQuery,
-  useGetPublicBlogBySlugQuery,
-  useGetPublicCategoriesQuery,
-} = blogPublicApi
+  useGetHomePortfolioQuery,
+  useGetPublicPortfolioListQuery,
+  useGetPublicPortfolioBySlugQuery,
+  useGetPublicPortfolioCategoriesQuery,
+} = portfolioPublicApi

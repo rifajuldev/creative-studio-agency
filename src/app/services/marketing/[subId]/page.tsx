@@ -8,27 +8,65 @@ import { notFound } from 'next/navigation'
 const SUB_SERVICES = [
   {
     id: 'gmb-optimization',
-    title: 'GMB Optimization & Map Ranking',
+    title: 'GMB & Google Map Pack Ranking | Dominate Local Search',
     description:
-      'Dominate local search. We optimize your Google My Business profile to rank in the coveted Map Pack, driving foot traffic and inbound calls.',
+      'Want more calls and foot traffic? NextCreavo optimizes Google Business Profile for Map Pack ranking — citations, reviews, photos and local SEO that boost Search Console visibility.',
+    keywords: [
+      'Google Business Profile optimization',
+      'GMB optimization',
+      'Google Map Pack ranking',
+      'rank on Google Maps',
+      'local SEO agency',
+      'increase Google search visibility',
+      'Google My Business optimization',
+    ],
   },
   {
     id: 'google-ads',
-    title: 'Google PPC Ads',
+    title: 'Google Ads Agency | More Clicks, Leads & Lower CPA',
     description:
-      'Hyper-targeted Google Search, Display, and Performance Max campaigns that turn clicks into predictable phone calls and leads.',
+      'Get high-intent clicks with NextCreavo Google Ads — Search, Display, Performance Max and YouTube campaigns tracked for ROAS, CPA and qualified lead growth.',
+    keywords: [
+      'Google Ads agency',
+      'Google PPC agency',
+      'Google Ads management',
+      'Performance Max campaigns',
+      'YouTube ads agency',
+      'high ROAS Google Ads',
+      'lower Google Ads CPA',
+      'get more leads with Google Ads',
+    ],
   },
   {
     id: 'facebook-ads',
-    title: 'Facebook & Instagram Ads',
+    title: 'Facebook & Instagram Ads Agency | Meta ROAS Growth',
     description:
-      'Thumb-stopping creatives and laser-focused demographic funnels to capture and retarget high-quality leads on Meta platforms.',
+      'Scale with NextCreavo Meta ads — Facebook and Instagram creatives, Reels ads, retargeting and Advantage+ campaigns engineered for clicks, leads and measurable ROAS.',
+    keywords: [
+      'Facebook ads agency',
+      'Instagram ads agency',
+      'Meta ads agency',
+      'Instagram Reels ads',
+      'Facebook lead generation ads',
+      'Meta Advantage+ campaigns',
+      'social media advertising agency',
+    ],
   },
   {
     id: 'social-media-management',
-    title: 'Social Media Management',
+    title: 'Social Media Agency | Instagram, TikTok, LinkedIn, Facebook & X',
     description:
-      'Engaging content and community management that builds loyal brand followers across your social channels.',
+      'Grow on every channel with NextCreavo — Instagram, Facebook, TikTok, LinkedIn and Twitter/X content, community and ads strategy that builds followers, engagement and pipeline.',
+    keywords: [
+      'social media management agency',
+      'Instagram marketing agency',
+      'TikTok marketing agency',
+      'LinkedIn marketing agency',
+      'Facebook page management',
+      'Twitter ads agency',
+      'multi-channel social ads',
+      'brand social media strategy',
+    ],
   },
 ] as const
 
@@ -44,8 +82,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   if (!service) return { title: 'Service Not Found' }
 
   return buildPageMetadata({
-    title: `${service.title} | NextCreavo`,
+    title: service.title,
     description: service.description,
+    keywords: [...service.keywords],
     path: `/services/marketing/${service.id}`,
   })
 }
@@ -61,7 +100,7 @@ export default async function MarketingSubServicePage({ params }: Props) {
     <>
       <JsonLd
         data={[
-          webPageJsonLd(service.title, service.description, path),
+          webPageJsonLd(service.title, service.description, path, [...service.keywords]),
           breadcrumbJsonLd([
             { name: 'Home', path: '/' },
             { name: 'Services', path: '/services' },

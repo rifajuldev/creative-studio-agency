@@ -320,28 +320,107 @@ export function getServiceById(id: string) {
   return SERVICES_DATA.find((s) => s.id === id)
 }
 
+const SERVICE_SEO: Record<string, { title: string; description: string; keywords: string[] }> = {
+  animation: {
+    title: '2D Animation Studio | Lottie, Logo Motion & Explainers',
+    description:
+      'Stand out with NextCreavo 2D animation — lightweight Lottie, logo motion and explainer videos that load fast, run at 60fps and lift clicks across web, ads and apps.',
+    keywords: [
+      '2D animation studio',
+      'Lottie animation agency',
+      'logo animation services',
+      'explainer video animation',
+      'motion design for ads',
+      'SVG animation agency',
+    ],
+  },
+  marketing: {
+    title: 'Digital Marketing Agency | Google, Meta, LinkedIn & TikTok Ads',
+    description:
+      'Scale leads with NextCreavo: Google Ads & SEO, Facebook & Instagram ads, LinkedIn, Twitter/X and TikTok campaigns, plus GMB Map Pack ranking built for ROAS.',
+    keywords: [
+      'digital marketing agency',
+      'Google Ads agency',
+      'Facebook ads agency',
+      'Instagram ads agency',
+      'LinkedIn ads agency',
+      'TikTok ads agency',
+      'Twitter ads agency',
+      'Google Business Profile optimization',
+      'local SEO agency',
+      'performance marketing agency',
+    ],
+  },
+  webdev: {
+    title: 'Web Development Agency | Next.js Sites That Rank & Convert',
+    description:
+      'NextCreavo builds lightning-fast Next.js and React websites, headless Shopify stores and SEO-ready sites engineered for Core Web Vitals, clicks and conversions.',
+    keywords: [
+      'web development agency',
+      'Next.js development agency',
+      'React website development',
+      'SEO website design',
+      'headless Shopify agency',
+      'high converting website agency',
+      'Core Web Vitals optimization',
+    ],
+  },
+  appdev: {
+    title: 'Mobile App Development Company | iOS, Android & Growth UX',
+    description:
+      'Launch apps that users love — NextCreavo builds iOS, Android and cross-platform products with clean UX, scalable backends and growth-ready analytics.',
+    keywords: [
+      'mobile app development company',
+      'iOS app development agency',
+      'Android app development',
+      'React Native agency',
+      'cross platform app development',
+      'app design and development',
+    ],
+  },
+  ai: {
+    title: 'AI Integration Services | Chatbots, Agents & LLM Features',
+    description:
+      'Boost AI visibility and automation with NextCreavo — custom AI chatbots, agents, LLM integrations and workflows that save time and improve customer experience.',
+    keywords: [
+      'AI integration services',
+      'AI chatbot development',
+      'LLM integration services',
+      'AI automation agency',
+      'ChatGPT integration agency',
+      'custom AI agents for business',
+      'generative AI marketing agency',
+    ],
+  },
+  uiux: {
+    title: 'UI/UX Design Agency | Interfaces That Drive Clicks & Sales',
+    description:
+      'NextCreavo UI/UX turns complex products into clear, high-converting interfaces — research, wireframes, design systems and Figma kits built for growth.',
+    keywords: [
+      'UI UX design agency',
+      'conversion focused UX',
+      'product design agency',
+      'Figma design system',
+      'saas UI design',
+      'website UX redesign',
+    ],
+  },
+}
+
 export function getServiceKeywords(service: ServiceDetail): string[] {
-  const base = [service.title, service.id.replace('dev', ' development'), 'NextCreavo']
-  return [
-    ...base,
-    ...service.techStack.slice(0, 5),
-    ...service.deliverables.slice(0, 3).map((d) => d.split(' ').slice(0, 3).join(' ')),
-  ]
+  return SERVICE_SEO[service.id]?.keywords ?? [service.title, 'NextCreavo', 'creative studio agency']
 }
 
 export function getServiceSeo(id: string) {
   const service = getServiceById(id)
   if (!service) return null
 
-  const marketingExtra =
-    id === 'marketing'
-      ? ['social media management', 'SEO captions', 'content creation', 'Instagram marketing', 'Facebook ads']
-      : []
+  const seo = SERVICE_SEO[id]
 
   return {
-    title: `${service.title} Services`,
-    description: `${service.shortDesc} ${service.longDesc.slice(0, 120)}…`.slice(0, 160),
-    keywords: [...getServiceKeywords(service), ...marketingExtra],
+    title: seo?.title ?? `${service.title} Services | NextCreavo`,
+    description: seo?.description ?? service.shortDesc,
+    keywords: getServiceKeywords(service),
     path: `/services/${service.id}`,
   }
 }

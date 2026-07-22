@@ -24,13 +24,13 @@ export default async function ServiceDetailPage({ params }: Props) {
   const seo = getServiceSeo(id)
   if (!seo) notFound()
 
-  const serviceLd = serviceJsonLd(id)
+  const serviceLd = serviceJsonLd(id, seo.keywords)
 
   return (
     <>
       <JsonLd
         data={[
-          webPageJsonLd(seo.title, seo.description, seo.path),
+          webPageJsonLd(seo.title, seo.description, seo.path, seo.keywords),
           breadcrumbJsonLd([
             { name: 'Home', path: '/' },
             { name: 'Services', path: '/services' },

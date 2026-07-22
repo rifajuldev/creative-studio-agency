@@ -1,83 +1,75 @@
+import { pageKeywordSets } from './keywords'
 import { buildPageMetadata } from './metadata'
 
 export const staticPagesSeo = {
   home: buildPageMetadata({
-    title: 'Creative Studio Agency — Web, Marketing, Animation & AI',
+    title: 'NextCreavo | Facebook, Instagram, TikTok, LinkedIn & Google Ads Agency',
     description:
-      'NextCreavo crafts digital ecosystems for modern brands — web development, digital marketing, 2D animation, mobile apps, AI integrations, and UI/UX design with measurable results.',
-    keywords: [
-      'creative agency',
-      'digital ecosystem',
-      'brand experience',
-      'hire creative studio',
-      'full service agency',
-    ],
+      'Grow on Facebook, Instagram, TikTok, LinkedIn, Twitter/X & Google. NextCreavo delivers ads, SEO, social content, Next.js websites, apps, AI & UI/UX that turn clicks into customers. Free strategy call.',
+    keywords: [...pageKeywordSets.home],
     path: '/',
   }),
   about: buildPageMetadata({
-    title: 'About Us — Our Story, Values & Team',
+    title: 'About NextCreavo | Social Ads & Creative Studio Team',
     description:
-      'Meet NextCreavo — a creative studio agency built on structural integrity, human-centric design, bold aesthetics, and agentic intelligence for modern digital products.',
-    keywords: ['about NextCreavo', 'creative team', 'agency values', 'digital studio'],
+      'Meet NextCreavo — media buyers and creatives for Facebook, Instagram, TikTok, LinkedIn, Twitter/X, Google Ads, SEO, web, apps and AI-powered brand growth.',
+    keywords: [...pageKeywordSets.about],
     path: '/about',
   }),
   services: buildPageMetadata({
-    title: 'Services — Web, Marketing, Apps, AI & Design',
+    title: 'Services | Facebook, Instagram, TikTok, LinkedIn, Google Ads & SEO',
     description:
-      'Explore NextCreavo services: 2D animation, digital marketing, web development, app development, AI integrations, and UI/UX design with transparent deliverables and pricing.',
-    keywords: ['agency services', 'web development services', 'marketing agency services', 'animation studio'],
+      'Full-funnel NextCreavo services: Facebook & Instagram ads, TikTok, LinkedIn, Twitter/X, Google Ads, local SEO, social management, web, apps, AI, animation and UI/UX.',
+    keywords: [...pageKeywordSets.services],
     path: '/services',
   }),
   portfolio: buildPageMetadata({
-    title: 'Portfolio — Case Studies & Client Work',
+    title: 'Case Studies | Social Ads, SEO & Brand Results | NextCreavo',
     description:
-      'Browse NextCreavo portfolio case studies across animation, marketing, web development, mobile apps, AI automation, and UI/UX design with real project outcomes.',
-    keywords: ['agency portfolio', 'case studies', 'client work', 'project showcase'],
+      'See NextCreavo results across Facebook, Instagram, TikTok, LinkedIn, Twitter/X and Google — ROAS wins, follower growth, Map Pack rankings and conversion-focused websites.',
+    keywords: [...pageKeywordSets.portfolio],
     path: '/portfolio',
   }),
   blog: buildPageMetadata({
-    title: 'Blog — Insights on Tech, AI, Design & Marketing',
+    title: 'Blog | Instagram, TikTok, LinkedIn, Facebook & Google Ads Tips',
     description:
-      'Read NextCreavo insights on headless commerce, AI agents, minimal design, local SEO, and digital craft — practical guides for founders and marketing teams.',
-    keywords: ['agency blog', 'digital marketing blog', 'web development insights', 'AI SaaS guide'],
+      'Popular guides: Instagram Reels ads, TikTok ecommerce, LinkedIn B2B leads, Facebook Meta creatives, Twitter/X ads, Google Map Pack SEO and AI marketing playbooks.',
+    keywords: [...pageKeywordSets.blog],
     path: '/blog',
   }),
   contact: buildPageMetadata({
-    title: 'Contact — Start Your Project Brief',
+    title: 'Hire NextCreavo | Free Quote for Social Ads & SEO',
     description:
-      'Contact NextCreavo to start your project brief. Tell us about your web, marketing, animation, app, or AI project and receive a comprehensive quote from our team.',
-    keywords: ['contact agency', 'project brief', 'get a quote', 'hire NextCreavo'],
+      'Ready to grow on Facebook, Instagram, TikTok, LinkedIn, Twitter/X or Google? Contact NextCreavo for a free quote on ads, SEO, web, apps or AI — start your brief today.',
+    keywords: [...pageKeywordSets.contact],
     path: '/contact',
   }),
   faq: buildPageMetadata({
-    title: 'FAQ — Services, Technology & Billing Answers',
+    title: 'FAQ | Social Ads, SEO, Pricing & Delivery',
     description:
-      'Find answers about NextCreavo workflows, Figma deliverables, Shopify speed, GMB SEO, headless architecture, security, billing, and maintenance retainers.',
-    keywords: ['agency FAQ', 'web development FAQ', 'digital marketing questions', 'project pricing'],
+      'Answers on Facebook/Instagram/TikTok/LinkedIn ads budgets, Google Ads spend, SEO timelines, social retainers, Figma handoff, billing and NextCreavo delivery.',
+    keywords: [...pageKeywordSets.faq],
     path: '/faq',
   }),
   privacy: buildPageMetadata({
-    title: 'Privacy Policy',
+    title: 'Privacy Policy | NextCreavo',
     description:
-      'NextCreavo privacy policy — how we collect, use, and protect your personal data when you visit our website or submit a project inquiry.',
-    keywords: ['privacy policy', 'data protection'],
+      'How NextCreavo collects, uses and protects personal data when you visit our site or submit a project inquiry.',
+    keywords: ['NextCreavo privacy policy', 'data protection'],
     path: '/privacy',
-    noIndex: false,
   }),
   terms: buildPageMetadata({
-    title: 'Terms of Service',
+    title: 'Terms of Service | NextCreavo',
     description:
-      'NextCreavo terms of service governing use of our website, services, intellectual property, and client engagement agreements.',
-    keywords: ['terms of service', 'agency terms'],
+      'Terms for using the NextCreavo website, creative services, intellectual property and client engagement agreements.',
+    keywords: ['NextCreavo terms of service', 'agency terms'],
     path: '/terms',
-    noIndex: false,
   }),
   cookies: buildPageMetadata({
-    title: 'Cookie Policy',
+    title: 'Cookie Policy | NextCreavo',
     description:
-      'Learn how NextCreavo uses cookies and similar technologies for analytics, performance, and user experience on our website.',
-    keywords: ['cookie policy', 'website cookies'],
+      'How NextCreavo uses cookies for analytics, performance and experience — supporting Google Analytics and Search Console insights.',
+    keywords: ['NextCreavo cookie policy', 'analytics cookies'],
     path: '/cookies',
-    noIndex: false,
   }),
 } as const

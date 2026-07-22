@@ -16,6 +16,9 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning data-scroll-behavior="smooth">
       <head>
+        <link rel="alternate" type="text/plain" href="/llms.txt" title="LLMs.txt" />
+        <link rel="alternate" type="text/plain" href="/llm.txt" title="LLM.txt" />
+        <link rel="alternate" type="text/plain" href="/llms-full.txt" title="LLMs full context" />
         <GoogleTag />
       </head>
       <body>

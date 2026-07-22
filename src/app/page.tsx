@@ -1,6 +1,7 @@
 import HomePage from '@/components/home/HomePage'
 import JsonLd from '@/components/seo/JsonLd'
 import { webPageJsonLd } from '@/lib/seo/json-ld'
+import { siteConfig } from '@/lib/seo/site'
 import { staticPagesSeo } from '@/lib/seo/static-pages'
 
 export const metadata = staticPagesSeo.home
@@ -10,9 +11,10 @@ export default function Page() {
     <>
       <JsonLd
         data={webPageJsonLd(
-          'NextCreavo — Creative Studio Agency',
-          'Crafting digital ecosystems for modern brands.',
-          '/'
+          'NextCreavo | Facebook, Instagram, TikTok, LinkedIn & Google Ads Agency',
+          siteConfig.description,
+          '/',
+          [...siteConfig.defaultKeywords]
         )}
       />
       <HomePage />

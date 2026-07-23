@@ -1613,7 +1613,7 @@ export default function GmbOptimizationService() {
           {/* Action Blocks */}
           <div className="flex flex-col justify-center gap-4 sm:flex-row lg:justify-start">
             <a
-              href="https://wa.me/923012345678"
+              href="https://wa.me/14041112222"
               target="_blank"
               rel="noreferrer"
               className="flex w-full cursor-pointer items-center justify-center gap-3 rounded-xl bg-[#25D366] px-8 py-4 text-[11px] font-bold tracking-widest text-white uppercase shadow-[0_0_20px_rgba(37,211,102,0.2)] transition-all hover:-translate-y-1 hover:bg-[#128C7E] sm:w-auto sm:text-xs"

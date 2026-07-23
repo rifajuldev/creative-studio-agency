@@ -147,6 +147,44 @@ export default function ContactPage() {
             </div>
           </div>
         </div>
+
+        <section className="border-border-primary/60 mt-20 space-y-8 border-t pt-16 md:mt-28 md:pt-20">
+          <h2 className="font-display text-primary text-3xl font-light tracking-tight md:text-4xl">
+            How to start a project with NextCreavo
+          </h2>
+          <p className="text-secondary max-w-3xl text-base leading-relaxed font-light md:text-lg">
+            Whether you need Google Ads management, Facebook and Instagram campaigns, TikTok or LinkedIn growth, local
+            SEO and Google Business Profile ranking, a Next.js website, mobile app, AI integration, UI/UX design, or 2D
+            animation — use this form to share goals, timeline, and budget. Our team reviews every brief and replies
+            with clear next steps, recommended scope, and a transparent quote.
+          </p>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
+            {[
+              {
+                title: 'What to include in your brief',
+                body: 'Describe your business, target audience, current website or ads setup, competitors, and the outcome you want — more leads, Map Pack ranking, ecommerce sales, brand launch, or product design.',
+              },
+              {
+                title: 'Services we quote fastest',
+                body: 'Digital marketing retainers (Google Ads, Meta ads, social management), web development, UI/UX redesigns, AI chatbot builds, and motion packages usually receive a first response within one business day.',
+              },
+              {
+                title: 'What happens after you submit',
+                body: 'We confirm receipt, ask clarifying questions if needed, then send a proposal covering strategy, deliverables, timeline, and investment. You can also book a meeting for a live strategy conversation.',
+              },
+            ].map((card) => (
+              <div key={card.title} className="border-border-primary bg-secondary/5 space-y-3 rounded-3xl border p-6">
+                <h3 className="font-display text-primary text-lg font-medium">{card.title}</h3>
+                <p className="text-secondary text-sm leading-relaxed font-light">{card.body}</p>
+              </div>
+            ))}
+          </div>
+          <p className="text-secondary max-w-3xl text-base leading-relaxed font-light md:text-lg">
+            Prefer email? Write to info@nextcreavo.com with “Project brief” in the subject line. For paid media and SEO
+            audits, mention the platforms you use today (Google Ads, Facebook, Instagram, LinkedIn, TikTok, Twitter/X)
+            so we can prepare a sharper recommendation before the first call.
+          </p>
+        </section>
       </div>
     </div>
   )

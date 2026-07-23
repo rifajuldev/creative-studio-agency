@@ -2,7 +2,27 @@
 
 import { BarChart, Cookie, Settings } from 'lucide-react'
 import { motion } from 'motion/react'
+import Link from 'next/link'
 import { useLanguage } from './context/LanguageContext'
+
+const EXTRA_SECTIONS = [
+  {
+    title: '4. Types of cookies we may use',
+    body: 'Essential cookies keep core site functions working (security, load balancing, form sessions). Preference cookies remember language or theme choices. Analytics cookies help us understand which pages perform well in Google Search Console and Google Analytics. Marketing cookies may be set by Google Ads, Meta (Facebook/Instagram), LinkedIn, TikTok, or Twitter/X when you arrive from paid or social campaigns so we can measure conversions and improve creative.',
+  },
+  {
+    title: '5. Third-party cookies and pixels',
+    body: 'When you interact with NextCreavo ads or share buttons, third parties may process device identifiers and event data under their own policies. We use these technologies to attribute leads from Google, Facebook, Instagram, LinkedIn, TikTok, and other channels. We do not control every cookie set by embedded third-party scripts, so review those providers’ privacy notices for full details.',
+  },
+  {
+    title: '6. How to manage or disable cookies',
+    body: 'Most browsers let you block or delete cookies in settings. You can also use platform opt-outs for personalized advertising where available. Disabling analytics or marketing cookies will not stop the website from loading, but it may limit our ability to measure performance and improve campaigns. Essential cookies are required for secure form submission and basic browsing.',
+  },
+  {
+    title: '7. Updates and contact',
+    body: 'We may update this Cookie Policy as our analytics stack, ad platforms, or legal requirements change. The “last updated” date at the top reflects the latest revision. Questions about cookies on nextcreavo.com can be sent to info@nextcreavo.com. For personal data rights, see our Privacy Policy.',
+  },
+]
 
 export default function CookiesPage() {
   const { t } = useLanguage()
@@ -20,6 +40,15 @@ export default function CookiesPage() {
               <span className="text-secondary font-serif italic">{t('cookies_page.title_italic')}</span>
             </h1>
             <p className="text-secondary text-lg font-light">{t('cookies_page.last_updated')}</p>
+            <p className="text-secondary max-w-3xl text-base leading-relaxed font-light md:text-lg">
+              This Cookie Policy describes how NextCreavo uses cookies and similar technologies on nextcreavo.com to
+              operate the site, understand traffic, and measure marketing from Google Ads, Facebook, Instagram,
+              LinkedIn, TikTok, and Twitter/X. It should be read together with our{' '}
+              <Link href="/privacy" className="text-primary underline-offset-4 hover:underline">
+                Privacy Policy
+              </Link>
+              .
+            </p>
           </header>
 
           <div className="border-border-primary grid grid-cols-1 gap-8 border-y py-10 md:grid-cols-3">
@@ -53,6 +82,13 @@ export default function CookiesPage() {
               <h2 className="text-primary font-display text-2xl tracking-tight">{t('cookies_page.section3.title')}</h2>
               <p>{t('cookies_page.section3.desc')}</p>
             </section>
+
+            {EXTRA_SECTIONS.map((section) => (
+              <section key={section.title} className="space-y-4">
+                <h2 className="text-primary font-display text-2xl tracking-tight">{section.title}</h2>
+                <p>{section.body}</p>
+              </section>
+            ))}
           </div>
         </motion.div>
       </div>

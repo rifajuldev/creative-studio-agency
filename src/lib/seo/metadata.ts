@@ -17,12 +17,17 @@ export interface PageSeoInput {
 export function buildPageMetadata(input: PageSeoInput): Metadata {
   const canonical = absoluteUrl(input.path)
   const fullTitle = input.title.includes(siteConfig.name) ? input.title : `${input.title} | ${siteConfig.name}`
-  const keywords = Array.from(new Set([...siteConfig.defaultKeywords, ...(input.keywords ?? [])]))
+  // Cap meta keywords — long lists bloat HTML without helping Google rankings
+  const keywords = Array.from(new Set([...siteConfig.defaultKeywords.slice(0, 10), ...(input.keywords ?? [])])).slice(
+    0,
+    18
+  )
   const image = input.image ?? absoluteUrl(siteConfig.defaultOgImage)
   const ogType = input.type ?? 'website'
 
   return {
-    title: fullTitle,
+    // absolute bypasses root layout `title.template` (prevents "| NextCreavo | NextCreavo")
+    title: { absolute: fullTitle },
     description: input.description,
     keywords,
     authors: [{ name: siteConfig.name, url: siteConfig.url }],
@@ -91,8 +96,7 @@ export function buildPageMetadata(input: PageSeoInput): Metadata {
       'ai-content-declaration': 'human-and-ai-assisted',
       'llms-txt': absoluteUrl('/llms.txt'),
       'llm-txt': absoluteUrl('/llm.txt'),
-      // Helps Facebook / LinkedIn / TikTok scrapers find brand profiles
-      'og:see_also': socialProfileUrls().join(', '),
+      'og:see_also': socialProfileUrls().slice(0, 5).join(', '),
     },
   }
 }

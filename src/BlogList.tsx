@@ -418,6 +418,36 @@ export default function BlogList() {
           )}
         </div>
       </section>
+
+      <section className="border-border-primary/60 mx-auto max-w-350 space-y-6 border-t px-6 py-14 md:px-12 md:py-16">
+        <h2 className="font-display text-primary text-2xl font-light tracking-tight md:text-3xl">
+          Insights for founders, marketers, and product teams
+        </h2>
+        <p className="text-secondary max-w-4xl text-base leading-relaxed font-light md:text-lg">
+          The NextCreavo blog covers practical growth topics: Google Search visibility and local SEO, Google Ads and
+          Performance Max, Facebook and Instagram (Meta) creative testing, LinkedIn B2B lead generation, TikTok ads for
+          ecommerce, Twitter/X campaigns, Next.js and Core Web Vitals, headless Shopify, UI/UX patterns, and AI chatbot
+          or LLM integrations. Each article is written for teams who need clear actions—not fluff.
+        </p>
+        <p className="text-secondary max-w-4xl text-base leading-relaxed font-light md:text-lg">
+          Browse by category or search above to find playbooks on Map Pack ranking, ad creative iteration, landing page
+          conversion, brand systems, and automation. Prefer a hands-on partner? Visit our{' '}
+          <Link href="/services" className="text-primary underline-offset-4 hover:underline">
+            services
+          </Link>{' '}
+          page or{' '}
+          <Link href="/contact" className="text-primary underline-offset-4 hover:underline">
+            contact NextCreavo
+          </Link>{' '}
+          to start a project brief for ads, SEO, web, apps, or AI.
+        </p>
+        <ul className="text-secondary grid max-w-4xl list-disc grid-cols-1 gap-2 pl-5 text-base font-light md:grid-cols-2">
+          <li>Google Ads, SEO, and Google Business Profile guides</li>
+          <li>Facebook, Instagram, LinkedIn, TikTok, and Twitter/X tactics</li>
+          <li>Web performance, Next.js SEO, and conversion UX</li>
+          <li>AI agents, chatbots, and creative studio process notes</li>
+        </ul>
+      </section>
     </div>
   )
 }

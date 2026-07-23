@@ -3,8 +3,10 @@
 import CookieConsent from '@/components/CookieConsent'
 import PageTransition from '@/components/PageTransition'
 import SchedulerModal from '@/components/SchedulerModal'
+import FooterSitemapLinks from '@/components/layout/FooterSitemapLinks'
 import { LanguageProvider, useLanguage } from '@/context/LanguageContext'
 import { gsapScopeOptions, useScrollTriggerRefresh } from '@/hooks/useScrollTriggerRefresh'
+import { siteConfig } from '@/lib/seo/site'
 import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
 import gsap from 'gsap'
@@ -105,9 +107,8 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
       <div className="pointer-events-none fixed right-6 bottom-6 z-80 flex flex-col items-end gap-3 select-none">
         {/* WhatsApp Icon */}
         <motion.a
-          href="https://wa.me/14041112222"
+          href={siteConfig.whatsappUrl}
           target="_blank"
-          referrerPolicy="no-referrer"
           rel="noopener noreferrer"
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
@@ -248,9 +249,13 @@ function Navbar({ toggleTheme, isDark }: { toggleTheme: () => void; isDark: bool
               {/* Sidebar Header */}
               <div className="border-border-primary/50 bg-primary/20 relative flex items-center justify-between border-b p-8 md:p-14">
                 <div className="flex flex-col">
-                  <span className="font-display text-2xl font-light tracking-tighter">
+                  <Link
+                    href="/"
+                    onClick={() => setIsOpen(false)}
+                    className="font-display text-2xl font-light tracking-tighter"
+                  >
                     NextCreavo<span className="text-[#bca374] italic">.</span>
-                  </span>
+                  </Link>
                   <span className="mt-2 font-mono text-[10px] font-bold tracking-[0.4em] text-[#bca374] uppercase opacity-80">
                     {t('ui.system_navigation')}
                   </span>
@@ -270,8 +275,9 @@ function Navbar({ toggleTheme, isDark }: { toggleTheme: () => void; isDark: bool
               {/* Scrollable Navigation Area */}
               <div className="flex flex-1 flex-col overflow-y-auto px-8 py-12 md:px-14">
                 <div className="flex flex-col gap-6 md:gap-8">
-                  {['About', 'Portfolio', 'Services', 'Pricing', 'FAQ', 'Blog'].map((item, i) => {
+                  {['Home', 'About', 'Portfolio', 'Services', 'Pricing', 'FAQ', 'Blog'].map((item, i) => {
                     const routeMap: { [key: string]: string } = {
+                      Home: '/',
                       About: '/about',
                       Portfolio: '/portfolio',
                       Services: '/services',
@@ -280,7 +286,7 @@ function Navbar({ toggleTheme, isDark }: { toggleTheme: () => void; isDark: bool
                       Pricing: '/',
                     }
                     const isHashLink = item === 'Pricing'
-                    const translationKey = `nav.${item.toLowerCase()}`
+                    const translationKey = item === 'Home' ? 'nav.home' : `nav.${item.toLowerCase()}`
                     return (
                       <motion.div
                         key={item}
@@ -302,7 +308,7 @@ function Navbar({ toggleTheme, isDark }: { toggleTheme: () => void; isDark: bool
                               0{i + 1}
                             </span>
                             <span className="font-display inline-block text-4xl font-light tracking-tighter transition-all duration-500 ease-[0.16,1,0.3,1] group-hover:translate-x-4 hover:italic md:text-6xl">
-                              {t(translationKey)}
+                              {t(translationKey) || item}
                             </span>
                           </a>
                         ) : (
@@ -315,7 +321,7 @@ function Navbar({ toggleTheme, isDark }: { toggleTheme: () => void; isDark: bool
                               0{i + 1}
                             </span>
                             <span className="font-display inline-block text-4xl font-light tracking-tighter transition-all duration-500 ease-[0.16,1,0.3,1] group-hover:translate-x-4 hover:italic md:text-6xl">
-                              {t(translationKey)}
+                              {t(translationKey) || item}
                             </span>
                           </Link>
                         )}
@@ -335,14 +341,16 @@ function Navbar({ toggleTheme, isDark }: { toggleTheme: () => void; isDark: bool
                     <span className="font-mono text-[9px] font-bold tracking-[0.25em] text-[#bca374] uppercase">
                       {t('ui.social_feeds')}
                     </span>
-                    <div className="flex gap-5">
-                      {['Instagram', 'Dribbble', 'LinkedIn'].map((social) => (
+                    <div className="flex flex-wrap gap-5">
+                      {siteConfig.socialLinks.slice(0, 4).map((social) => (
                         <a
-                          key={social}
-                          href="#"
+                          key={social.label}
+                          href={social.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
                           className="text-secondary hover:text-primary text-xs tracking-widest uppercase transition-colors"
                         >
-                          {social}
+                          {social.label}
                         </a>
                       ))}
                     </div>
@@ -661,15 +669,17 @@ function Footer() {
             <div className="grid grid-cols-2 gap-12 sm:grid-cols-3 lg:gap-0 lg:pl-16">
               <div className="footer-reveal flex flex-col gap-4 sm:gap-6">
                 <p className="text-invert/40 mb-2 text-[9px] tracking-[0.2em] uppercase sm:text-[10px]">Socials</p>
-                {['Instagram', 'Twitter', 'LinkedIn', 'Dribbble'].map((social) => (
+                {siteConfig.socialLinks.map((social) => (
                   <a
-                    key={social}
-                    href="#"
+                    key={social.label}
+                    href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="hover:text-secondary group flex w-max items-center gap-2 text-sm font-light transition-colors hover:italic sm:text-base md:text-lg"
                     onMouseEnter={handleSocialEnter}
                     onMouseLeave={handleSocialLeave}
                   >
-                    {social}{' '}
+                    {social.label}{' '}
                     <ArrowUpRight
                       size={14}
                       className="social-arrow text-secondary hidden -translate-x-2 translate-y-2 opacity-0 sm:block"
@@ -680,7 +690,7 @@ function Footer() {
 
               <div className="footer-reveal flex flex-col gap-4 sm:gap-6">
                 <p className="text-invert/40 mb-2 text-[9px] tracking-[0.2em] uppercase sm:text-[10px]">Explore</p>
-                {['About', 'Portfolio', 'Services', 'FAQ', 'Contact'].map((link) => (
+                {['Home', 'About', 'Portfolio', 'Services', 'FAQ', 'Contact'].map((link) => (
                   <Link
                     key={link}
                     href={link === 'Home' ? '/' : `/${link.toLowerCase()}`}
@@ -694,20 +704,24 @@ function Footer() {
               <div className="footer-reveal border-invert/10 col-span-2 flex flex-col gap-4 border-t pt-8 sm:col-span-1 sm:gap-6 sm:border-0 sm:pt-0">
                 <p className="text-invert/40 mb-2 text-[9px] tracking-[0.2em] uppercase sm:text-[10px]">Visit Us</p>
                 <address className="text-invert/70 max-w-[200px] text-xs leading-relaxed font-light not-italic sm:text-sm md:text-base">
-                  404 Digital Avenue,
+                  {siteConfig.address.line1},
                   <br />
-                  Innovation District,
+                  {siteConfig.address.line2},
                   <br />
-                  New York, NY 10001
+                  {siteConfig.address.city}, {siteConfig.address.region} {siteConfig.address.postalCode}
                 </address>
                 <a
-                  href="#"
+                  href={siteConfig.address.mapsUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-secondary hover:text-invert mt-2 text-[10px] font-medium tracking-widest uppercase transition-colors sm:text-xs"
                 >
                   Get Directions
                 </a>
               </div>
             </div>
+
+            <FooterSitemapLinks />
           </div>
 
           <div className="footer-reveal flex flex-col items-center justify-between gap-6 py-8 md:flex-row">
@@ -728,21 +742,25 @@ function Footer() {
           </div>
         </div>
 
-        {/* Big text element at the bottom */}
+        {/* Big text element at the bottom — links to homepage for internal SEO */}
         <div className="bg-invert relative z-10 flex w-screen justify-center overflow-hidden pt-8 pb-4 md:pt-0">
           <div className="mx-auto w-[95%] overflow-hidden pb-4 lg:w-[98%]">
-            <h1 className="footer-big-text font-display text-invert hover:text-secondary flex w-full cursor-default justify-between text-center text-[12vw] leading-[0.8] font-light tracking-tighter opacity-90 transition-colors select-none sm:text-[11vw] xl:text-[10vw]">
-              <span>N</span>
-              <span>E</span>
-              <span>X</span>
-              <span>T</span>
-              <span>C</span>
-              <span>R</span>
-              <span>E</span>
-              <span>A</span>
-              <span>V</span>
-              <span>O</span>
-            </h1>
+            <Link
+              href="/"
+              aria-label="NextCreavo home"
+              className="footer-big-text font-display text-invert hover:text-secondary flex w-full cursor-pointer justify-between text-center text-[12vw] leading-[0.8] font-light tracking-tighter opacity-90 transition-colors select-none sm:text-[11vw] xl:text-[10vw]"
+            >
+              <span aria-hidden="true">N</span>
+              <span aria-hidden="true">E</span>
+              <span aria-hidden="true">X</span>
+              <span aria-hidden="true">T</span>
+              <span aria-hidden="true">C</span>
+              <span aria-hidden="true">R</span>
+              <span aria-hidden="true">E</span>
+              <span aria-hidden="true">A</span>
+              <span aria-hidden="true">V</span>
+              <span aria-hidden="true">O</span>
+            </Link>
           </div>
         </div>
       </div>

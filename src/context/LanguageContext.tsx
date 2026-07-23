@@ -14,6 +14,7 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 const translations: Record<Language, Record<string, string>> = {
   EN: {
+    'nav.home': 'Home',
     'nav.about': 'About',
     'nav.portfolio': 'Portfolio',
     'nav.services': 'Services',
@@ -339,6 +340,7 @@ const translations: Record<Language, Record<string, string>> = {
     'timeline.phase4.desc': 'Rigorous benchmarking and global edge deployment.',
   },
   FR: {
+    'nav.home': 'Accueil',
     'nav.about': 'À Propos',
     'nav.portfolio': 'Portfolio',
     'nav.services': 'Services',

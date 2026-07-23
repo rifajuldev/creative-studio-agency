@@ -321,37 +321,45 @@ export default function Services() {
               const isActive = activeTab === service.id
               const SvgIcon = service.icon
               return (
-                <button
-                  key={service.id}
-                  onClick={() => setActiveTab(service.id)}
-                  className={`rounded-2.5xl group relative flex w-full items-start gap-5 overflow-hidden border p-6 text-left transition-all duration-500 md:p-8 ${
-                    isActive
-                      ? 'bg-secondary border-transparent shadow-md'
-                      : 'bg-secondary/40 border-border-primary/45 hover:bg-secondary'
-                  }`}
-                >
-                  <span
-                    className={`shrink-0 rounded-xl border p-3 transition-colors ${
-                      isActive ? 'bg-primary border-transparent' : 'bg-secondary border-border-primary'
+                <div key={service.id} className="space-y-2">
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab(service.id)}
+                    className={`rounded-2.5xl group relative flex w-full items-start gap-5 overflow-hidden border p-6 text-left transition-all duration-500 md:p-8 ${
+                      isActive
+                        ? 'bg-secondary border-transparent shadow-md'
+                        : 'bg-secondary/40 border-border-primary/45 hover:bg-secondary'
                     }`}
                   >
-                    <SvgIcon
-                      className="text-secondary h-5 w-5"
-                      style={{ color: isActive ? service.accentColor : undefined }}
-                    />
-                  </span>
-                  <div className="space-y-1 pr-6">
-                    <span className="text-secondary/40 block font-mono text-[8px] tracking-widest">
-                      SECTOR: {service.id.toUpperCase()}
+                    <span
+                      className={`shrink-0 rounded-xl border p-3 transition-colors ${
+                        isActive ? 'bg-primary border-transparent' : 'bg-secondary border-border-primary'
+                      }`}
+                    >
+                      <SvgIcon
+                        className="text-secondary h-5 w-5"
+                        style={{ color: isActive ? service.accentColor : undefined }}
+                      />
                     </span>
-                    <h3 className="font-display text-primary text-lg font-semibold md:text-xl">{service.title}</h3>
-                    <p className="text-secondary/80 max-w-xs truncate text-xs font-light">{service.shortDesc}</p>
-                  </div>
-                  <ChevronRight
-                    size={16}
-                    className={`text-secondary/40 group-hover:text-primary absolute top-1/2 right-6 -translate-y-1/2 transition-all ${isActive ? 'translate-x-[2px]' : ''}`}
-                  />
-                </button>
+                    <div className="space-y-1 pr-6">
+                      <span className="text-secondary/40 block font-mono text-[8px] tracking-widest">
+                        SECTOR: {service.id.toUpperCase()}
+                      </span>
+                      <h3 className="font-display text-primary text-lg font-semibold md:text-xl">{service.title}</h3>
+                      <p className="text-secondary/80 max-w-xs truncate text-xs font-light">{service.shortDesc}</p>
+                    </div>
+                    <ChevronRight
+                      size={16}
+                      className={`text-secondary/40 group-hover:text-primary absolute top-1/2 right-6 -translate-y-1/2 transition-all ${isActive ? 'translate-x-[2px]' : ''}`}
+                    />
+                  </button>
+                  <Link
+                    href={`/services/${service.id}`}
+                    className="text-secondary hover:text-primary ml-2 inline-flex text-[10px] font-bold tracking-widest uppercase"
+                  >
+                    Open {service.title} page →
+                  </Link>
+                </div>
               )
             })}
           </div>
@@ -430,13 +438,13 @@ export default function Services() {
               <span className="text-secondary/60 font-mono text-[9px] leading-none tracking-widest uppercase">
                 Pricing: <span className="text-primary font-bold">{activeService.pricing.growth}</span>
               </span>
-              <button
-                onClick={() => router.push(`/services/${activeService.id}`)}
+              <Link
+                href={`/services/${activeService.id}`}
                 className="text-secondary hover:text-primary inline-flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase transition-transform hover:translate-x-0.5"
               >
                 Inquire Deep Solution
                 <ArrowRight size={12} style={{ color: activeService.accentColor }} />
-              </button>
+              </Link>
             </div>
           </div>
         </div>

@@ -8,7 +8,9 @@ type JsonLd = Record<string, unknown>
 export function organizationJsonLd(): JsonLd {
   return {
     '@context': 'https://schema.org',
-    '@type': ['Organization', 'ProfessionalService'],
+    // Organization only — ProfessionalService is a LocalBusiness subtype and
+    // fails Google/Semrush validation without a real postal address.
+    '@type': 'Organization',
     '@id': `${siteConfig.url}/#organization`,
     name: siteConfig.legalName,
     alternateName: siteConfig.name,
@@ -17,25 +19,26 @@ export function organizationJsonLd(): JsonLd {
     slogan: siteConfig.tagline,
     logo: {
       '@type': 'ImageObject',
+      '@id': `${siteConfig.url}/#logo`,
       url: absoluteUrl(siteConfig.logo),
       contentUrl: absoluteUrl(siteConfig.logo),
+      caption: siteConfig.name,
     },
-    image: absoluteUrl(siteConfig.logo),
+    image: { '@id': `${siteConfig.url}/#logo` },
     email: siteConfig.email,
     telephone: siteConfig.phone,
-    keywords: siteConfig.defaultKeywords.join(', '),
-    knowsAbout: [...siteConfig.knowsAbout],
-    areaServed: {
-      '@type': 'Place',
-      name: 'Worldwide',
-    },
+    // Keep schema keywords lean — long keyword dumps inflate HTML and hurt text:HTML ratio
+    keywords: siteConfig.defaultKeywords.slice(0, 12).join(', '),
+    knowsAbout: [...siteConfig.knowsAbout].slice(0, 16),
+    areaServed: 'Worldwide',
     sameAs: [...socialProfileUrls(), absoluteUrl('/llms.txt'), absoluteUrl('/llm.txt')],
     contactPoint: {
       '@type': 'ContactPoint',
-      contactType: 'sales',
+      contactType: 'customer service',
       email: siteConfig.email,
       telephone: siteConfig.phone,
       availableLanguage: ['English'],
+      areaServed: 'Worldwide',
     },
     hasOfferCatalog: {
       '@type': 'OfferCatalog',
@@ -47,6 +50,7 @@ export function organizationJsonLd(): JsonLd {
           name: service.title,
           description: service.shortDesc,
           url: absoluteUrl(`/services/${service.id}`),
+          provider: { '@id': `${siteConfig.url}/#organization` },
         },
       })),
     },
@@ -62,7 +66,7 @@ export function websiteJsonLd(): JsonLd {
     alternateName: siteConfig.legalName,
     url: siteConfig.url,
     description: siteConfig.description,
-    keywords: siteConfig.defaultKeywords.join(', '),
+    keywords: siteConfig.defaultKeywords.slice(0, 12).join(', '),
     inLanguage: 'en-US',
     publisher: { '@id': `${siteConfig.url}/#organization` },
     potentialAction: {
@@ -71,19 +75,24 @@ export function websiteJsonLd(): JsonLd {
         '@type': 'EntryPoint',
         urlTemplate: `${siteConfig.url}/portfolio?search={search_term_string}`,
       },
-      'query-input': 'required name=search_term_string',
+      'query-input': {
+        '@type': 'PropertyValueSpecification',
+        valueRequired: true,
+        valueName: 'search_term_string',
+      },
     },
   }
 }
 
 export function webPageJsonLd(title: string, description: string, path: string, keywords?: string[]): JsonLd {
+  const leanKeywords = (keywords?.length ? keywords : siteConfig.defaultKeywords).slice(0, 12)
   return {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: title,
     description,
     url: absoluteUrl(path),
-    ...(keywords?.length ? { keywords: keywords.join(', ') } : { keywords: siteConfig.defaultKeywords.join(', ') }),
+    keywords: leanKeywords.join(', '),
     isPartOf: { '@id': `${siteConfig.url}/#website` },
     about: { '@id': `${siteConfig.url}/#organization` },
     publisher: { '@id': `${siteConfig.url}/#organization` },

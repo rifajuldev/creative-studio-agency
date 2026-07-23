@@ -33,13 +33,22 @@ import {
   X as XIcon,
 } from 'lucide-react'
 import { AnimatePresence, motion } from 'motion/react'
+import dynamic from 'next/dynamic'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useRef, useState } from 'react'
-import Portfolio3DViewer from './components/Portfolio3DViewer'
 import ProjectTimeline from './components/ProjectTimeline'
 import SocialShareToolbar from './components/SocialShareToolbar'
 import { useLanguage } from './context/LanguageContext'
+
+const Portfolio3DViewer = dynamic(() => import('./components/Portfolio3DViewer'), {
+  ssr: false,
+  loading: () => (
+    <div className="bg-secondary/20 border-border-primary flex h-full min-h-[280px] w-full items-center justify-center rounded-3xl border">
+      <span className="text-secondary text-xs tracking-widest uppercase">Loading 3D…</span>
+    </div>
+  ),
+})
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -1029,71 +1038,72 @@ export default function Portfolio() {
                   animate={{ opacity: 1, scale: 1, y: 0 }}
                   exit={{ opacity: 0, scale: 0.95, y: 20 }}
                   transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-                  onClick={() => router.push(`/portfolio/${project.id}`)}
-                  className="group portfolio-reveal flex cursor-pointer flex-col"
+                  className="group portfolio-reveal flex flex-col"
                   id={`portfolio-item-${project.id}`}
                 >
-                  {/* Styled Rounded Card Wrap */}
-                  <div className="border-border-primary bg-secondary relative mb-6 aspect-[4/5] w-full overflow-hidden rounded-[2rem] border transition-all duration-[0.8s] group-hover:border-transparent group-hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)]">
-                    {/* Grayscale image element shifting to vibrant full-color on hover */}
-                    <img
-                      src={project.img}
-                      alt={project.title}
-                      className="h-full w-full scale-102 object-cover grayscale transition-all duration-[1.2s] ease-out group-hover:scale-100 group-hover:grayscale-0"
-                      referrerPolicy="no-referrer"
-                    />
+                  <Link href={`/portfolio/${project.id}`} className="flex flex-col">
+                    {/* Styled Rounded Card Wrap */}
+                    <div className="border-border-primary bg-secondary relative mb-6 aspect-[4/5] w-full overflow-hidden rounded-[2rem] border transition-all duration-[0.8s] group-hover:border-transparent group-hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.15)]">
+                      {/* Grayscale image element shifting to vibrant full-color on hover */}
+                      <img
+                        src={project.img}
+                        alt={project.title}
+                        className="h-full w-full scale-102 object-cover grayscale transition-all duration-[1.2s] ease-out group-hover:scale-100 group-hover:grayscale-0"
+                        referrerPolicy="no-referrer"
+                      />
 
-                    {/* Gradient Overlay for Hover Text */}
-                    <div className="absolute inset-x-0 top-1/2 bottom-0 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/40 to-transparent p-8 opacity-0 transition-all duration-500 group-hover:opacity-100">
-                      <span className="text-secondary mb-2 block text-[10px] font-bold tracking-[0.2em] uppercase">
-                        {t('portfolio.interactive_case_studio')}
+                      {/* Gradient Overlay for Hover Text */}
+                      <div className="absolute inset-x-0 top-1/2 bottom-0 flex flex-col justify-end bg-gradient-to-t from-black/90 via-black/40 to-transparent p-8 opacity-0 transition-all duration-500 group-hover:opacity-100">
+                        <span className="text-secondary mb-2 block text-[10px] font-bold tracking-[0.2em] uppercase">
+                          {t('portfolio.interactive_case_studio')}
+                        </span>
+                        <h4 className="font-display mb-4 text-2xl leading-tight font-medium text-white">
+                          {t(`project.${project.id}.title`) !== `project.${project.id}.title`
+                            ? t(`project.${project.id}.title`)
+                            : project.title}
+                        </h4>
+                        <p className="line-clamp-2 text-xs leading-relaxed font-light text-gray-300">
+                          {t(`project.${project.id}.desc`) !== `project.${project.id}.desc`
+                            ? t(`project.${project.id}.desc`)
+                            : project.desc}
+                        </p>
+                      </div>
+
+                      {/* Constant Top Category Tag */}
+                      <div className="bg-primary/80 text-secondary border-border-primary/40 absolute top-6 left-6 rounded-full border px-4 py-1.5 text-[9px] font-semibold tracking-wider uppercase backdrop-blur-md transition-colors duration-500">
+                        {project.category}
+                      </div>
+
+                      {/* Hover Arrow indicator */}
+                      <div className="bg-invert text-invert border-border-primary absolute top-6 right-6 flex h-10 w-10 scale-75 items-center justify-center rounded-full border opacity-0 transition-all duration-500 ease-[0.16,1,0.3,1] group-hover:scale-100 group-hover:opacity-100">
+                        <ArrowUpRight size={16} />
+                      </div>
+                    </div>
+
+                    {/* Informative Grid Details */}
+                    <div className="pl-2">
+                      <span className="text-secondary mb-1.5 block text-[9px] font-bold tracking-[0.25em] uppercase">
+                        {project.client}
                       </span>
-                      <h4 className="font-display mb-4 text-2xl leading-tight font-medium text-white">
+                      <h3 className="font-display text-primary group-hover:text-secondary mb-4 text-2xl font-light tracking-tight transition-all duration-500 group-hover:translate-x-1.5">
                         {t(`project.${project.id}.title`) !== `project.${project.id}.title`
                           ? t(`project.${project.id}.title`)
                           : project.title}
-                      </h4>
-                      <p className="line-clamp-2 text-xs leading-relaxed font-light text-gray-300">
-                        {t(`project.${project.id}.desc`) !== `project.${project.id}.desc`
-                          ? t(`project.${project.id}.desc`)
-                          : project.desc}
-                      </p>
-                    </div>
+                      </h3>
 
-                    {/* Constant Top Category Tag */}
-                    <div className="bg-primary/80 text-secondary border-border-primary/40 absolute top-6 left-6 rounded-full border px-4 py-1.5 text-[9px] font-semibold tracking-wider uppercase backdrop-blur-md transition-colors duration-500">
-                      {project.category}
+                      {/* Horizontal Pill Badges */}
+                      <div className="flex flex-wrap gap-1.5">
+                        {project.tags.slice(0, 3).map((tag, tIdx) => (
+                          <span
+                            key={tIdx}
+                            className="text-secondary/70 bg-secondary rounded-md px-3 py-1 text-[9px] font-semibold tracking-wider uppercase"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
                     </div>
-
-                    {/* Hover Arrow indicator */}
-                    <div className="bg-invert text-invert border-border-primary absolute top-6 right-6 flex h-10 w-10 scale-75 items-center justify-center rounded-full border opacity-0 transition-all duration-500 ease-[0.16,1,0.3,1] group-hover:scale-100 group-hover:opacity-100">
-                      <ArrowUpRight size={16} />
-                    </div>
-                  </div>
-
-                  {/* Informative Grid Details */}
-                  <div className="pl-2">
-                    <span className="text-secondary mb-1.5 block text-[9px] font-bold tracking-[0.25em] uppercase">
-                      {project.client}
-                    </span>
-                    <h3 className="font-display text-primary group-hover:text-secondary mb-4 text-2xl font-light tracking-tight transition-all duration-500 group-hover:translate-x-1.5">
-                      {t(`project.${project.id}.title`) !== `project.${project.id}.title`
-                        ? t(`project.${project.id}.title`)
-                        : project.title}
-                    </h3>
-
-                    {/* Horizontal Pill Badges */}
-                    <div className="flex flex-wrap gap-1.5">
-                      {project.tags.slice(0, 3).map((tag, tIdx) => (
-                        <span
-                          key={tIdx}
-                          className="text-secondary/70 bg-secondary rounded-md px-3 py-1 text-[9px] font-semibold tracking-wider uppercase"
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+                  </Link>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -1123,6 +1133,37 @@ export default function Portfolio() {
             </div>
           )}
         </div>
+      </section>
+
+      <section className="border-border-primary/60 mx-auto max-w-[1400px] space-y-6 border-t px-6 py-14 md:px-12 md:py-20">
+        <h2 className="font-display text-primary text-2xl font-light tracking-tight md:text-3xl">
+          Case studies across ads, web, product, and motion
+        </h2>
+        <p className="text-secondary max-w-4xl text-base leading-relaxed font-light md:text-lg">
+          The NextCreavo portfolio highlights real client work spanning digital marketing, Google Ads and Meta
+          campaigns, local SEO and Map Pack growth, Next.js and headless commerce builds, mobile apps, AI automation,
+          UI/UX design systems, and 2D / Lottie animation. Filter by category or search by keyword to explore outcomes,
+          process, and creative direction.
+        </p>
+        <p className="text-secondary max-w-4xl text-base leading-relaxed font-light md:text-lg">
+          Every case study focuses on measurable results where possible — ROAS, lead quality, page speed, engagement, or
+          brand clarity — and shows how strategy, design, and engineering work together. Looking for a similar outcome
+          for Facebook, Instagram, TikTok, LinkedIn, Twitter/X, or Google? Review a few projects, then{' '}
+          <Link href="/contact" className="text-primary underline-offset-4 hover:underline">
+            start a project brief
+          </Link>{' '}
+          or explore our{' '}
+          <Link href="/services" className="text-primary underline-offset-4 hover:underline">
+            full service suite
+          </Link>
+          .
+        </p>
+        <ul className="text-secondary grid max-w-4xl list-disc grid-cols-1 gap-2 pl-5 text-base font-light md:grid-cols-2">
+          <li>Performance creative for Google Ads and Meta (Facebook & Instagram)</li>
+          <li>Social growth systems for LinkedIn, TikTok, and Twitter/X</li>
+          <li>Conversion-focused websites, Shopify, and product interfaces</li>
+          <li>AI features, motion design, and multi-channel brand launches</li>
+        </ul>
       </section>
     </div>
   )

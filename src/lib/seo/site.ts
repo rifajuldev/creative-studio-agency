@@ -10,6 +10,18 @@ export const siteConfig = {
   locale: 'en_US',
   email: 'info@nextcreavo.com',
   phone: '+1-404-111-2222',
+  /** Digits-only for tel:/wa.me links */
+  phoneE164: '14041112222',
+  whatsappUrl: 'https://wa.me/14041112222',
+  address: {
+    line1: '404 Digital Avenue',
+    line2: 'Innovation District',
+    city: 'New York',
+    region: 'NY',
+    postalCode: '10001',
+    country: 'US',
+    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=New+York%2C+NY+10001',
+  },
   logo: '/favicon-logo.png',
   defaultOgImage: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop',
   twitterHandle: '@nextcreavo',
@@ -21,6 +33,14 @@ export const siteConfig = {
     x: 'https://x.com/nextcreavo',
     tiktok: 'https://www.tiktok.com/@nextcreavo',
   },
+  /** Labeled footer/nav social links (real URLs only — never href="#") */
+  socialLinks: [
+    { label: 'Instagram', href: 'https://www.instagram.com/nextcreavo' },
+    { label: 'Twitter', href: 'https://twitter.com/nextcreavo' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/nextcreavo' },
+    { label: 'TikTok', href: 'https://www.tiktok.com/@nextcreavo' },
+    { label: 'Facebook', href: 'https://www.facebook.com/nextcreavo' },
+  ],
   gtmId: process.env.NEXT_PUBLIC_GTM_ID ?? '',
   gaMeasurementId: process.env.NEXT_PUBLIC_GA_MEASUREMENT_ID ?? 'G-SY8XHE63J2',
   defaultKeywords: defaultSeoKeywords,
@@ -30,8 +50,11 @@ export const siteConfig = {
 
 export function absoluteUrl(path: string) {
   if (path.startsWith('http://') || path.startsWith('https://')) return path
+  const base = siteConfig.url.replace(/\/$/, '')
+  // Keep homepage without trailing slash so sitemap/canonical/internal links match
+  if (!path || path === '/') return base
   const normalized = path.startsWith('/') ? path : `/${path}`
-  return `${siteConfig.url}${normalized}`
+  return `${base}${normalized}`
 }
 
 export function socialProfileUrls() {

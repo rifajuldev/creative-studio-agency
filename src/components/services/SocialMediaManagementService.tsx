@@ -1063,7 +1063,7 @@ export default function SocialMediaManagementService() {
                     <ArrowRight size={14} />
                   </button>
                   <a
-                    href="https://wa.me/923012345678"
+                    href="https://wa.me/14041112222"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex min-h-[48px] items-center justify-center gap-3 rounded-full border border-white/20 bg-white/5 px-8 py-4 text-[11px] font-bold tracking-widest text-white uppercase backdrop-blur-md transition-colors hover:bg-white/10 active:scale-95"

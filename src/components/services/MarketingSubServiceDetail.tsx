@@ -247,7 +247,7 @@ export default function MarketingSubServiceDetail({ subId }: { subId: string }) 
                   Start Your Campaign
                 </Link>
                 <a
-                  href="https://wa.me/923012345678"
+                  href="https://wa.me/14041112222"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-8 py-4 text-[11px] font-bold tracking-widest text-white uppercase transition-all hover:bg-[#128C7E] active:scale-95 sm:text-xs"

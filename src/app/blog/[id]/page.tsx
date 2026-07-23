@@ -50,7 +50,7 @@ export default async function BlogDetailPage({ params }: Props) {
           ...(articleLd ? [articleLd] : []),
         ]}
       />
-      <BlogDetails />
+      <BlogDetails initialPost={post} />
     </>
   )
 }

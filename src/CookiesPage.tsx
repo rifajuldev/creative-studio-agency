@@ -1,5 +1,6 @@
 'use client'
 
+import { openCookiePreferences } from '@/lib/cookies/consent'
 import { BarChart, Cookie, Settings } from 'lucide-react'
 import { motion } from 'motion/react'
 import Link from 'next/link'
@@ -16,7 +17,7 @@ const EXTRA_SECTIONS = [
   },
   {
     title: '6. How to manage or disable cookies',
-    body: 'Most browsers let you block or delete cookies in settings. You can also use platform opt-outs for personalized advertising where available. Disabling analytics or marketing cookies will not stop the website from loading, but it may limit our ability to measure performance and improve campaigns. Essential cookies are required for secure form submission and basic browsing.',
+    body: 'Use the cookie banner on this site to Accept All or Reject analytics and marketing cookies. You can reopen preferences anytime with “Manage cookie preferences” on this page. Most browsers also let you block or delete cookies in settings. Disabling analytics or marketing cookies will not stop the website from loading, but it may limit our ability to measure performance and improve campaigns. Essential cookies are required for secure form submission and basic browsing.',
   },
   {
     title: '7. Updates and contact',
@@ -49,6 +50,13 @@ export default function CookiesPage() {
               </Link>
               .
             </p>
+            <button
+              type="button"
+              onClick={openCookiePreferences}
+              className="mt-2 rounded-xl border border-[#bca374]/30 bg-[#bca374]/10 px-5 py-3 text-[10px] font-bold tracking-widest text-[#bca374] uppercase transition-colors hover:bg-[#bca374]/20"
+            >
+              {t('cookies.manage')}
+            </button>
           </header>
 
           <div className="border-border-primary grid grid-cols-1 gap-8 border-y py-10 md:grid-cols-3">

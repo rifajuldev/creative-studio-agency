@@ -42,7 +42,7 @@ export default async function PortfolioDetailPage({ params }: Props) {
           ...(projectLd ? [projectLd] : []),
         ]}
       />
-      <Portfolio />
+      <Portfolio initialProject={project} />
     </>
   )
 }

@@ -446,13 +446,13 @@ export default function MarketingServiceDetail() {
                     {tLocal.ctaContact}
                   </button>
                   <a
-                    href="https://wa.me/14041112222"
+                    href="https://wa.me/8801611095655"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-8 py-4 text-center text-xs font-bold tracking-widest text-white uppercase transition-all hover:bg-[#128C7E]"
                     id="cta-whatsapp-marketing"
                   >
-                    Chat on WhatsApp
+                    Message NextCreavo on WhatsApp
                   </a>
                 </div>
               </div>
@@ -1409,13 +1409,13 @@ export default function MarketingServiceDetail() {
               </Link>
 
               <a
-                href="https://wa.me/14041112222"
+                href="https://wa.me/8801611095655"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#25D366] px-8 py-4 text-[11px] font-bold tracking-widest text-white uppercase transition-all hover:bg-[#128C7E] active:scale-95 sm:w-auto sm:px-10 sm:text-xs"
                 id="cta-bottom-whatsapp-marketing"
               >
-                Chat on WhatsApp
+                Message NextCreavo on WhatsApp
               </a>
             </div>
           </div>

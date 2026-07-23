@@ -7,6 +7,7 @@ import { CheckCircle, Mail, MapPin, Phone, Shield } from 'lucide-react'
 import { useRef } from 'react'
 import ContactForm from './components/contact/ContactForm'
 import { useLanguage } from './context/LanguageContext'
+import { siteConfig } from './lib/seo/site'
 
 export default function ContactPage() {
   const { t } = useLanguage()
@@ -103,10 +104,10 @@ export default function ContactPage() {
                     HQ Inquiries
                   </span>
                   <a
-                    href="tel:+14041112222"
+                    href={`tel:+${siteConfig.phoneE164}`}
                     className="text-primary hover:text-secondary font-medium transition-colors"
                   >
-                    +1 (404) 111-2222
+                    {siteConfig.phone}
                   </a>
                 </div>
               </div>

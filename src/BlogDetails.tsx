@@ -2,6 +2,7 @@
 
 import PortableTextBody from '@/components/blog/PortableTextBody'
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
+import type { IBlogPublicDetail } from '@/interfaces/blog.interface'
 import { formatBlogDate } from '@/interfaces/blog.interface'
 import { useGetPublicBlogBySlugQuery, useGetPublicBlogListQuery } from '@/redux/features/blog/blogPublic.api'
 import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
@@ -16,14 +17,14 @@ import { useEffect, useMemo, useRef } from 'react'
 
 gsap.registerPlugin(ScrollTrigger)
 
-export default function BlogDetails() {
+export default function BlogDetails({ initialPost }: { initialPost?: IBlogPublicDetail | null }) {
   const params = useParams()
   const slug = typeof params.id === 'string' ? params.id : undefined
   const router = useRouter()
   const containerRef = useRef<HTMLDivElement>(null)
 
   const { data, isLoading, isError } = useGetPublicBlogBySlugQuery(slug!, { skip: !slug })
-  const activePost = data?.data
+  const activePost = data?.data ?? initialPost ?? undefined
 
   const { data: listData } = useGetPublicBlogListQuery({ skip: 0, limit: 100 })
   const nextPost = useMemo(() => {
@@ -61,7 +62,7 @@ export default function BlogDetails() {
     { scope: containerRef, dependencies: [slug, activePost?._id], ...gsapScopeOptions }
   )
 
-  if (isLoading) {
+  if (isLoading && !activePost) {
     return (
       <div className="bg-primary text-primary flex min-h-screen w-full items-center justify-center p-6">
         <div className="border-border-primary h-12 w-12 animate-spin rounded-full border-2 border-t-transparent" />
@@ -69,7 +70,7 @@ export default function BlogDetails() {
     )
   }
 
-  if (isError || !activePost) {
+  if ((isError && !activePost) || !activePost) {
     return (
       <div className="bg-primary text-primary flex min-h-screen w-full flex-col items-center justify-center p-6 text-center">
         <Sparkles className="text-secondary mb-4 h-12 w-12 animate-pulse" />

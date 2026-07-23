@@ -28,7 +28,7 @@ export default async function PortfolioPage() {
           ),
         ]}
       />
-      <Portfolio />
+      <Portfolio initialList={projects} />
       <ServerTextBoost
         heading="NextCreavo portfolio index — projects searchable by crawlers"
         intro="Each case study below includes a plain-text summary in the initial HTML. Explore work across Google Ads, Meta (Facebook & Instagram), TikTok, LinkedIn, local SEO, Next.js websites, mobile apps, AI automation, UI/UX, and 2D animation."

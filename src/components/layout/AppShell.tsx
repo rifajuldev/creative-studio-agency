@@ -113,9 +113,10 @@ function AppShellContent({ children }: { children: React.ReactNode }) {
           whileHover={{ scale: 1.1 }}
           whileTap={{ scale: 0.95 }}
           className="pointer-events-auto flex h-12 w-12 cursor-pointer items-center justify-center rounded-full border border-black/5 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.12)] transition-colors hover:bg-gray-50 dark:border-white/5 dark:bg-[#1a1c24] dark:hover:bg-[#212432]"
-          title="Contact us on WhatsApp"
+          title={siteConfig.whatsappLabel}
+          aria-label={siteConfig.whatsappLabel}
         >
-          <img src="/whatsapp.svg" alt="WhatsApp" className="h-6 w-6" />
+          <img src="/whatsapp.svg" alt={siteConfig.whatsappLabel} className="h-6 w-6" />
         </motion.a>
 
         {/* Book Meeting Pill */}

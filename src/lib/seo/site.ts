@@ -9,10 +9,11 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.nextcreavo.com',
   locale: 'en_US',
   email: 'info@nextcreavo.com',
-  phone: '+1-404-111-2222',
-  /** Digits-only for tel:/wa.me links */
-  phoneE164: '14041112222',
-  whatsappUrl: 'https://wa.me/14041112222',
+  phone: '+880 1611-095655',
+  /** Digits-only for tel: links */
+  phoneE164: '8801611095655',
+  whatsappUrl: 'https://wa.me/8801611095655',
+  whatsappLabel: 'Message NextCreavo on WhatsApp',
   address: {
     line1: '404 Digital Avenue',
     line2: 'Innovation District',

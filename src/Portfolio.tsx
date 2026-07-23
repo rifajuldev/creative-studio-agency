@@ -114,7 +114,13 @@ function toDetailProject(item: IPortfolioPublicDetail): Project {
   }
 }
 
-export default function Portfolio() {
+export default function Portfolio({
+  initialProject = null,
+  initialList = null,
+}: {
+  initialProject?: IPortfolioPublicDetail | null
+  initialList?: IPortfolioPublicListItem[] | null
+}) {
   const params = useParams()
   const id = typeof params.id === 'string' ? params.id : undefined
   const router = useRouter()
@@ -131,9 +137,10 @@ export default function Portfolio() {
     isError: detailError,
   } = useGetPublicPortfolioBySlugQuery(id!, { skip: !id })
 
-  const PROJECTS = (listData?.data ?? []).map(toListProject)
+  const PROJECTS = (listData?.data ?? initialList ?? []).map(toListProject)
   const sanityCategories = categoriesData?.data ?? []
   const totalCount = PROJECTS.length
+  const resolvedDetail = detailData?.data ?? (initialProject && initialProject.slug === id ? initialProject : null)
 
   const CATEGORIES: {
     id: string
@@ -282,7 +289,7 @@ export default function Portfolio() {
   // DEDICATED FULL-PAGE DETAILS RENDER BRANCH
   // -------------------------------------------------------------
   if (id) {
-    if (detailLoading) {
+    if (detailLoading && !resolvedDetail) {
       return (
         <div className="bg-primary text-primary flex min-h-screen w-full items-center justify-center p-6">
           <div className="border-border-primary h-12 w-12 animate-spin rounded-full border-2 border-t-transparent" />
@@ -290,7 +297,7 @@ export default function Portfolio() {
       )
     }
 
-    if (detailError || !detailData?.data) {
+    if ((detailError && !resolvedDetail) || !resolvedDetail) {
       return (
         <div className="bg-primary text-primary flex min-h-screen w-full flex-col items-center justify-center p-6 text-center">
           <Sparkles className="text-secondary mb-4 h-12 w-12 animate-pulse" />
@@ -309,7 +316,7 @@ export default function Portfolio() {
     }
 
     {
-      const activeProject = toDetailProject(detailData.data)
+      const activeProject = toDetailProject(resolvedDetail)
       const { colors, stack, steps, kpis } = getProjectStrategy(activeProject)
       const currentIndex = Math.max(
         0,
@@ -912,7 +919,7 @@ export default function Portfolio() {
     }
   }
 
-  if (listLoading) {
+  if (listLoading && PROJECTS.length === 0) {
     return (
       <div className="bg-primary text-primary flex min-h-screen w-full items-center justify-center p-6">
         <div className="border-border-primary h-12 w-12 animate-spin rounded-full border-2 border-t-transparent" />

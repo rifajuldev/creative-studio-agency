@@ -1,7 +1,7 @@
 import About from '@/About'
 import JsonLd from '@/components/seo/JsonLd'
 import ServerTextBoost from '@/components/seo/ServerTextBoost'
-import { webPageJsonLd } from '@/lib/seo/json-ld'
+import { breadcrumbJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
 import { pageKeywordSets } from '@/lib/seo/keywords'
 import { staticPagesSeo } from '@/lib/seo/static-pages'
 
@@ -11,12 +11,18 @@ export default function AboutPage() {
   return (
     <>
       <JsonLd
-        data={webPageJsonLd(
-          'About NextCreavo | Social Ads & Creative Studio Team',
-          'Meet NextCreavo — media buyers and creatives for Facebook, Instagram, TikTok, LinkedIn, Twitter/X, Google Ads, SEO, web, apps and AI-powered brand growth.',
-          '/about',
-          [...pageKeywordSets.about]
-        )}
+        data={[
+          webPageJsonLd(
+            'About NextCreavo | Web, Marketing, Animation & AI Studio',
+            'Meet NextCreavo — a creative studio for UI/UX, web & apps, 2D animation, AI integration, and growth marketing across Google Ads, Facebook Ads, GMB, SEO and social.',
+            '/about',
+            [...pageKeywordSets.about]
+          ),
+          breadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'About', path: '/about' },
+          ]),
+        ]}
       />
       <About />
       <ServerTextBoost

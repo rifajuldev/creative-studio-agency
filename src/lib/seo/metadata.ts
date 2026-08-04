@@ -33,7 +33,9 @@ export function buildPageMetadata(input: PageSeoInput): Metadata {
     authors: [{ name: siteConfig.name, url: siteConfig.url }],
     creator: siteConfig.name,
     publisher: siteConfig.legalName,
-    category: 'Digital Marketing & Creative Agency',
+    category: 'Creative Studio — Web, Marketing, Animation & AI',
+    applicationName: siteConfig.name,
+    referrer: 'origin-when-cross-origin',
     metadataBase: new URL(siteConfig.url),
     alternates: {
       canonical,
@@ -72,6 +74,8 @@ export function buildPageMetadata(input: PageSeoInput): Metadata {
         {
           url: image,
           alt: `${fullTitle} — NextCreavo`,
+          width: 1200,
+          height: 630,
         },
       ],
     },
@@ -104,18 +108,23 @@ export function buildPageMetadata(input: PageSeoInput): Metadata {
 export function buildDefaultMetadata(): Metadata {
   return {
     ...buildPageMetadata({
-      title: 'NextCreavo | Facebook, Instagram, TikTok, LinkedIn & Google Ads Agency',
+      title: 'Web, Marketing, Animation & AI | NextCreavo',
       description: siteConfig.description,
       path: '/',
     }),
     title: {
-      default: 'NextCreavo | Facebook, Instagram, TikTok, LinkedIn & Google Ads Agency',
+      default: 'Web, Marketing, Animation & AI | NextCreavo',
       template: `%s | ${siteConfig.name}`,
     },
     icons: {
       icon: [{ url: siteConfig.logo, type: 'image/png' }],
       apple: [{ url: siteConfig.logo, type: 'image/png' }],
       shortcut: siteConfig.logo,
+    },
+    formatDetection: {
+      telephone: true,
+      email: true,
+      address: true,
     },
   }
 }

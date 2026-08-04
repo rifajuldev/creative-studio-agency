@@ -1,14 +1,22 @@
+import { getAllIndustrySlugs } from '@/data/industries'
+import { getAllLocationSlugs } from '@/data/locations'
+import { getAllServiceLandingSlugs } from '@/data/servicePages'
 import { fetchPublicBlogList } from '@/lib/blog/server'
 import { fetchPortfolioIndex } from '@/lib/portfolio/server'
 import { absoluteUrl } from '@/lib/seo/site'
 import type { MetadataRoute } from 'next'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  // HTML pages only — do NOT include /llms.txt (plain text, discovered via robots + <link>)
+  const serviceLandings = getAllServiceLandingSlugs().map((slug) => `/services/${slug}`)
+  const industries = getAllIndustrySlugs().map((slug) => `/industries/${slug}`)
+  const locations = getAllLocationSlugs().map((slug) => `/locations/${slug}`)
+
   const staticRoutes = [
     '/',
     '/about',
     '/services',
+    ...serviceLandings,
+    // Legacy hub services (keep indexed during migration)
     '/services/animation',
     '/services/marketing',
     '/services/marketing/gmb-optimization',
@@ -19,7 +27,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/services/appdev',
     '/services/ai',
     '/services/uiux',
+    '/industries',
+    ...industries,
+    '/locations',
+    ...locations,
     '/portfolio',
+    '/case-studies',
     '/blog',
     '/contact',
     '/faq',
@@ -48,7 +61,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (path === '/') return 1
     if (path === '/services' || path === '/contact') return 0.95
     if (path.startsWith('/services/')) return 0.9
-    if (path === '/portfolio' || path === '/blog') return 0.85
+    if (path.startsWith('/industries')) return 0.85
+    if (path.startsWith('/locations')) return 0.8
+    if (path === '/portfolio' || path === '/case-studies' || path === '/blog') return 0.85
     return 0.7
   }
 

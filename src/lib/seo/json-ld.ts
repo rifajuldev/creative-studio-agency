@@ -2,6 +2,7 @@ import { SERVICES_DATA, getServiceById } from '@/data/services'
 import type { IBlogPublicDetail } from '@/interfaces/blog.interface'
 import type { IPortfolioPublicListItem } from '@/interfaces/portfolio.interface'
 import { absoluteUrl, siteConfig, socialProfileUrls } from './site'
+import { SITE_REVIEWS } from './structured-content'
 
 type JsonLd = Record<string, unknown>
 
@@ -29,7 +30,7 @@ export function organizationJsonLd(): JsonLd {
     telephone: siteConfig.phone,
     // Keep schema keywords lean — long keyword dumps inflate HTML and hurt text:HTML ratio
     keywords: siteConfig.defaultKeywords.slice(0, 12).join(', '),
-    knowsAbout: [...siteConfig.knowsAbout].slice(0, 16),
+    knowsAbout: [...siteConfig.knowsAbout].slice(0, 20),
     areaServed: 'Worldwide',
     sameAs: [...socialProfileUrls(), absoluteUrl('/llms.txt'), absoluteUrl('/llm.txt')],
     contactPoint: {
@@ -54,6 +55,34 @@ export function organizationJsonLd(): JsonLd {
         },
       })),
     },
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: Number(
+        (SITE_REVIEWS.reduce((sum, review) => sum + review.ratingValue, 0) / Math.max(SITE_REVIEWS.length, 1)).toFixed(
+          1
+        )
+      ),
+      bestRating: 5,
+      worstRating: 1,
+      ratingCount: SITE_REVIEWS.length,
+      reviewCount: SITE_REVIEWS.length,
+    },
+    review: SITE_REVIEWS.map((review) => ({
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: review.author,
+        ...(review.jobTitle ? { jobTitle: review.jobTitle } : {}),
+      },
+      reviewBody: review.reviewBody,
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: review.ratingValue,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      ...(review.datePublished ? { datePublished: review.datePublished } : {}),
+    })),
   }
 }
 
@@ -199,7 +228,7 @@ export function itemListJsonLd(name: string, path: string, items: { name: string
 
 export function servicesListJsonLd(): JsonLd {
   return itemListJsonLd(
-    'NextCreavo Digital Agency Services',
+    'NextCreavo Creative Studio Services',
     '/services',
     SERVICES_DATA.map((s) => ({ name: s.title, url: `/services/${s.id}` }))
   )
@@ -222,5 +251,79 @@ export function faqPageJsonLd(faqs: { question: string; answer: string }[]): Jso
       name: faq.question,
       acceptedAnswer: { '@type': 'Answer', text: faq.answer },
     })),
+  }
+}
+
+export function reviewJsonLd(
+  reviews: {
+    author: string
+    jobTitle?: string
+    reviewBody: string
+    ratingValue: number
+    datePublished?: string
+  }[] = [...SITE_REVIEWS]
+): JsonLd {
+  const avg = reviews.reduce((sum, review) => sum + review.ratingValue, 0) / Math.max(reviews.length, 1)
+
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${siteConfig.url}/#organization`,
+    name: siteConfig.legalName,
+    aggregateRating: {
+      '@type': 'AggregateRating',
+      ratingValue: Number(avg.toFixed(1)),
+      bestRating: 5,
+      worstRating: 1,
+      ratingCount: reviews.length,
+      reviewCount: reviews.length,
+    },
+    review: reviews.map((review) => ({
+      '@type': 'Review',
+      author: {
+        '@type': 'Person',
+        name: review.author,
+        ...(review.jobTitle ? { jobTitle: review.jobTitle } : {}),
+      },
+      reviewBody: review.reviewBody,
+      reviewRating: {
+        '@type': 'Rating',
+        ratingValue: review.ratingValue,
+        bestRating: 5,
+        worstRating: 1,
+      },
+      ...(review.datePublished ? { datePublished: review.datePublished } : {}),
+      itemReviewed: {
+        '@type': 'Organization',
+        '@id': `${siteConfig.url}/#organization`,
+        name: siteConfig.legalName,
+      },
+    })),
+  }
+}
+
+/** Standalone Service offer for marketing sub-pages and custom offers */
+export function customServiceJsonLd(input: {
+  name: string
+  description: string
+  path: string
+  keywords?: string[]
+}): JsonLd {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    name: input.name,
+    description: input.description,
+    url: absoluteUrl(input.path),
+    provider: { '@id': `${siteConfig.url}/#organization` },
+    areaServed: 'Worldwide',
+    serviceType: input.name,
+    keywords: (input.keywords ?? siteConfig.defaultKeywords.slice(0, 8)).join(', '),
+    offers: {
+      '@type': 'Offer',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: absoluteUrl(input.path),
+    },
   }
 }

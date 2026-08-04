@@ -3,9 +3,9 @@ import { defaultSeoKeywords, knowsAboutTopics, pageKeywordSets } from './keyword
 export const siteConfig = {
   name: 'NextCreavo',
   legalName: 'NextCreavo Creative Studio Agency',
-  tagline: 'Grow faster with ads, SEO & creative built for every social platform.',
+  tagline: 'Web, Marketing, Animation & AI — creative studio for modern brands.',
   description:
-    'NextCreavo is a creative studio agency for Google Ads, SEO, Facebook, Instagram, LinkedIn, Twitter/X & TikTok growth — plus Next.js websites, apps, AI, animation and UI/UX that convert clicks into customers.',
+    'NextCreavo is a creative studio agency for UI/UX, web development, mobile apps, 2D & modern animation, AI integration, chatbots & agents, SaaS & custom software — plus Google Ads, Facebook Ads, GMB, social media, SEO and technical SEO that rank and convert.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.nextcreavo.com',
   locale: 'en_US',
   email: 'info@nextcreavo.com',

@@ -2,7 +2,7 @@ import Portfolio from '@/Portfolio'
 import JsonLd from '@/components/seo/JsonLd'
 import ServerTextBoost from '@/components/seo/ServerTextBoost'
 import { fetchPortfolioIndex } from '@/lib/portfolio/server'
-import { itemListJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
+import { breadcrumbJsonLd, itemListJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
 import { pageKeywordSets } from '@/lib/seo/keywords'
 import { staticPagesSeo } from '@/lib/seo/static-pages'
 
@@ -21,6 +21,10 @@ export default async function PortfolioPage() {
             '/portfolio',
             [...pageKeywordSets.portfolio]
           ),
+          breadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'Portfolio', path: '/portfolio' },
+          ]),
           itemListJsonLd(
             'NextCreavo Portfolio Case Studies',
             '/portfolio',

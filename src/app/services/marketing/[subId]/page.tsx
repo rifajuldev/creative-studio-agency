@@ -1,6 +1,6 @@
 import JsonLd from '@/components/seo/JsonLd'
 import MarketingSubServiceDetail from '@/components/services/MarketingSubServiceDetail'
-import { breadcrumbJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
+import { breadcrumbJsonLd, customServiceJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
 import { buildPageMetadata } from '@/lib/seo/metadata'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -107,6 +107,12 @@ export default async function MarketingSubServicePage({ params }: Props) {
             { name: 'Digital Marketing', path: '/services/marketing' },
             { name: service.title, path },
           ]),
+          customServiceJsonLd({
+            name: service.title,
+            description: service.description,
+            path,
+            keywords: [...service.keywords],
+          }),
         ]}
       />
       <MarketingSubServiceDetail subId={subId} />

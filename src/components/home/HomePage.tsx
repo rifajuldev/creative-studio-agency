@@ -105,8 +105,10 @@ function Hero() {
             src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop"
             alt="Abstract"
             className="hero-img absolute inset-0 top-[-15%] h-[130%] w-full object-cover grayscale"
-            width={1000}
-            height={1000}
+            width={1280}
+            height={1600}
+            sizes="(max-width: 1024px) 100vw, 50vw"
+            priority
           />
         </div>
         <div className="to-primary absolute inset-0 bg-linear-to-l from-transparent via-transparent"></div>

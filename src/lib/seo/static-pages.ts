@@ -3,51 +3,51 @@ import { buildPageMetadata } from './metadata'
 
 export const staticPagesSeo = {
   home: buildPageMetadata({
-    title: 'NextCreavo | Facebook, Instagram, TikTok, LinkedIn & Google Ads Agency',
+    title: 'Web, Marketing, Animation & AI | NextCreavo',
     description:
-      'Grow on Facebook, Instagram, TikTok, LinkedIn, Twitter/X & Google. NextCreavo delivers ads, SEO, social content, Next.js websites, apps, AI & UI/UX that turn clicks into customers. Free strategy call.',
+      'NextCreavo creative studio: UI/UX, web & mobile apps, 2D animation, AI agents & chatbots, SaaS & custom software — plus Google Ads, Facebook Ads, GMB, social media, SEO & technical SEO. Free strategy call.',
     keywords: [...pageKeywordSets.home],
     path: '/',
   }),
   about: buildPageMetadata({
-    title: 'About NextCreavo | Social Ads & Creative Studio Team',
+    title: 'About NextCreavo | Web, Marketing, Animation & AI Studio',
     description:
-      'Meet NextCreavo — media buyers and creatives for Facebook, Instagram, TikTok, LinkedIn, Twitter/X, Google Ads, SEO, web, apps and AI-powered brand growth.',
+      'Meet NextCreavo — creative studio for UI/UX, web development, mobile apps, 2D animation, AI integration, Google Ads, Facebook Ads, GMB, SEO and social growth.',
     keywords: [...pageKeywordSets.about],
     path: '/about',
   }),
   services: buildPageMetadata({
-    title: 'Services | Facebook, Instagram, TikTok, LinkedIn, Google Ads & SEO',
+    title: 'Services | Web, Marketing, Animation & AI | NextCreavo',
     description:
-      'Full-funnel NextCreavo services: Facebook & Instagram ads, TikTok, LinkedIn, Twitter/X, Google Ads, local SEO, social management, web, apps, AI, animation and UI/UX.',
+      'Full-funnel NextCreavo services: UI/UX, web & apps, 2D animation, AI — plus Google Ads, Facebook Ads, GMB, social media management, SEO and technical SEO.',
     keywords: [...pageKeywordSets.services],
     path: '/services',
   }),
   portfolio: buildPageMetadata({
-    title: 'Case Studies | Social Ads, SEO & Brand Results | NextCreavo',
+    title: 'Case Studies | Web, Ads, SEO & Animation | NextCreavo',
     description:
-      'See NextCreavo results across Facebook, Instagram, TikTok, LinkedIn, Twitter/X and Google — ROAS wins, follower growth, Map Pack rankings and conversion-focused websites.',
+      'See NextCreavo results across websites, apps, AI, 2D animation, Google Ads, Facebook/Instagram, Map Pack SEO and conversion-focused brand experiences.',
     keywords: [...pageKeywordSets.portfolio],
     path: '/portfolio',
   }),
   blog: buildPageMetadata({
-    title: 'Blog | Instagram, TikTok, LinkedIn, Facebook & Google Ads Tips',
+    title: 'Blog | Web, Marketing, Animation & AI Insights | NextCreavo',
     description:
-      'Popular guides: Instagram Reels ads, TikTok ecommerce, LinkedIn B2B leads, Facebook Meta creatives, Twitter/X ads, Google Map Pack SEO and AI marketing playbooks.',
+      'Guides on Instagram Reels ads, TikTok ecommerce, LinkedIn B2B, Google Ads, Map Pack SEO, Next.js performance, animation, and AI marketing playbooks.',
     keywords: [...pageKeywordSets.blog],
     path: '/blog',
   }),
   contact: buildPageMetadata({
-    title: 'Hire NextCreavo | Free Quote for Social Ads & SEO',
+    title: 'Hire NextCreavo | Free Quote for Web, Marketing, Animation & AI',
     description:
-      'Ready to grow on Facebook, Instagram, TikTok, LinkedIn, Twitter/X or Google? Contact NextCreavo for a free quote on ads, SEO, web, apps or AI — start your brief today.',
+      'Ready to grow? Contact NextCreavo for a free quote on UI/UX, web, apps, animation, AI, Google Ads, Facebook Ads, GMB, SEO or social — start your brief today.',
     keywords: [...pageKeywordSets.contact],
     path: '/contact',
   }),
   faq: buildPageMetadata({
-    title: 'FAQ | Social Ads, SEO, Pricing & Delivery',
+    title: 'FAQ | Pricing, Delivery, Ads, SEO & Technical SEO',
     description:
-      'Answers on Facebook/Instagram/TikTok/LinkedIn ads budgets, Google Ads spend, SEO timelines, social retainers, Figma handoff, billing and NextCreavo delivery.',
+      'Answers on NextCreavo pricing, Google Ads spend, Meta campaigns, SEO timelines, Core Web Vitals, Figma handoff, billing and retainers.',
     keywords: [...pageKeywordSets.faq],
     path: '/faq',
   }),

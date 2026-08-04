@@ -2,7 +2,7 @@ import BlogList from '@/BlogList'
 import JsonLd from '@/components/seo/JsonLd'
 import ServerTextBoost from '@/components/seo/ServerTextBoost'
 import { fetchPublicBlogList } from '@/lib/blog/server'
-import { itemListJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
+import { breadcrumbJsonLd, itemListJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
 import { pageKeywordSets } from '@/lib/seo/keywords'
 import { staticPagesSeo } from '@/lib/seo/static-pages'
 
@@ -21,6 +21,10 @@ export default async function BlogPage() {
             '/blog',
             [...pageKeywordSets.blog]
           ),
+          breadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'Blog', path: '/blog' },
+          ]),
           itemListJsonLd(
             'NextCreavo Growth Blog Articles',
             '/blog',

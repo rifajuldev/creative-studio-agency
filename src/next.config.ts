@@ -37,11 +37,6 @@ const nextConfig: NextConfig = {
         destination: 'https://www.nextcreavo.com/:path*',
         permanent: true,
       },
-      { source: '/case-studies/:slug*', destination: '/portfolio/:slug*', permanent: true },
-      { source: '/services/webdev', destination: '/services/web-development', permanent: false },
-      { source: '/services/appdev', destination: '/services/mobile-app-development', permanent: false },
-      { source: '/services/ai', destination: '/services/ai-development', permanent: false },
-      { source: '/services/uiux', destination: '/services/ui-ux-design', permanent: false },
     ]
   },
   async headers() {

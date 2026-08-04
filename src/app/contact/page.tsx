@@ -2,7 +2,7 @@ import ContactPage from '@/ContactPage'
 import JsonLd from '@/components/seo/JsonLd'
 import ServerTextBoost from '@/components/seo/ServerTextBoost'
 import { SERVICES_DATA } from '@/data/services'
-import { webPageJsonLd } from '@/lib/seo/json-ld'
+import { breadcrumbJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
 import { pageKeywordSets } from '@/lib/seo/keywords'
 import { staticPagesSeo } from '@/lib/seo/static-pages'
 
@@ -12,12 +12,18 @@ export default function ContactRoutePage() {
   return (
     <>
       <JsonLd
-        data={webPageJsonLd(
-          'Hire NextCreavo | Free Quote for Social Ads & SEO',
-          'Ready to grow on Facebook, Instagram, TikTok, LinkedIn, Twitter/X or Google? Contact NextCreavo for a free quote on ads, SEO, web, apps or AI — start your brief today.',
-          '/contact',
-          [...pageKeywordSets.contact]
-        )}
+        data={[
+          webPageJsonLd(
+            'Hire NextCreavo | Free Quote for Web, Marketing, Animation & AI',
+            'Contact NextCreavo for UI/UX, web & apps, 2D animation, AI integration, Google Ads, Facebook Ads, GMB, SEO and social — start your free strategy brief today.',
+            '/contact',
+            [...pageKeywordSets.contact]
+          ),
+          breadcrumbJsonLd([
+            { name: 'Home', path: '/' },
+            { name: 'Contact', path: '/contact' },
+          ]),
+        ]}
       />
       <ContactPage />
       <ServerTextBoost

@@ -3,6 +3,7 @@
 import CookieConsent from '@/components/CookieConsent'
 import PageTransition from '@/components/PageTransition'
 import SchedulerModal from '@/components/SchedulerModal'
+import BriefInquiryForm from '@/components/contact/BriefInquiryForm'
 import FooterSitemapLinks from '@/components/layout/FooterSitemapLinks'
 import { LanguageProvider, useLanguage } from '@/context/LanguageContext'
 import { gsapScopeOptions, useScrollTriggerRefresh } from '@/hooks/useScrollTriggerRefresh'
@@ -396,13 +397,6 @@ function Navbar({ toggleTheme, isDark }: { toggleTheme: () => void; isDark: bool
 
 function ContactBlock() {
   const container = useRef(null)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    service: '',
-    industry: '',
-    details: '',
-  })
   const { t } = useLanguage()
 
   useGSAP(
@@ -429,9 +423,6 @@ function ContactBlock() {
     },
     { scope: container, ...gsapScopeOptions }
   )
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) =>
-    setFormData({ ...formData, [e.target.name]: e.target.value })
 
   return (
     <section ref={container} className="bg-primary transition-colors duration-700" id="contact">
@@ -460,108 +451,7 @@ function ContactBlock() {
             Provide details regarding your project, and our team will get back to you with a comprehensive quote.
           </p>
 
-          <form className="flex flex-col gap-8 sm:gap-10" onSubmit={(e) => e.preventDefault()}>
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10">
-              <div className="group relative">
-                <input
-                  type="text"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleChange}
-                  placeholder=" "
-                  className="peer border-invert/20 text-invert focus:border-invert w-full border-b bg-transparent py-3 text-sm font-light transition-colors focus:outline-none"
-                />
-                <label className="text-invert/40 peer-focus:text-invert/80 peer-not-placeholder-shown:text-invert/80 pointer-events-none absolute top-3 left-0 text-sm font-light transition-all peer-not-placeholder-shown:-top-4 peer-not-placeholder-shown:text-[10px] peer-not-placeholder-shown:tracking-widest peer-not-placeholder-shown:uppercase peer-focus:-top-4 peer-focus:text-[10px] peer-focus:tracking-widest peer-focus:uppercase">
-                  Your Name
-                </label>
-              </div>
-              <div className="group relative">
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  placeholder=" "
-                  className="peer border-invert/20 text-invert focus:border-invert w-full border-b bg-transparent py-3 text-sm font-light transition-colors focus:outline-none"
-                />
-                <label className="text-invert/40 peer-focus:text-invert/80 peer-not-placeholder-shown:text-invert/80 pointer-events-none absolute top-3 left-0 text-sm font-light transition-all peer-not-placeholder-shown:-top-4 peer-not-placeholder-shown:text-[10px] peer-not-placeholder-shown:tracking-widest peer-not-placeholder-shown:uppercase peer-focus:-top-4 peer-focus:text-[10px] peer-focus:tracking-widest peer-focus:uppercase">
-                  Email Address
-                </label>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10">
-              <select
-                name="service"
-                value={formData.service}
-                onChange={handleChange}
-                className="border-invert/20 text-invert/60 focus:border-invert cursor-pointer appearance-none rounded-none border-b bg-transparent py-3 text-sm font-light transition-colors focus:outline-none"
-              >
-                <option value="" disabled>
-                  Select Service
-                </option>
-                <option value="animation" className="bg-invert text-invert">
-                  2D Animation
-                </option>
-                <option value="marketing" className="bg-invert text-invert">
-                  Digital Marketing
-                </option>
-                <option value="webdev" className="bg-invert text-invert">
-                  Web Development
-                </option>
-                <option value="mobile" className="bg-invert text-invert">
-                  Mobile App
-                </option>
-                <option value="ai" className="bg-invert text-invert">
-                  AI & Integrations
-                </option>
-                <option value="design" className="bg-invert text-invert">
-                  UI/UX Design
-                </option>
-              </select>
-              <select
-                name="industry"
-                value={formData.industry}
-                onChange={handleChange}
-                className="border-invert/20 text-invert/60 focus:border-invert cursor-pointer appearance-none rounded-none border-b bg-transparent py-3 text-sm font-light transition-colors focus:outline-none"
-              >
-                <option value="" disabled>
-                  Select Industry
-                </option>
-                <option value="saas" className="bg-invert text-invert">
-                  SaaS / Technology
-                </option>
-                <option value="ecommerce" className="bg-invert text-invert">
-                  E-Commerce
-                </option>
-                <option value="finance" className="bg-invert text-invert">
-                  Finance
-                </option>
-                <option value="other" className="bg-invert text-invert">
-                  Other
-                </option>
-              </select>
-            </div>
-
-            <div className="group relative mt-4">
-              <textarea
-                name="details"
-                value={formData.details}
-                onChange={handleChange}
-                placeholder=" "
-                rows={3}
-                className="peer border-invert/20 text-invert focus:border-invert w-full resize-none border-b bg-transparent py-3 text-sm font-light transition-colors focus:outline-none"
-              />
-              <label className="text-invert/40 peer-focus:text-invert/80 peer-not-placeholder-shown:text-invert/80 pointer-events-none absolute top-3 left-0 text-sm font-light transition-all peer-not-placeholder-shown:-top-4 peer-not-placeholder-shown:text-[10px] peer-not-placeholder-shown:tracking-widest peer-not-placeholder-shown:uppercase peer-focus:-top-4 peer-focus:text-[10px] peer-focus:tracking-widest peer-focus:uppercase">
-                Tell us about your project
-              </label>
-            </div>
-
-            <button className="group bg-primary text-primary border-primary relative mt-4 overflow-hidden rounded-full border px-10 py-5 text-[10px] font-medium tracking-[0.2em] uppercase transition-all duration-300 sm:mt-8 sm:px-12 sm:py-6 md:max-w-xs">
-              <span className="group-hover:text-invert relative z-10 transition-colors duration-500">Send Inquiry</span>
-              <div className="bg-invert absolute inset-0 z-0 translate-y-full transition-transform duration-500 ease-[0.16,1,0.3,1] group-hover:translate-y-0"></div>
-            </button>
-          </form>
+          <BriefInquiryForm variant="block" />
         </div>
       </div>
     </section>

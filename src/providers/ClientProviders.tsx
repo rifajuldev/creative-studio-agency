@@ -3,6 +3,7 @@
 import AppShell from '@/components/layout/AppShell'
 import '@/redux/features/blog/blogPublic.api'
 import '@/redux/features/booking/booking.api'
+import '@/redux/features/brief/brief.api'
 import '@/redux/features/portfolio/portfolioPublic.api'
 import { store } from '@/redux/store'
 import { Provider } from 'react-redux'

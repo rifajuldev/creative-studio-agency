@@ -1,15 +1,14 @@
 import HomePage from '@/components/home/HomePage'
 import JsonLd from '@/components/seo/JsonLd'
 import ServerTextBoost from '@/components/seo/ServerTextBoost'
-import { SERVICE_LANDING_PAGES } from '@/data/servicePages'
-import { breadcrumbJsonLd, faqPageJsonLd, reviewJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
+import { breadcrumbJsonLd, faqPageJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
 import { siteConfig } from '@/lib/seo/site'
 import { staticPagesSeo } from '@/lib/seo/static-pages'
 import { HOME_FAQS } from '@/lib/seo/structured-content'
 
 export const metadata = staticPagesSeo.home
 
-const HOME_TITLE = 'Web, Marketing, Animation & AI | NextCreavo'
+const HOME_TITLE = 'NextCreavo | Official Website'
 
 export default function Page() {
   return (
@@ -19,19 +18,35 @@ export default function Page() {
           webPageJsonLd(HOME_TITLE, siteConfig.description, '/', [...siteConfig.defaultKeywords.slice(0, 12)]),
           breadcrumbJsonLd([{ name: 'Home', path: '/' }]),
           faqPageJsonLd([...HOME_FAQS]),
-          reviewJsonLd(),
         ]}
       />
       <HomePage />
       <ServerTextBoost
-        heading="NextCreavo — Web, Marketing, Animation & AI creative studio"
-        intro={siteConfig.description}
-        items={SERVICE_LANDING_PAGES.map((service) => ({
-          title: service.primaryKeyword,
-          href: `/services/${service.slug}`,
-          summary: service.shortDesc,
-        }))}
-        outro="UI/UX, web development, mobile apps, 2D & modern animation, AI integration, chatbots, SaaS, custom software — plus Google Ads, Facebook Ads, GMB, social media, SEO and technical SEO. Explore /services, /industries, /locations, /portfolio and /contact."
+        heading="AI, React, Next.js, and custom software"
+        intro="NextCreavo builds AI workflow automation, custom chatbots, React and Next.js products, and custom software for teams in Singapore and globally. Open a service, industry, or location page for the full brief — this homepage is the studio overview."
+        items={[
+          {
+            title: 'AI & automation',
+            href: '/services/ai-automation',
+            summary: 'Workflow automation, agents, and custom chatbot development for support and ops.',
+          },
+          {
+            title: 'React & Next.js',
+            href: '/services/react-development',
+            summary: 'React development agency work, Next.js apps, and nearshore React squads.',
+          },
+          {
+            title: 'Custom software',
+            href: '/services/custom-software-development',
+            summary: 'Portals, internal tools, and industry systems — including construction and travel.',
+          },
+          {
+            title: 'Singapore & locations',
+            href: '/locations/singapore',
+            summary: 'Custom software development Singapore and AI product engineering with SGT overlap.',
+          },
+        ]}
+        outro="Explore /services, /industries, /locations, /portfolio and /contact when you are ready to brief a project."
       />
     </>
   )

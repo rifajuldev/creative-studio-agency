@@ -47,8 +47,8 @@ export default function IndustriesIndexPage() {
             Software built for your industry
           </h1>
           <p className="text-secondary mt-8 max-w-2xl text-base font-light md:text-lg">
-            Phase 3 industry pages — each vertical targets a commercial software keyword cluster with links into our AI,
-            web, SaaS, and product services.
+            Industry pages for construction software, travel booking platforms, restaurants, government citizen portals,
+            and more — each linked into AI, web, SaaS, and product services.
           </p>
           <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {INDUSTRY_PAGES.map((industry) => (

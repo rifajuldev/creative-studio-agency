@@ -1,8 +1,10 @@
 'use client'
 
+import BlogReadCount from '@/components/blog/BlogReadCount'
 import PortableTextBody from '@/components/blog/PortableTextBody'
+import { useRecordBlogRead } from '@/hooks/useBlogViews'
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
-import type { IBlogPublicDetail } from '@/interfaces/blog.interface'
+import type { IBlogPublicDetail, IBlogPublicListItem } from '@/interfaces/blog.interface'
 import { formatBlogDate } from '@/interfaces/blog.interface'
 import { useGetPublicBlogBySlugQuery, useGetPublicBlogListQuery } from '@/redux/features/blog/blogPublic.api'
 import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
@@ -25,6 +27,7 @@ export default function BlogDetails({ initialPost }: { initialPost?: IBlogPublic
 
   const { data, isLoading, isError } = useGetPublicBlogBySlugQuery(slug!, { skip: !slug })
   const activePost = data?.data ?? initialPost ?? undefined
+  const { count: liveReads } = useRecordBlogRead(activePost?.slug, activePost?.viewCount ?? 0)
 
   const { data: listData } = useGetPublicBlogListQuery({ skip: 0, limit: 100 })
   const nextPost = useMemo(() => {
@@ -33,6 +36,14 @@ export default function BlogDetails({ initialPost }: { initialPost?: IBlogPublic
     const idx = posts.findIndex((p) => p.slug === activePost.slug)
     if (idx === -1) return posts[0] ?? null
     return posts[idx < posts.length - 1 ? idx + 1 : 0] ?? null
+  }, [listData, activePost])
+
+  const relatedPosts = useMemo(() => {
+    const posts = listData?.data ?? []
+    const slugs = activePost?.relatedPostSlugs ?? []
+    return slugs
+      .map((item) => posts.find((post) => post.slug === item))
+      .filter((post): post is IBlogPublicListItem => Boolean(post && post.slug !== activePost?.slug))
   }, [listData, activePost])
 
   useEffect(() => {
@@ -118,7 +129,7 @@ export default function BlogDetails({ initialPost }: { initialPost?: IBlogPublic
 
       <section className="bg-primary relative px-6 pt-24 pb-16 md:px-12 md:pt-32">
         <div className="relative z-10 mx-auto w-full max-w-[1400px]">
-          <div className="blog-det-reveal mb-8 flex items-center gap-3.5">
+          <div className="blog-det-reveal mb-8 flex flex-wrap items-center gap-3.5">
             {activePost.category ? (
               <span className="bg-secondary text-secondary border-border-primary/45 rounded-full border px-3.5 py-1 text-[9px] font-bold tracking-wider uppercase">
                 {activePost.category} Specialization
@@ -129,6 +140,7 @@ export default function BlogDetails({ initialPost }: { initialPost?: IBlogPublic
                 {activePost.readTime}
               </span>
             ) : null}
+            <BlogReadCount count={liveReads || activePost.viewCount} variant="detail" />
           </div>
 
           <div className="blog-det-reveal max-w-4xl space-y-6">
@@ -236,6 +248,57 @@ export default function BlogDetails({ initialPost }: { initialPost?: IBlogPublic
                   Share insight
                 </button>
               </div>
+            </div>
+          ) : null}
+
+          {activePost.relatedServices?.length ? (
+            <div className="blog-paragraph-anim border-border-primary/40 bg-secondary/10 mb-14 rounded-[28px] border p-8">
+              <p className="text-secondary/60 mb-4 font-mono text-[9px] tracking-[0.25em] uppercase">
+                Related services
+              </p>
+              <div className="flex flex-wrap gap-2.5">
+                {activePost.relatedServices.map((service) => (
+                  <Link
+                    key={service.href}
+                    href={service.href}
+                    className="border-border-primary text-primary hover:bg-secondary rounded-full border px-4 py-2 text-[10px] font-bold tracking-wider uppercase transition-colors"
+                  >
+                    {service.label}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {activePost.faqs?.length ? (
+            <div className="blog-paragraph-anim mb-16">
+              <h2 className="font-display text-primary mb-8 text-3xl font-light tracking-tight">Questions teams ask</h2>
+              <div className="space-y-6">
+                {activePost.faqs.map((faq) => (
+                  <div key={faq.question} className="border-border-primary/40 border-b pb-6">
+                    <h3 className="text-primary mb-2 text-lg font-medium">{faq.question}</h3>
+                    <p className="text-secondary text-sm leading-relaxed font-light">{faq.answer}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
+
+          {relatedPosts.length > 0 ? (
+            <div className="blog-paragraph-anim mb-8">
+              <p className="text-secondary/60 mb-4 font-mono text-[9px] tracking-[0.25em] uppercase">Keep reading</p>
+              <ul className="space-y-3">
+                {relatedPosts.map((post) => (
+                  <li key={post.slug}>
+                    <Link
+                      href={`/blog/${post.slug}`}
+                      className="text-primary hover:text-secondary border-secondary/30 border-b text-base font-light transition-colors"
+                    >
+                      {post.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
             </div>
           ) : null}
         </div>

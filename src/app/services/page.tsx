@@ -41,11 +41,11 @@ export default function ServicesPage() {
         <div className="mx-auto max-w-[1400px]">
           <p className="text-secondary mb-4 text-[10px] font-semibold tracking-[0.25em] uppercase">Service catalog</p>
           <h1 className="font-display text-primary max-w-4xl text-4xl font-light tracking-tight md:text-6xl">
-            One keyword. One page. Real delivery.
+            AI, React, Next.js, and custom software — one page per brief
           </h1>
           <p className="text-secondary mt-6 max-w-2xl text-base font-light">
-            Phase 2 service landings — each page targets a commercial keyword for AI, engineering, SaaS, mobile, design,
-            and SEO.
+            Commercial service pages for the work we actually sell: AI workflow automation, custom chatbot development,
+            React and Next.js teams, SaaS, mobile, UI/UX, and SEO.
           </p>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {SERVICE_LANDING_PAGES.map((service) => (
@@ -67,7 +67,7 @@ export default function ServicesPage() {
       <Services />
       <ServerTextBoost
         heading="NextCreavo service keyword map"
-        intro="Commercial-intent service pages power topical clusters for AI software development company rankings."
+        intro="Service pages for AI workflow automation, React development, custom chatbots, Next.js, SaaS, and custom software. Each URL owns one commercial cluster."
         items={SERVICE_LANDING_PAGES.map((service) => ({
           title: service.primaryKeyword,
           href: `/services/${service.slug}`,

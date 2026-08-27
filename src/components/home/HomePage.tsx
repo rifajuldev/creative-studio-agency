@@ -1,6 +1,8 @@
 'use client'
 
+import BlogReadCount from '@/components/blog/BlogReadCount'
 import { useLanguage } from '@/context/LanguageContext'
+import { useBlogViewCounts } from '@/hooks/useBlogViews'
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
 import { formatBlogDateShort } from '@/interfaces/blog.interface'
 import { useGetHomeBlogsQuery } from '@/redux/features/blog/blogPublic.api'
@@ -27,7 +29,7 @@ import {
 import { AnimatePresence, motion } from 'motion/react'
 import Image from 'next/image'
 import Link from 'next/link'
-import React, { useCallback, useRef, useState } from 'react'
+import React, { useCallback, useMemo, useRef, useState } from 'react'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -713,7 +715,14 @@ function Services() {
                 </div>
 
                 {(() => {
-                  const sMap = ['animation', 'marketing', 'webdev', 'appdev', 'ai', 'uiux']
+                  const sMap = [
+                    'animation',
+                    'marketing',
+                    'web-development',
+                    'mobile-app-development',
+                    'ai-development',
+                    'ui-ux-design',
+                  ]
                   const serviceId = sMap[selectedServiceIndex]
                   return (
                     <Link
@@ -782,7 +791,7 @@ function Testimonials() {
           <div className="border-border-primary flex flex-col gap-8 border-t pt-8 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-6">
               <Image
-                src="https://i.pravatar.cc/150?img=47"
+                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?q=80&w=200&auto=format&fit=crop"
                 alt="Jenny Wilson"
                 className="border-border-primary h-14 w-14 rounded-full border object-cover grayscale"
                 width={1000}
@@ -1086,7 +1095,16 @@ function Blog() {
   const container = useRef(null)
   const { t } = useLanguage()
   const { data, isLoading } = useGetHomeBlogsQuery()
-  const posts = data?.data ?? []
+  const posts = data?.data
+  const homeSlugs = useMemo(() => (posts ?? []).map((post) => post.slug), [posts])
+  const homeInitials = useMemo(() => {
+    const map: Record<string, number> = {}
+    for (const post of posts ?? []) {
+      if (typeof post.viewCount === 'number') map[post.slug] = post.viewCount
+    }
+    return map
+  }, [posts])
+  const viewCounts = useBlogViewCounts(homeSlugs, homeInitials)
 
   useGSAP(
     () => {
@@ -1098,10 +1116,10 @@ function Blog() {
       })
       return () => clearRevealStyles('.blog-up')
     },
-    { scope: container, dependencies: [posts.length], ...gsapScopeOptions }
+    { scope: container, dependencies: [posts?.length ?? 0], ...gsapScopeOptions }
   )
 
-  if (!isLoading && posts.length === 0) return null
+  if (!isLoading && (posts?.length ?? 0) === 0) return null
 
   return (
     <section
@@ -1126,7 +1144,7 @@ function Blog() {
                   <div className="bg-secondary/30 h-8 w-full" />
                 </div>
               ))
-            : posts.map((p) => (
+            : (posts ?? []).map((p) => (
                 <Link
                   href={`/blog/${p.slug}`}
                   key={p._id}
@@ -1141,10 +1159,15 @@ function Blog() {
                       height={1000}
                     />
                   </div>
-                  <div className="mb-4 flex items-center justify-between">
+                  <div className="mb-4 flex items-center justify-between gap-3">
                     <p className="text-secondary/60 text-[10px] font-medium tracking-[0.2em] uppercase">
                       {formatBlogDateShort(p.createdAt)}
                     </p>
+                    <BlogReadCount
+                      count={viewCounts[p.slug] ?? p.viewCount}
+                      variant="home"
+                      className="text-secondary/60 font-mono text-[10px] tracking-[0.2em] uppercase"
+                    />
                   </div>
                   <h3 className="font-display text-primary mb-6 text-2xl leading-[1.3] font-light tracking-tight transition-none group-hover:font-serif group-hover:italic">
                     {p.title}

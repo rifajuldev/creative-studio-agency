@@ -37,11 +37,12 @@ const nextConfig: NextConfig = {
         destination: 'https://www.nextcreavo.com/:path*',
         permanent: true,
       },
+      { source: '/case-studies', destination: '/portfolio', permanent: true },
       { source: '/case-studies/:slug*', destination: '/portfolio/:slug*', permanent: true },
-      { source: '/services/webdev', destination: '/services/web-development', permanent: false },
-      { source: '/services/appdev', destination: '/services/mobile-app-development', permanent: false },
-      { source: '/services/ai', destination: '/services/ai-development', permanent: false },
-      { source: '/services/uiux', destination: '/services/ui-ux-design', permanent: false },
+      { source: '/services/webdev', destination: '/services/web-development', permanent: true },
+      { source: '/services/appdev', destination: '/services/mobile-app-development', permanent: true },
+      { source: '/services/ai', destination: '/services/ai-development', permanent: true },
+      { source: '/services/uiux', destination: '/services/ui-ux-design', permanent: true },
     ]
   },
   async headers() {
@@ -57,8 +58,8 @@ const nextConfig: NextConfig = {
           { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
           { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
           {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
+            key: 'Strict-Transport-Security',
+            value: 'max-age=63072000; includeSubDomains; preload',
           },
         ],
       },

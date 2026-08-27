@@ -14,7 +14,7 @@ export default function FaqPage() {
       <JsonLd
         data={[
           webPageJsonLd(
-            'FAQ | Pricing, Ads, SEO, Delivery & Retainers',
+            'FAQ | Pricing, Ads, SEO & Delivery | NextCreavo',
             'Answers on NextCreavo pricing, Google Ads spend, Meta campaigns, SEO timelines, Figma handoff, Shopify speed, security, billing and maintenance retainers.',
             '/faq',
             [...pageKeywordSets.faq]

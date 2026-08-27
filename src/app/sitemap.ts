@@ -16,23 +16,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     '/about',
     '/services',
     ...serviceLandings,
-    // Legacy hub services (keep indexed during migration)
+    // Live hub pages only — never list URLs that 3xx (webdev/appdev/ai/uiux redirect)
     '/services/animation',
     '/services/marketing',
     '/services/marketing/gmb-optimization',
     '/services/marketing/google-ads',
     '/services/marketing/facebook-ads',
     '/services/marketing/social-media-management',
-    '/services/webdev',
-    '/services/appdev',
-    '/services/ai',
-    '/services/uiux',
     '/industries',
     ...industries,
     '/locations',
     ...locations,
     '/portfolio',
-    '/case-studies',
     '/blog',
     '/contact',
     '/faq',
@@ -63,7 +58,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     if (path.startsWith('/services/')) return 0.9
     if (path.startsWith('/industries')) return 0.85
     if (path.startsWith('/locations')) return 0.8
-    if (path === '/portfolio' || path === '/case-studies' || path === '/blog') return 0.85
+    if (path === '/portfolio' || path === '/blog') return 0.85
     return 0.7
   }
 

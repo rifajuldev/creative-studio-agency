@@ -1,6 +1,7 @@
-import { SERVICES_DATA, getServiceById } from '@/data/services'
+import { SERVICES_DATA, getServiceById, getServiceCanonicalPath } from '@/data/services'
 import type { IBlogPublicDetail } from '@/interfaces/blog.interface'
 import type { IPortfolioPublicListItem } from '@/interfaces/portfolio.interface'
+import { countWords, portableTextToPlain, readTimeToIsoDuration } from '@/lib/blog/portable'
 import { absoluteUrl, siteConfig, socialProfileUrls } from './site'
 import { SITE_REVIEWS } from './structured-content'
 
@@ -13,8 +14,9 @@ export function organizationJsonLd(): JsonLd {
     // fails Google/Semrush validation without a real postal address.
     '@type': 'Organization',
     '@id': `${siteConfig.url}/#organization`,
-    name: siteConfig.legalName,
-    alternateName: siteConfig.name,
+    name: siteConfig.name,
+    legalName: siteConfig.legalName,
+    alternateName: [siteConfig.legalName, 'NextCreavo Studio', 'nextcreavo.com'],
     url: siteConfig.url,
     description: siteConfig.description,
     slogan: siteConfig.tagline,
@@ -50,39 +52,11 @@ export function organizationJsonLd(): JsonLd {
           '@type': 'Service',
           name: service.title,
           description: service.shortDesc,
-          url: absoluteUrl(`/services/${service.id}`),
+          url: absoluteUrl(getServiceCanonicalPath(service.id)),
           provider: { '@id': `${siteConfig.url}/#organization` },
         },
       })),
     },
-    aggregateRating: {
-      '@type': 'AggregateRating',
-      ratingValue: Number(
-        (SITE_REVIEWS.reduce((sum, review) => sum + review.ratingValue, 0) / Math.max(SITE_REVIEWS.length, 1)).toFixed(
-          1
-        )
-      ),
-      bestRating: 5,
-      worstRating: 1,
-      ratingCount: SITE_REVIEWS.length,
-      reviewCount: SITE_REVIEWS.length,
-    },
-    review: SITE_REVIEWS.map((review) => ({
-      '@type': 'Review',
-      author: {
-        '@type': 'Person',
-        name: review.author,
-        ...(review.jobTitle ? { jobTitle: review.jobTitle } : {}),
-      },
-      reviewBody: review.reviewBody,
-      reviewRating: {
-        '@type': 'Rating',
-        ratingValue: review.ratingValue,
-        bestRating: 5,
-        worstRating: 1,
-      },
-      ...(review.datePublished ? { datePublished: review.datePublished } : {}),
-    })),
   }
 }
 
@@ -98,18 +72,6 @@ export function websiteJsonLd(): JsonLd {
     keywords: siteConfig.defaultKeywords.slice(0, 12).join(', '),
     inLanguage: 'en-US',
     publisher: { '@id': `${siteConfig.url}/#organization` },
-    potentialAction: {
-      '@type': 'SearchAction',
-      target: {
-        '@type': 'EntryPoint',
-        urlTemplate: `${siteConfig.url}/portfolio?search={search_term_string}`,
-      },
-      'query-input': {
-        '@type': 'PropertyValueSpecification',
-        valueRequired: true,
-        valueName: 'search_term_string',
-      },
-    },
   }
 }
 
@@ -151,7 +113,7 @@ export function serviceJsonLd(id: string, keywords?: string[]): JsonLd | null {
     '@type': 'Service',
     name: service.title,
     description: service.longDesc,
-    url: absoluteUrl(`/services/${service.id}`),
+    url: absoluteUrl(getServiceCanonicalPath(service.id)),
     provider: { '@id': `${siteConfig.url}/#organization` },
     areaServed: 'Worldwide',
     serviceType: service.title,
@@ -185,27 +147,59 @@ export function portfolioProjectJsonLd(project: IPortfolioPublicListItem): JsonL
 export function blogPostJsonLd(post: IBlogPublicDetail): JsonLd | null {
   if (!post) return null
 
+  const articleUrl = absoluteUrl(`/blog/${post.slug}`)
+  const plain = portableTextToPlain(post.body ?? [])
+  const wordCount = post.wordCount || (plain ? countWords(`${post.title} ${post.summary} ${plain}`) : undefined)
+  const timeRequired = readTimeToIsoDuration(post.readTime)
+
   return {
     '@context': 'https://schema.org',
     '@type': 'BlogPosting',
     headline: post.title,
     description: post.summary,
-    image: post.coverImageUrl,
+    image: post.coverImageUrl
+      ? {
+          '@type': 'ImageObject',
+          url: post.coverImageUrl,
+        }
+      : undefined,
     datePublished: post.createdAt,
+    dateModified: post.createdAt,
+    inLanguage: 'en-US',
     author: post.authorName
       ? {
           '@type': 'Person',
           name: post.authorName,
           ...(post.authorRole ? { jobTitle: post.authorRole } : {}),
         }
-      : undefined,
+      : { '@type': 'Organization', name: siteConfig.name, url: siteConfig.url },
     publisher: { '@id': `${siteConfig.url}/#organization` },
-    url: absoluteUrl(`/blog/${post.slug}`),
+    url: articleUrl,
     keywords: (post.tags ?? []).join(', '),
     ...(post.category ? { articleSection: post.category } : {}),
+    ...(wordCount ? { wordCount } : {}),
+    ...(timeRequired ? { timeRequired } : {}),
+    isPartOf: {
+      '@type': 'Blog',
+      name: `${siteConfig.name} Blog`,
+      url: absoluteUrl('/blog'),
+    },
+    speakable: {
+      '@type': 'SpeakableSpecification',
+      cssSelector: ['h1', '.blog-prose p'],
+    },
+    ...(typeof post.viewCount === 'number'
+      ? {
+          interactionStatistic: {
+            '@type': 'InteractionCounter',
+            interactionType: 'https://schema.org/ReadAction',
+            userInteractionCount: post.viewCount,
+          },
+        }
+      : {}),
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': absoluteUrl(`/blog/${post.slug}`),
+      '@id': articleUrl,
     },
   }
 }
@@ -230,7 +224,7 @@ export function servicesListJsonLd(): JsonLd {
   return itemListJsonLd(
     'NextCreavo Creative Studio Services',
     '/services',
-    SERVICES_DATA.map((s) => ({ name: s.title, url: `/services/${s.id}` }))
+    SERVICES_DATA.map((s) => ({ name: s.title, url: getServiceCanonicalPath(s.id) }))
   )
 }
 

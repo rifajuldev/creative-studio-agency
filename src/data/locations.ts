@@ -1,7 +1,9 @@
 /**
- * Phase 4 location pages — commercial "Software Development Company in {City}" targeting.
- * Expand toward 100+ over time; start with priority metros.
+ * Location pages — commercial city intent.
+ * Singapore copy is aligned to live GSC queries (custom software + AI in Singapore).
  */
+
+import { LOCATION_LONGFORM, fallbackLocationLongform, mergeLandingLongform } from './landingCopy'
 
 export interface LocationPage {
   slug: string
@@ -12,6 +14,10 @@ export interface LocationPage {
   metaTitle: string
   metaDescription: string
   intro: string
+  audience?: string[]
+  sections?: { heading: string; body: string }[]
+  faqs?: { question: string; answer: string }[]
+  featuredServiceSlugs?: string[]
 }
 
 export const LOCATION_PAGES: LocationPage[] = [
@@ -71,11 +77,20 @@ export const LOCATION_PAGES: LocationPage[] = [
     slug: 'singapore',
     city: 'Singapore',
     country: 'Singapore',
-    primaryKeyword: 'Software Development Company Singapore',
-    metaTitle: 'Software Development Company Singapore | NextCreavo',
+    primaryKeyword: 'Custom Software Development Singapore',
+    metaTitle: 'Custom Software Singapore | NextCreavo',
     metaDescription:
-      'Hire NextCreavo — software development company in Singapore for AI, SaaS, and enterprise products.',
-    intro: 'Singapore teams partner with NextCreavo for AI development, SaaS builds, and API platforms.',
+      'Custom software development Singapore from NextCreavo — AI development agency Singapore, custom web apps, and a software development company Singapore teams can brief without a vanity office.',
+    intro:
+      'Custom software development Singapore for startups and enterprises that need AI, Next.js, and product engineering with SGT overlap. NextCreavo is the software development company Singapore buyers hire when they want a named team, not a reseller.',
+    featuredServiceSlugs: [
+      'custom-software-development',
+      'ai-development',
+      'ai-automation',
+      'chatbot-development',
+      'nextjs-development',
+      'react-development',
+    ],
   },
   {
     slug: 'berlin',
@@ -93,7 +108,8 @@ export const LOCATION_PAGES: LocationPage[] = [
     primaryKeyword: 'Software Development Company Amsterdam',
     metaTitle: 'Software Development Company Amsterdam | NextCreavo',
     metaDescription: 'NextCreavo — software development company in Amsterdam for AI, SaaS, and web applications.',
-    intro: 'Build AI and SaaS products with a software development company serving Amsterdam teams.',
+    intro:
+      'Build AI and SaaS products with a software development company serving Amsterdam teams — including app maker Amsterdam briefs.',
   },
   {
     slug: 'california',
@@ -109,7 +125,15 @@ export const LOCATION_PAGES: LocationPage[] = [
 ]
 
 export function getLocationBySlug(slug: string) {
-  return LOCATION_PAGES.find((l) => l.slug === slug)
+  const location = LOCATION_PAGES.find((l) => l.slug === slug)
+  if (!location) return undefined
+  const extra = mergeLandingLongform(LOCATION_LONGFORM[slug], fallbackLocationLongform(location))
+  return {
+    ...location,
+    audience: extra.audience,
+    sections: extra.sections,
+    faqs: extra.extraFaqs,
+  }
 }
 
 export function getAllLocationSlugs() {

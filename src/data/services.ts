@@ -411,6 +411,18 @@ export function getServiceKeywords(service: ServiceDetail): string[] {
   return SERVICE_SEO[service.id]?.keywords ?? [service.title, 'NextCreavo', 'creative studio agency']
 }
 
+/** Legacy hub IDs that 308 to keyword landing pages — never link or sitemap the old path. */
+const LEGACY_SERVICE_PATHS: Record<string, string> = {
+  webdev: '/services/web-development',
+  appdev: '/services/mobile-app-development',
+  ai: '/services/ai-development',
+  uiux: '/services/ui-ux-design',
+}
+
+export function getServiceCanonicalPath(id: string) {
+  return LEGACY_SERVICE_PATHS[id] ?? `/services/${id}`
+}
+
 export function getServiceSeo(id: string) {
   const service = getServiceById(id)
   if (!service) return null
@@ -421,6 +433,6 @@ export function getServiceSeo(id: string) {
     title: seo?.title ?? `${service.title} Services | NextCreavo`,
     description: seo?.description ?? service.shortDesc,
     keywords: getServiceKeywords(service),
-    path: `/services/${service.id}`,
+    path: getServiceCanonicalPath(id),
   }
 }

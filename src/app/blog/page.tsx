@@ -16,8 +16,8 @@ export default async function BlogPage() {
       <JsonLd
         data={[
           webPageJsonLd(
-            'Growth Blog | SEO, Google Ads, Meta, TikTok & AI Tips',
-            'Popular playbooks: Map Pack ranking, Google Ads vs Meta, Instagram Reels ads, LinkedIn B2B leads, TikTok ecommerce, Next.js SEO, AI chatbots and creative testing.',
+            'Growth Blog | Next.js SEO, AI, GMB, Headless CMS & UI/UX',
+            'Playbooks on Next.js App Router SEO, Claude for developers, headless CMS, Shopify, Laravel, Google Business Profile Map Pack, Relume UI/UX, and AI automation.',
             '/blog',
             [...pageKeywordSets.blog]
           ),
@@ -35,7 +35,7 @@ export default async function BlogPage() {
       <BlogList />
       <ServerTextBoost
         heading="Browse NextCreavo articles on growth, ads, and product"
-        intro="This index is published in the page HTML so search engines can read every title and summary — covering Google Ads, SEO, Facebook and Instagram marketing, LinkedIn, TikTok, Twitter/X, Next.js performance, UI/UX, and AI integrations."
+        intro="This index is published in the page HTML so search engines can read every title and summary — covering Next.js SEO, AI for developers, headless CMS, Laravel, WordPress, Shopify, Google Business Profile, UI/UX, ads, and AI integrations."
         items={posts.slice(0, 24).map((post) => ({
           title: post.title,
           href: `/blog/${post.slug}`,

@@ -25,7 +25,7 @@ export default function SocialShareToolbar({ title, url }: SocialShareToolbarPro
     {
       name: 'Twitter',
       icon: Twitter,
-      href: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
+      href: `https://x.com/intent/post?url=${encodedUrl}&text=${encodedTitle}`,
       color: 'hover:text-[#1da1f2]',
     },
     {

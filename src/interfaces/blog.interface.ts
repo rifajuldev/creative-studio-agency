@@ -7,6 +7,16 @@ export type PortableTextBlock = {
   [key: string]: unknown
 }
 
+export interface BlogFaq {
+  question: string
+  answer: string
+}
+
+export interface BlogRelatedLink {
+  label: string
+  href: string
+}
+
 export interface IBlogPublicListItem {
   _id: string
   title: string
@@ -20,6 +30,8 @@ export interface IBlogPublicListItem {
   readTime: string
   tags: string[]
   createdAt: string
+  /** Seed + live extras. First paint uses dummy seeds; API increments unique readers. */
+  viewCount?: number
 }
 
 export interface IBlogPublicDetail extends IBlogPublicListItem {
@@ -28,6 +40,10 @@ export interface IBlogPublicDetail extends IBlogPublicListItem {
   body: PortableTextBlock[]
   featuredOnHome: boolean
   featuredOnBlogPage: boolean
+  faqs?: BlogFaq[]
+  relatedServices?: BlogRelatedLink[]
+  relatedPostSlugs?: string[]
+  wordCount?: number
 }
 
 export interface IBlogListMetaPublic {

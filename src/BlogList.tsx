@@ -1,5 +1,7 @@
 'use client'
 
+import BlogReadCount from '@/components/blog/BlogReadCount'
+import { useBlogViewCounts } from '@/hooks/useBlogViews'
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
 import type { IBlogPublicListItem } from '@/interfaces/blog.interface'
 import { formatBlogDate } from '@/interfaces/blog.interface'
@@ -109,6 +111,23 @@ export default function BlogList() {
     featuredPost
   const listBusy = listLoading || listFetching
 
+  const viewSlugs = useMemo(() => {
+    const slugs = filteredPosts.map((post) => post.slug)
+    if (featuredPost?.slug) slugs.unshift(featuredPost.slug)
+    return slugs
+  }, [filteredPosts, featuredPost])
+
+  const viewInitials = useMemo(() => {
+    const map: Record<string, number> = {}
+    for (const post of filteredPosts) {
+      if (typeof post.viewCount === 'number') map[post.slug] = post.viewCount
+    }
+    if (featuredPost && typeof featuredPost.viewCount === 'number') map[featuredPost.slug] = featuredPost.viewCount
+    return map
+  }, [filteredPosts, featuredPost])
+
+  const viewCounts = useBlogViewCounts(viewSlugs, viewInitials)
+
   useGSAP(
     () => {
       reveal('.blog-list-reveal', {
@@ -213,7 +232,7 @@ export default function BlogList() {
                 </div>
 
                 <div className="flex flex-col justify-center p-8 md:p-12 lg:col-span-5 lg:p-16">
-                  <div className="text-secondary/60 mb-8 flex items-center gap-4 font-mono text-[.625rem] tracking-widest uppercase">
+                  <div className="text-secondary/60 mb-8 flex flex-wrap items-center gap-4 font-mono text-[.625rem] tracking-widest uppercase">
                     {featuredPost.category ? (
                       <div className="border-border-primary bg-primary/40 text-secondary rounded border px-2 py-0.5">
                         {featuredPost.category}
@@ -222,6 +241,7 @@ export default function BlogList() {
                     <div className="flex items-center gap-1.5">
                       <Calendar size={12} /> {formatBlogDate(featuredPost.createdAt)}
                     </div>
+                    <BlogReadCount count={viewCounts[featuredPost.slug] ?? featuredPost.viewCount} variant="featured" />
                   </div>
 
                   <h2 className="font-display text-primary mb-8 text-3xl leading-[1.1] font-light transition-colors group-hover:text-amber-600 md:text-5xl lg:text-5xl">
@@ -352,7 +372,7 @@ export default function BlogList() {
                       ) : null}
                     </div>
 
-                    <div className="text-secondary/50 mb-4 flex items-center gap-4 font-mono text-[.5625rem] tracking-widest uppercase">
+                    <div className="text-secondary/50 mb-4 flex flex-wrap items-center gap-4 font-mono text-[.5625rem] tracking-widest uppercase">
                       <span>{formatBlogDate(post.createdAt)}</span>
                       {post.readTime ? (
                         <>
@@ -360,6 +380,7 @@ export default function BlogList() {
                           <span>{post.readTime}</span>
                         </>
                       ) : null}
+                      <BlogReadCount count={viewCounts[post.slug] ?? post.viewCount} variant="card" />
                     </div>
 
                     <h3 className="font-display text-primary group-hover:text-secondary mb-4 line-clamp-2 text-2xl leading-tight font-light tracking-tight transition-colors">
@@ -424,10 +445,10 @@ export default function BlogList() {
           Insights for founders, marketers, and product teams
         </h2>
         <p className="text-secondary max-w-4xl text-base leading-relaxed font-light md:text-lg">
-          The NextCreavo blog covers practical growth topics: Google Search visibility and local SEO, Google Ads and
-          Performance Max, Facebook and Instagram (Meta) creative testing, LinkedIn B2B lead generation, TikTok ads for
-          ecommerce, Twitter/X campaigns, Next.js and Core Web Vitals, headless Shopify, UI/UX patterns, and AI chatbot
-          or LLM integrations. Each article is written for teams who need clear actions—not fluff.
+          The NextCreavo blog covers practical growth and product topics: Next.js App Router SEO, AI for developers
+          (Claude, agents), headless CMS (Sanity, WordPress, Shopify), Laravel vs JavaScript stacks, Google Business
+          Profile and Map Pack ranking, Google Ads, Meta creative testing, UI/UX with Relume and design systems, and
+          chatbot or LLM integrations. Each article is written for teams who need clear actions—not fluff.
         </p>
         <p className="text-secondary max-w-4xl text-base leading-relaxed font-light md:text-lg">
           Browse by category or search above to find playbooks on Map Pack ranking, ad creative iteration, landing page

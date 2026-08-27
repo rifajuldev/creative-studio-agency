@@ -1,7 +1,10 @@
 /**
- * Phase 2 keyword-targeted service landing pages.
+ * Keyword-targeted service landing pages.
  * Each page owns ONE primary commercial keyword + supporting secondaries.
+ * Long-form copy lives in landingCopy.ts so GSC clusters can deepen without duplicating meta.
  */
+
+import { SERVICE_LONGFORM, fallbackServiceLongform, mergeLandingLongform } from './landingCopy'
 
 export type ServicePillar = 'ai' | 'web' | 'mobile' | 'saas' | 'seo' | 'design' | 'product'
 
@@ -23,6 +26,10 @@ export interface ServiceLandingPage {
   relatedSlugs: string[]
   /** Soft redirect alias from legacy hub IDs when useful */
   legacyHubId?: string
+  audience?: string[]
+  process?: { title: string; detail: string }[]
+  sections?: { heading: string; body: string }[]
+  relatedIndustrySlugs?: string[]
 }
 
 export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
@@ -31,14 +38,15 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
     primaryKeyword: 'AI Development Agency',
     secondaryKeywords: [
       'AI software development company',
+      'AI product development agency',
+      'AI software development agency',
+      'AI software engineering firm Singapore',
       'hire AI developers',
       'custom AI development',
-      'LLM development',
-      'enterprise AI development',
     ],
-    metaTitle: 'AI Development Agency | AI Software Development Company',
+    metaTitle: 'AI Development Agency | NextCreavo',
     metaDescription:
-      'NextCreavo is an AI development agency building custom LLMs, agents, chatbots and AI software for startups and enterprises. Hire AI developers for production-ready systems.',
+      'NextCreavo is an AI product development agency building custom LLMs, agents and AI software. An AI development agency for startups and enterprises — production systems, not demos.',
     pillar: 'ai',
     shortDesc: 'Custom AI products, LLM features, and production-grade AI software.',
     intro:
@@ -73,20 +81,22 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
   },
   {
     slug: 'ai-automation',
-    primaryKeyword: 'AI Automation Services',
+    primaryKeyword: 'AI Workflow Automation Services',
     secondaryKeywords: [
-      'AI workflow automation',
+      'AI automation services',
+      'AI workflow automation agency',
+      'AI process automation services',
+      'AI workflow automation company',
+      'AI workflow automation consultant',
       'business process automation',
-      'AI agents for business',
-      'AI lead generation automation',
     ],
-    metaTitle: 'AI Automation Services | Workflow & Business Process Automation',
+    metaTitle: 'AI Workflow Automation | NextCreavo',
     metaDescription:
-      'Automate ops with NextCreavo AI automation services — AI agents, workflow automation, lead gen, and customer support systems that cut manual work.',
+      'AI workflow automation services from NextCreavo — agents, AI process automation, and production workflows for CRM, support, and ops. An AI workflow automation agency, not a Zapier demo.',
     pillar: 'ai',
     shortDesc: 'AI agents and workflows that remove repetitive business work.',
     intro:
-      'Our AI automation services connect your tools, data, and teams so repetitive work runs itself. We design reliable agent workflows for support, CRM updates, lead qualification, reporting, and internal ops.',
+      'NextCreavo delivers AI workflow automation services that connect your tools, data, and teams so repetitive work runs itself. We design reliable agent workflows for support, CRM updates, lead qualification, reporting, and internal ops — with monitoring and human review.',
     outcomes: ['Fewer manual handoffs', 'Faster response times', 'Auditable automation with human review'],
     deliverables: [
       'Process mapping & automation roadmap',
@@ -106,15 +116,21 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
   },
   {
     slug: 'chatbot-development',
-    primaryKeyword: 'AI Chatbot Development',
-    secondaryKeywords: ['AI chatbot company', 'custom chatbot development', 'GPT chatbot', 'customer support chatbot'],
-    metaTitle: 'AI Chatbot Development Company | Custom GPT Chatbots',
+    primaryKeyword: 'Custom Chatbot Development',
+    secondaryKeywords: [
+      'custom chatbot development company',
+      'custom AI chatbot development services',
+      'custom AI chatbot development company',
+      'custom chatbot app development company',
+      'bespoke conversational AI development',
+    ],
+    metaTitle: 'Custom Chatbots | GPT Assistants | NextCreavo',
     metaDescription:
-      'Build custom AI chatbots with NextCreavo — GPT-powered support, sales, and internal assistants trained on your knowledge base.',
+      'Custom chatbot development from NextCreavo — GPT-powered support, sales, and internal assistants grounded in your knowledge base. A custom chatbot development company that ships evals and handoff.',
     pillar: 'ai',
     shortDesc: 'Custom AI chatbots for support, sales, and internal knowledge.',
     intro:
-      'We build AI chatbots that answer accurately, escalate cleanly, and connect to your CRM, docs, and product data — for websites, apps, and internal teams.',
+      'Custom chatbot development at NextCreavo means assistants that answer accurately, escalate cleanly, and connect to your CRM, docs, and product data — for websites, apps, and internal teams. We are a custom AI chatbot development company, not a widget reseller.',
     outcomes: ['24/7 support deflection', 'Higher lead capture', 'Consistent brand answers'],
     deliverables: [
       'Conversation design',
@@ -136,15 +152,16 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
     slug: 'nextjs-development',
     primaryKeyword: 'Next.js Development Agency',
     secondaryKeywords: [
+      'next js development agency',
+      'next.js agency',
+      'nextjs development agency',
+      'next.js website development agency',
+      'nextjs web development agency',
       'hire nextjs developers',
-      'nextjs development company',
-      'custom nextjs development',
-      'enterprise nextjs development',
-      'nextjs migration',
     ],
-    metaTitle: 'Next.js Development Agency | Hire Next.js Developers',
+    metaTitle: 'Next.js Development Agency | NextCreavo',
     metaDescription:
-      'NextCreavo is a Next.js development agency for high-performance apps, SaaS, and SEO-ready websites. Hire Next.js developers for custom and enterprise builds.',
+      'NextCreavo is a Next.js development agency for high-performance apps, SaaS, and SEO-ready websites. Next js development agency and Next.js agency work with App Router, CWV, and clean handoff.',
     pillar: 'web',
     shortDesc: 'High-performance Next.js apps, SaaS frontends, and SEO sites.',
     intro:
@@ -170,20 +187,22 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
   },
   {
     slug: 'react-development',
-    primaryKeyword: 'React Development Company',
+    primaryKeyword: 'React Development Agency',
     secondaryKeywords: [
-      'hire react developers',
-      'react development agency',
-      'custom react applications',
-      'enterprise react',
+      'react development company',
+      'react development team',
+      'react software development company',
+      'react web app development company',
+      'react app development company',
+      'react agency',
     ],
-    metaTitle: 'React Development Company | Hire React Developers',
+    metaTitle: 'React Development Agency | NextCreavo',
     metaDescription:
-      'Partner with NextCreavo, a React development company building scalable SPAs, dashboards, and design systems. Hire React developers for product teams.',
+      'NextCreavo is a React development agency building SPAs, dashboards, and design systems. Hire a React development company or embedded React development team for product UIs that scale.',
     pillar: 'web',
     shortDesc: 'Scalable React apps, dashboards, and component systems.',
     intro:
-      'Our React development company builds maintainable frontends — design systems, dashboards, and product UIs that scale with your team and traffic.',
+      'NextCreavo is a React development agency that builds maintainable frontends — design systems, dashboards, and product UIs that scale with your team and traffic. Partner with us as your React development company when you need ownership, not a slide deck of CVs.',
     outcomes: ['Reusable component libraries', 'Faster feature velocity', 'Accessible, tested UI'],
     deliverables: ['React architecture', 'Design system in code', 'State/data layer', 'Testing strategy'],
     techStack: ['React', 'TypeScript', 'Redux Toolkit', 'TanStack Query', 'Storybook'],
@@ -194,12 +213,57 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
           'Use Next.js when you need SEO, SSR, or full-stack routes. Use React (SPA) for authenticated apps where SEO is less critical. We help you choose.',
       },
     ],
-    relatedSlugs: ['nextjs-development', 'web-development', 'ui-ux-design'],
+    relatedSlugs: ['nextjs-development', 'react-outsourcing', 'web-development', 'ui-ux-design'],
+  },
+  {
+    slug: 'react-outsourcing',
+    primaryKeyword: 'Nearshore React Development',
+    secondaryKeywords: [
+      'react outsourcing',
+      'offshore react development',
+      'outsource react application development',
+      'react app outsourcing company',
+      'react development outsourcing',
+      'outsource react app development services',
+    ],
+    metaTitle: 'Nearshore React Teams | Outsourcing | NextCreavo',
+    metaDescription:
+      'Nearshore React development and React outsourcing from NextCreavo — dedicated React app developers for offshore and outsource React application development with named leads and your Git workflow.',
+    pillar: 'web',
+    shortDesc: 'Dedicated nearshore and offshore React squads inside your process.',
+    intro:
+      'Nearshore React development at NextCreavo means a named React squad in your repo: TypeScript, reviews, and overlap hours. Use this page to outsource React application development or extend capacity. If you want us to own the product outcome instead, see our React development agency page.',
+    outcomes: [
+      'Dedicated React app developers, not anonymous marketplace profiles',
+      'Overlap hours and a named delivery lead',
+      'Same PR and test bar as an onshore hire',
+    ],
+    deliverables: [
+      'Squad mix (lead + engineers) matched to the backlog',
+      'Onboarding into your Git, CI, and design system',
+      'Sprint cadence, demos, and written status',
+      'Optional fixed-scope slices when you are not ready to staff a pod',
+    ],
+    techStack: ['React', 'TypeScript', 'Next.js', 'Redux Toolkit', 'TanStack Query', 'Storybook', 'Playwright'],
+    faqs: [
+      {
+        question: 'Nearshore vs offshore React development — which do you offer?',
+        answer:
+          'Both. Nearshore React development emphasizes overlap with US/EU hours. Offshore React development is available when coverage and cost matter more. The engineering bar does not change.',
+      },
+    ],
+    relatedSlugs: ['react-development', 'nextjs-development', 'nodejs-development'],
   },
   {
     slug: 'nodejs-development',
     primaryKeyword: 'Node.js Development Company',
-    secondaryKeywords: ['hire nodejs developers', 'nodejs backend development', 'nodejs API development'],
+    secondaryKeywords: [
+      'hire nodejs developers',
+      'nodejs backend development',
+      'node.js backend team',
+      'nodejs development outsourcing',
+      'node js software development agency',
+    ],
     metaTitle: 'Node.js Development Company | Backend & API Engineering',
     metaDescription:
       'NextCreavo Node.js development for APIs, microservices, and real-time backends. Hire Node.js developers for secure, scalable services.',
@@ -256,7 +320,7 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
       'enterprise web applications',
       'full stack web development',
     ],
-    metaTitle: 'Web Application Development Company | Custom Web Apps',
+    metaTitle: 'Web App Development Company | NextCreavo',
     metaDescription:
       'NextCreavo is a web application development company for custom web apps, portals, and high-converting websites built for performance and SEO.',
     pillar: 'web',
@@ -285,7 +349,7 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
       'Android development',
       'cross platform apps',
     ],
-    metaTitle: 'Mobile App Development Company | iOS, Android & Cross-Platform',
+    metaTitle: 'Mobile App Development | iOS & Android | NextCreavo',
     metaDescription:
       'Launch with NextCreavo — a mobile app development company for iOS, Android, Flutter and React Native products with growth-ready UX.',
     pillar: 'mobile',
@@ -355,13 +419,14 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
     primaryKeyword: 'Custom Software Development Company',
     secondaryKeywords: [
       'custom software development',
+      'custom software team',
+      'custom software development company for digital product startups',
       'enterprise software development',
-      'bespoke software',
-      'digital transformation services',
+      'software development agency',
     ],
-    metaTitle: 'Custom Software Development Company | Enterprise Builds',
+    metaTitle: 'Custom Software Company | NextCreavo',
     metaDescription:
-      'NextCreavo is a custom software development company for portals, internal tools, and enterprise systems tailored to your workflows.',
+      'NextCreavo is a custom software development company for portals, internal tools, and enterprise systems. A custom software team for startups and operators who have outgrown SaaS sprawl.',
     pillar: 'product',
     shortDesc: 'Bespoke software for operations, portals, and enterprise needs.',
     intro:
@@ -380,10 +445,16 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
   {
     slug: 'ui-ux-design',
     primaryKeyword: 'UI UX Design Agency',
-    secondaryKeywords: ['product design agency', 'SaaS UI design', 'conversion UX', 'design systems'],
-    metaTitle: 'UI UX Design Agency | Product & SaaS Interfaces',
+    secondaryKeywords: [
+      'hire a UI UX design agency for SaaS products',
+      'UI UX design agency for SaaS',
+      'UI UX design company B2B SaaS',
+      'product design agency',
+      'SaaS UI design',
+    ],
+    metaTitle: 'UI UX Design Agency for SaaS | NextCreavo',
     metaDescription:
-      'NextCreavo UI UX design agency for research-driven interfaces, design systems, and conversion-focused product UX.',
+      'Hire a UI UX design agency for SaaS products. NextCreavo designs B2B SaaS, admin, and conversion UX — a UI UX design agency that can also implement in React.',
     pillar: 'design',
     shortDesc: 'Research-led UI/UX for SaaS, apps, and marketing sites.',
     intro:
@@ -448,7 +519,13 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
   {
     slug: 'api-development',
     primaryKeyword: 'API Development Services',
-    secondaryKeywords: ['REST API development', 'GraphQL API', 'API security', 'integration development'],
+    secondaryKeywords: [
+      'custom REST and GraphQL API development',
+      'REST API development',
+      'GraphQL API',
+      'API security',
+      'integration development',
+    ],
     metaTitle: 'API Development Services | REST, GraphQL & Integrations',
     metaDescription:
       'NextCreavo API development services for secure REST/GraphQL APIs, integrations, and partner platforms.',
@@ -470,8 +547,21 @@ export const SERVICE_LANDING_PAGES: ServiceLandingPage[] = [
   },
 ]
 
+function mergeServiceLongform(page: ServiceLandingPage): ServiceLandingPage {
+  const extra = mergeLandingLongform(SERVICE_LONGFORM[page.slug], fallbackServiceLongform(page))
+  return {
+    ...page,
+    audience: extra.audience,
+    process: extra.process,
+    sections: extra.sections,
+    relatedIndustrySlugs: extra.relatedIndustrySlugs,
+    faqs: extra.extraFaqs ? [...page.faqs, ...extra.extraFaqs] : page.faqs,
+  }
+}
+
 export function getServiceLandingBySlug(slug: string) {
-  return SERVICE_LANDING_PAGES.find((s) => s.slug === slug)
+  const page = SERVICE_LANDING_PAGES.find((s) => s.slug === slug)
+  return page ? mergeServiceLongform(page) : undefined
 }
 
 export function getAllServiceLandingSlugs() {

@@ -368,9 +368,9 @@ function Navbar({ toggleTheme, isDark }: { toggleTheme: () => void; isDark: bool
                       {t('ui.coordinates')}
                     </span>
                     <p className="text-secondary text-xs leading-relaxed font-light">
-                      New York, NY 10001
+                      {siteConfig.presence.model}
                       <br />
-                      Innovation District
+                      {siteConfig.presence.areaServed}
                     </p>
                   </motion.div>
                 </div>
@@ -593,21 +593,19 @@ function Footer() {
               </div>
 
               <div className="footer-reveal border-invert/10 col-span-2 flex flex-col gap-4 border-t pt-8 sm:col-span-1 sm:gap-6 sm:border-0 sm:pt-0">
-                <p className="text-invert/40 mb-2 text-[9px] tracking-[0.2em] uppercase sm:text-[10px]">Visit Us</p>
-                <address className="text-invert/70 max-w-[200px] text-xs leading-relaxed font-light not-italic sm:text-sm md:text-base">
-                  {siteConfig.address.line1},
+                <p className="text-invert/40 mb-2 text-[9px] tracking-[0.2em] uppercase sm:text-[10px]">Studio</p>
+                <p className="text-invert/70 max-w-[220px] text-xs leading-relaxed font-light sm:text-sm md:text-base">
+                  {siteConfig.presence.model}
                   <br />
-                  {siteConfig.address.line2},
+                  {siteConfig.presence.areaServed}
                   <br />
-                  {siteConfig.address.city}, {siteConfig.address.region} {siteConfig.address.postalCode}
-                </address>
+                  {siteConfig.email}
+                </p>
                 <a
-                  href={siteConfig.address.mapsUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/contact"
                   className="text-secondary hover:text-invert mt-2 text-[10px] font-medium tracking-widest uppercase transition-colors sm:text-xs"
                 >
-                  Get Directions
+                  Start a brief
                 </a>
               </div>
             </div>

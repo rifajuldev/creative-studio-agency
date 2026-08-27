@@ -1,7 +1,7 @@
 import BlogDetails from '@/BlogDetails'
 import JsonLd from '@/components/seo/JsonLd'
 import { fetchPublicBlogBySlug, fetchPublicBlogSlugs } from '@/lib/blog/server'
-import { blogPostJsonLd, breadcrumbJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
+import { blogPostJsonLd, breadcrumbJsonLd, faqPageJsonLd, webPageJsonLd } from '@/lib/seo/json-ld'
 import { buildPageMetadata } from '@/lib/seo/metadata'
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -36,18 +36,20 @@ export default async function BlogDetailPage({ params }: Props) {
   if (!post) notFound()
 
   const articleLd = blogPostJsonLd(post)
+  const faqLd = post.faqs?.length ? faqPageJsonLd(post.faqs) : null
 
   return (
     <>
       <JsonLd
         data={[
-          webPageJsonLd(post.title, post.summary, `/blog/${post.slug}`),
+          webPageJsonLd(post.title, post.summary, `/blog/${post.slug}`, post.tags),
           breadcrumbJsonLd([
             { name: 'Home', path: '/' },
             { name: 'Blog', path: '/blog' },
             { name: post.title, path: `/blog/${post.slug}` },
           ]),
           ...(articleLd ? [articleLd] : []),
+          ...(faqLd ? [faqLd] : []),
         ]}
       />
       <BlogDetails initialPost={post} />

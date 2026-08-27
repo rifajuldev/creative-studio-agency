@@ -5,7 +5,7 @@ export const siteConfig = {
   legalName: 'NextCreavo Creative Studio Agency',
   tagline: 'Web, Marketing, Animation & AI — creative studio for modern brands.',
   description:
-    'NextCreavo is a creative studio agency for UI/UX, web development, mobile apps, 2D & modern animation, AI integration, chatbots & agents, SaaS & custom software — plus Google Ads, Facebook Ads, GMB, social media, SEO and technical SEO that rank and convert.',
+    'NextCreavo (nextcreavo.com) is a software and AI development studio for React, Next.js, custom software, chatbots, and workflow automation — plus UI/UX, ads, and SEO. Remote-first, worldwide.',
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://www.nextcreavo.com',
   locale: 'en_US',
   email: 'info@nextcreavo.com',
@@ -14,14 +14,11 @@ export const siteConfig = {
   phoneE164: '8801611095655',
   whatsappUrl: 'https://wa.me/8801611095655',
   whatsappLabel: 'Message NextCreavo on WhatsApp',
-  address: {
-    line1: '404 Digital Avenue',
-    line2: 'Innovation District',
-    city: 'New York',
-    region: 'NY',
-    postalCode: '10001',
-    country: 'US',
-    mapsUrl: 'https://www.google.com/maps/search/?api=1&query=New+York%2C+NY+10001',
+  /** Remote-first — do not publish a fake street address (confuses GBP / Semrush local matching). */
+  presence: {
+    model: 'Remote-first',
+    areaServed: 'Worldwide',
+    note: 'No public walk-in office. Briefs via contact, email, or WhatsApp.',
   },
   logo: '/favicon-logo.png',
   defaultOgImage: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop',
@@ -29,16 +26,13 @@ export const siteConfig = {
   social: {
     facebook: 'https://www.facebook.com/nextcreavo',
     instagram: 'https://www.instagram.com/nextcreavo',
-    linkedin: 'https://www.linkedin.com/company/nextcreavo',
-    twitter: 'https://twitter.com/nextcreavo',
-    x: 'https://x.com/nextcreavo',
+    linkedin: 'https://www.linkedin.com/company/nextcreavo/',
     tiktok: 'https://www.tiktok.com/@nextcreavo',
   },
-  /** Labeled footer/nav social links (real URLs only — never href="#") */
+  /** Live profiles only — Twitter/X 404s inflate broken-link audits on every page. */
   socialLinks: [
     { label: 'Instagram', href: 'https://www.instagram.com/nextcreavo' },
-    { label: 'Twitter', href: 'https://twitter.com/nextcreavo' },
-    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/nextcreavo' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/company/nextcreavo/' },
     { label: 'TikTok', href: 'https://www.tiktok.com/@nextcreavo' },
     { label: 'Facebook', href: 'https://www.facebook.com/nextcreavo' },
   ],
@@ -59,12 +53,5 @@ export function absoluteUrl(path: string) {
 }
 
 export function socialProfileUrls() {
-  return [
-    siteConfig.social.facebook,
-    siteConfig.social.instagram,
-    siteConfig.social.linkedin,
-    siteConfig.social.twitter,
-    siteConfig.social.x,
-    siteConfig.social.tiktok,
-  ]
+  return siteConfig.socialLinks.map((link) => link.href)
 }

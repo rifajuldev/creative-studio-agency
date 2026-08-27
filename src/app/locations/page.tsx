@@ -45,8 +45,8 @@ export default function LocationsIndexPage() {
             Software development company by city
           </h1>
           <p className="text-secondary mt-8 max-w-2xl text-base font-light md:text-lg">
-            Phase 4 location pages use commercial intent — “Software Development Company in {'{City}'}” — not thin “Web
-            Development USA” pages. Expand toward 100+ cities over time.
+            City pages for buyers searching a software development company in their market — Singapore, New York,
+            London, Amsterdam, and more. Each page links into AI, Next.js, React, and custom software.
           </p>
           <div className="mt-16 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {LOCATION_PAGES.map((location) => (

@@ -1,6 +1,9 @@
 /**
- * Phase 3 industry landing pages — one commercial keyword cluster per industry.
+ * Industry landing pages — one commercial keyword cluster per industry.
+ * Long-form GSC copy is merged from landingCopy.ts.
  */
+
+import { INDUSTRY_LONGFORM, fallbackIndustryLongform, mergeLandingLongform } from './landingCopy'
 
 export interface IndustryPage {
   slug: string
@@ -12,6 +15,9 @@ export interface IndustryPage {
   challenges: string[]
   solutions: string[]
   relatedServices: string[]
+  audience?: string[]
+  sections?: { heading: string; body: string }[]
+  faqs?: { question: string; answer: string }[]
 }
 
 export const INDUSTRY_PAGES: IndustryPage[] = [
@@ -43,9 +49,11 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     slug: 'construction-software',
     name: 'Construction',
     primaryKeyword: 'Construction Software Development',
-    metaTitle: 'Construction Software Development | Field & Project Tools',
-    metaDescription: 'NextCreavo construction software for project tracking, field apps, and operations platforms.',
-    intro: 'Digital tools for contractors — scheduling, field reporting, and project visibility.',
+    metaTitle: 'Construction Software Development | NextCreavo',
+    metaDescription:
+      'Construction software development by NextCreavo — field apps, project hubs, and custom software development for construction. Construction app development that works on site, not just in the office.',
+    intro:
+      'Construction software development for contractors who still run jobs on WhatsApp and spreadsheets. We build scheduling, field reporting, document workflows, and construction app development that superintendents will actually use.',
     challenges: ['Field/office disconnect', 'Change orders chaos', 'Document sprawl'],
     solutions: ['Project hubs', 'Mobile field apps', 'Document workflows'],
     relatedServices: ['mobile-app-development', 'custom-software-development', 'api-development'],
@@ -65,10 +73,11 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     slug: 'travel-software',
     name: 'Travel',
     primaryKeyword: 'Travel Software Development',
-    metaTitle: 'Travel Software Development | Booking & Operator Platforms',
+    metaTitle: 'Travel Software Development | NextCreavo',
     metaDescription:
-      'Travel software development by NextCreavo — booking engines, operator dashboards, and traveler apps.',
-    intro: 'Booking flows and operator tools for travel brands that need reliability at peak demand.',
+      'Travel software development by NextCreavo — travel agency software development, travel booking software development, and tour operator platforms with reliable booking engines.',
+    intro:
+      'Travel software development for brands that cannot afford checkout failure at peak demand. We build booking engines, operator dashboards, traveler apps, and travel booking software developers can actually maintain.',
     challenges: ['Complex inventory', 'Payment failures', 'Support overload'],
     solutions: ['Booking engines', 'Operator dashboards', 'AI support chatbots'],
     relatedServices: ['saas-development', 'api-development', 'chatbot-development'],
@@ -124,8 +133,9 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
     slug: 'restaurant-software',
     name: 'Restaurants',
     primaryKeyword: 'Restaurant Software Development',
-    metaTitle: 'Restaurant Software | Ordering, POS & Ops Tools',
-    metaDescription: 'Restaurant software development — ordering, reservations, and ops tools by NextCreavo.',
+    metaTitle: 'Restaurant Software | Chain Ops | NextCreavo',
+    metaDescription:
+      'Restaurant software development company work from NextCreavo — ordering, reservations, and restaurant chain software development for multi-location brands.',
     intro: 'Digital ordering and operations software for restaurants and multi-location brands.',
     challenges: ['Order accuracy', 'Staff turnover UX', 'Multi-location control'],
     solutions: ['Ordering apps', 'Kitchen displays', 'Ops dashboards'],
@@ -156,10 +166,12 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
   {
     slug: 'government-portals',
     name: 'Government',
-    primaryKeyword: 'Government Portal Development',
-    metaTitle: 'Government Portals | Citizen Services Platforms',
-    metaDescription: 'Government portal development by NextCreavo — accessible citizen services and secure workflows.',
-    intro: 'Accessible, secure citizen portals and internal service platforms.',
+    primaryKeyword: 'Citizen Service Portal Development',
+    metaTitle: 'Citizen Portals | Government Software | NextCreavo',
+    metaDescription:
+      'Citizen service portal development by NextCreavo — accessible citizen portal software, public portal software, and government case workflows.',
+    intro:
+      'Citizen service portal development for agencies that need accessible, auditable public services — status tracking, document upload, and APIs onto legacy systems.',
     challenges: ['Accessibility', 'Legacy systems', 'Trust & clarity'],
     solutions: ['Citizen portals', 'Case workflows', 'API modernization'],
     relatedServices: ['custom-software-development', 'api-development', 'ui-ux-design'],
@@ -167,7 +179,15 @@ export const INDUSTRY_PAGES: IndustryPage[] = [
 ]
 
 export function getIndustryBySlug(slug: string) {
-  return INDUSTRY_PAGES.find((i) => i.slug === slug)
+  const industry = INDUSTRY_PAGES.find((i) => i.slug === slug)
+  if (!industry) return undefined
+  const extra = mergeLandingLongform(INDUSTRY_LONGFORM[slug], fallbackIndustryLongform(industry))
+  return {
+    ...industry,
+    audience: extra.audience,
+    sections: extra.sections,
+    faqs: extra.extraFaqs,
+  }
 }
 
 export function getAllIndustrySlugs() {

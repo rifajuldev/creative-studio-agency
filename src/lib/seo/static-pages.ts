@@ -3,9 +3,9 @@ import { buildPageMetadata } from './metadata'
 
 export const staticPagesSeo = {
   home: buildPageMetadata({
-    title: 'Web, Marketing, Animation & AI | NextCreavo',
+    title: 'NextCreavo | Official Website',
     description:
-      'NextCreavo creative studio: UI/UX, web & mobile apps, 2D animation, AI agents & chatbots, SaaS & custom software — plus Google Ads, Facebook Ads, GMB, social media, SEO & technical SEO. Free strategy call.',
+      'Official NextCreavo software & AI studio (nextcreavo.com) — React, Next.js, custom software, chatbots, and automation. Not a medical or urgent-care brand.',
     keywords: [...pageKeywordSets.home],
     path: '/',
   }),
@@ -31,21 +31,21 @@ export const staticPagesSeo = {
     path: '/portfolio',
   }),
   blog: buildPageMetadata({
-    title: 'Blog | Web, Marketing, Animation & AI Insights | NextCreavo',
+    title: 'Blog | Next.js, AI, SEO & UI/UX Insights | NextCreavo',
     description:
-      'Guides on Instagram Reels ads, TikTok ecommerce, LinkedIn B2B, Google Ads, Map Pack SEO, Next.js performance, animation, and AI marketing playbooks.',
+      'Guides on Next.js SEO, Claude for developers, headless CMS, Shopify, Laravel, Google Business Profile / Map Pack, UI/UX with Relume, and AI automation.',
     keywords: [...pageKeywordSets.blog],
     path: '/blog',
   }),
   contact: buildPageMetadata({
-    title: 'Hire NextCreavo | Free Quote for Web, Marketing, Animation & AI',
+    title: 'Hire NextCreavo | Free Strategy Call',
     description:
       'Ready to grow? Contact NextCreavo for a free quote on UI/UX, web, apps, animation, AI, Google Ads, Facebook Ads, GMB, SEO or social — start your brief today.',
     keywords: [...pageKeywordSets.contact],
     path: '/contact',
   }),
   faq: buildPageMetadata({
-    title: 'FAQ | Pricing, Delivery, Ads, SEO & Technical SEO',
+    title: 'FAQ | Pricing, Ads, SEO & Delivery | NextCreavo',
     description:
       'Answers on NextCreavo pricing, Google Ads spend, Meta campaigns, SEO timelines, Core Web Vitals, Figma handoff, billing and retainers.',
     keywords: [...pageKeywordSets.faq],

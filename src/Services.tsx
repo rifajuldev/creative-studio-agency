@@ -1,6 +1,6 @@
 'use client'
 
-import { SERVICES_DATA } from '@/data/services'
+import { SERVICES_DATA, getServiceCanonicalPath } from '@/data/services'
 import { gsapScopeOptions } from '@/hooks/useScrollTriggerRefresh'
 import { clearRevealStyles, reveal } from '@/utils/gsapReveal'
 import { useGSAP } from '@gsap/react'
@@ -296,11 +296,11 @@ export default function Services() {
                 <Sparkles size={12} className="text-secondary" />
                 NextCreavo Competencies
               </span>
-              <h1 className="font-display lg:text-8.5xl text-primary text-4xl leading-[1.1] font-light tracking-tight sm:text-5xl md:text-7xl md:leading-none">
+              <h2 className="font-display lg:text-8.5xl text-primary text-4xl leading-[1.1] font-light tracking-tight sm:text-5xl md:text-7xl md:leading-none">
                 Our craft suite
                 <br />
                 <span className="text-secondary font-serif font-light italic">capabilities.</span>
-              </h1>
+              </h2>
             </div>
             <div className="pb-2 lg:col-span-4 lg:pl-6">
               <p className="srv-hero-reveal text-secondary text-base leading-relaxed font-light md:text-lg">
@@ -354,7 +354,7 @@ export default function Services() {
                     />
                   </button>
                   <Link
-                    href={`/services/${service.id}`}
+                    href={getServiceCanonicalPath(service.id)}
                     className="text-secondary hover:text-primary ml-2 inline-flex text-[10px] font-bold tracking-widest uppercase"
                   >
                     Open {service.title} page →
@@ -439,7 +439,7 @@ export default function Services() {
                 Pricing: <span className="text-primary font-bold">{activeService.pricing.growth}</span>
               </span>
               <Link
-                href={`/services/${activeService.id}`}
+                href={getServiceCanonicalPath(activeService.id)}
                 className="text-secondary hover:text-primary inline-flex items-center gap-2 text-[10px] font-bold tracking-widest uppercase transition-transform hover:translate-x-0.5"
               >
                 Inquire Deep Solution

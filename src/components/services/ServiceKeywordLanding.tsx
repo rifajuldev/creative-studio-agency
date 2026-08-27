@@ -1,5 +1,6 @@
 'use client'
 
+import { getIndustryBySlug } from '@/data/industries'
 import { getRelatedServiceLandings, SERVICE_PILLAR_LABELS, type ServiceLandingPage } from '@/data/servicePages'
 import { ArrowRight, CheckCircle2, ChevronLeft } from 'lucide-react'
 import Link from 'next/link'
@@ -10,6 +11,7 @@ interface Props {
 
 export default function ServiceKeywordLanding({ service }: Props) {
   const related = getRelatedServiceLandings(service.slug)
+  const relatedIndustries = (service.relatedIndustrySlugs ?? []).map((slug) => getIndustryBySlug(slug)).filter(Boolean)
 
   return (
     <div className="bg-primary text-primary min-h-screen w-full pb-32 transition-colors duration-700">
@@ -56,6 +58,26 @@ export default function ServiceKeywordLanding({ service }: Props) {
         </div>
       </section>
 
+      {service.audience && service.audience.length > 0 && (
+        <section className="border-border-primary border-t px-6 py-16 md:px-12">
+          <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-12">
+            <div className="lg:col-span-4">
+              <h2 className="font-display text-primary text-3xl font-light tracking-tight md:text-4xl">
+                Who this is for
+              </h2>
+            </div>
+            <ul className="space-y-4 lg:col-span-8">
+              {service.audience.map((item) => (
+                <li key={item} className="border-border-primary flex items-start gap-3 border-b pb-4">
+                  <CheckCircle2 className="text-secondary mt-0.5 h-5 w-5 shrink-0" strokeWidth={1.5} />
+                  <span className="text-primary text-base font-light">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+      )}
+
       <section className="border-border-primary border-t px-6 py-16 md:px-12">
         <div className="mx-auto grid max-w-[1400px] gap-12 lg:grid-cols-12">
           <div className="lg:col-span-4">
@@ -93,6 +115,44 @@ export default function ServiceKeywordLanding({ service }: Props) {
         </div>
       </section>
 
+      {service.process && service.process.length > 0 && (
+        <section className="border-border-primary border-t px-6 py-16 md:px-12">
+          <div className="mx-auto max-w-[1400px]">
+            <h2 className="font-display text-primary mb-10 text-3xl font-light tracking-tight md:text-4xl">
+              How we work
+            </h2>
+            <ol className="grid gap-6 md:grid-cols-3">
+              {service.process.map((step, index) => (
+                <li key={step.title} className="border-border-primary rounded-2xl border p-6">
+                  <p className="text-secondary mb-3 font-mono text-[10px] tracking-[0.2em] uppercase">
+                    {String(index + 1).padStart(2, '0')}
+                  </p>
+                  <h3 className="text-primary mb-3 text-lg font-medium">{step.title}</h3>
+                  <p className="text-secondary text-sm leading-relaxed font-light">{step.detail}</p>
+                </li>
+              ))}
+            </ol>
+          </div>
+        </section>
+      )}
+
+      {service.sections && service.sections.length > 0 && (
+        <section className="border-border-primary border-t px-6 py-16 md:px-12">
+          <div className="mx-auto max-w-[1400px] space-y-14">
+            {service.sections.map((section) => (
+              <article key={section.heading} className="grid gap-6 lg:grid-cols-12">
+                <h2 className="font-display text-primary text-3xl font-light tracking-tight md:text-4xl lg:col-span-4">
+                  {section.heading}
+                </h2>
+                <p className="text-secondary max-w-3xl text-base leading-relaxed font-light lg:col-span-8">
+                  {section.body}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
+      )}
+
       <section className="border-border-primary border-t px-6 py-16 md:px-12">
         <div className="mx-auto max-w-[1400px]">
           <h2 className="font-display text-primary mb-8 text-3xl font-light tracking-tight md:text-4xl">Tech stack</h2>
@@ -123,47 +183,70 @@ export default function ServiceKeywordLanding({ service }: Props) {
         </div>
       </section>
 
-      {related.length > 0 && (
-        <section className="border-border-primary border-t px-6 py-16 md:px-12">
-          <div className="mx-auto max-w-[1400px]">
-            <h2 className="font-display text-primary mb-8 text-3xl font-light tracking-tight md:text-4xl">
-              Related services
-            </h2>
-            <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-              {related.map((item) => (
-                <Link
-                  key={item.slug}
-                  href={`/services/${item.slug}`}
-                  className="border-border-primary hover:bg-secondary group rounded-2xl border p-6 transition-colors"
-                >
-                  <p className="text-secondary mb-2 text-[10px] tracking-[0.2em] uppercase">
-                    {SERVICE_PILLAR_LABELS[item.pillar]}
-                  </p>
-                  <p className="text-primary mb-3 text-lg font-medium">{item.primaryKeyword}</p>
-                  <p className="text-secondary mb-4 text-sm font-light">{item.shortDesc}</p>
-                  <span className="text-primary inline-flex items-center gap-2 text-[10px] font-medium tracking-[0.2em] uppercase">
-                    Explore <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                  </span>
-                </Link>
-              ))}
+      <section className="border-border-primary border-t px-6 py-16 md:px-12">
+        <div className="mx-auto max-w-[1400px]">
+          {related.length > 0 && (
+            <>
+              <h2 className="font-display text-primary mb-8 text-3xl font-light tracking-tight md:text-4xl">
+                Related services
+              </h2>
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {related.map((item) => (
+                  <Link
+                    key={item.slug}
+                    href={`/services/${item.slug}`}
+                    className="border-border-primary hover:bg-secondary group rounded-2xl border p-6 transition-colors"
+                  >
+                    <p className="text-secondary mb-2 text-[10px] tracking-[0.2em] uppercase">
+                      {SERVICE_PILLAR_LABELS[item.pillar]}
+                    </p>
+                    <p className="text-primary mb-3 text-lg font-medium">{item.primaryKeyword}</p>
+                    <p className="text-secondary mb-4 text-sm font-light">{item.shortDesc}</p>
+                    <span className="text-primary inline-flex items-center gap-2 text-[10px] font-medium tracking-[0.2em] uppercase">
+                      Explore <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </>
+          )}
+          {relatedIndustries.length > 0 && (
+            <div className={related.length > 0 ? 'mt-12' : undefined}>
+              <h2 className="font-display text-primary mb-6 text-2xl font-light md:text-3xl">Industry work</h2>
+              <div className="flex flex-wrap gap-3">
+                {relatedIndustries.map((industry) =>
+                  industry ? (
+                    <Link
+                      key={industry.slug}
+                      href={`/industries/${industry.slug}`}
+                      className="border-border-primary hover:bg-secondary rounded-full border px-5 py-2.5 text-[10px] font-medium tracking-[0.15em] uppercase transition-colors"
+                    >
+                      {industry.primaryKeyword}
+                    </Link>
+                  ) : null
+                )}
+              </div>
             </div>
-            <div className="text-secondary mt-10 flex flex-wrap gap-6 text-sm font-light">
-              <Link href="/" className="hover:text-primary underline-offset-4 hover:underline">
-                Homepage
-              </Link>
-              <Link href="/blog" className="hover:text-primary underline-offset-4 hover:underline">
-                Blog
-              </Link>
-              <Link href="/portfolio" className="hover:text-primary underline-offset-4 hover:underline">
-                Case studies
-              </Link>
-              <Link href="/contact" className="hover:text-primary underline-offset-4 hover:underline">
-                Contact
-              </Link>
-            </div>
+          )}
+          <div className="text-secondary mt-10 flex flex-wrap gap-6 text-sm font-light">
+            <Link href="/industries" className="hover:text-primary underline-offset-4 hover:underline">
+              Industries
+            </Link>
+            <Link href="/locations" className="hover:text-primary underline-offset-4 hover:underline">
+              Locations
+            </Link>
+            <Link href="/portfolio" className="hover:text-primary underline-offset-4 hover:underline">
+              Case studies
+            </Link>
+            <Link href="/locations/singapore" className="hover:text-primary underline-offset-4 hover:underline">
+              Singapore
+            </Link>
+            <Link href="/contact" className="hover:text-primary underline-offset-4 hover:underline">
+              Contact
+            </Link>
           </div>
-        </section>
-      )}
+        </div>
+      </section>
     </div>
   )
 }

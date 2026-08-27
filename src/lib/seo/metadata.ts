@@ -108,12 +108,12 @@ export function buildPageMetadata(input: PageSeoInput): Metadata {
 export function buildDefaultMetadata(): Metadata {
   return {
     ...buildPageMetadata({
-      title: 'Web, Marketing, Animation & AI | NextCreavo',
+      title: 'NextCreavo | Official Website',
       description: siteConfig.description,
       path: '/',
     }),
     title: {
-      default: 'Web, Marketing, Animation & AI | NextCreavo',
+      default: 'NextCreavo | Official Website',
       template: `%s | ${siteConfig.name}`,
     },
     icons: {
